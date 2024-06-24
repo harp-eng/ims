@@ -1,0 +1,13 @@
+{
+    "name": "Ingredient",
+    "alias": "ingredient",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Ingredient\\Providers\\IngredientServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -32,7 +32,7 @@ return [
                 'label' => 'Footer Text', // you know what label it is
                 'rules' => 'required|min:2', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => '<a href="https://github.com/nasirkhan/laravel-starter/" class="text-muted">Built with ♥ from Bangladesh</a>', // default value if you want
+                'value' => '', // default value if you want
             ],
             [
                 'type' => 'checkbox', // input fields type
@@ -76,7 +76,7 @@ return [
                 'label' => 'Website URL', // you know what label it is
                 'rules' => 'nullable|max:191', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'https://nasirkhn.com', // default value if you want
+                'value' => '', // default value if you want
             ],
             [
                 'type' => 'text', // input fields type
@@ -94,7 +94,7 @@ return [
                 'label' => 'Twitter Profile URL', // you know what label it is
                 'rules' => 'nullable|max:191', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'https://twitter.com/nasirkhansaikat', // default value if you want
+                'value' => '', // default value if you want
             ],
             [
                 'type' => 'text', // input fields type
@@ -103,7 +103,7 @@ return [
                 'label' => 'Instagram Account URL', // you know what label it is
                 'rules' => 'nullable|max:191', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'https://www.instagram.com/nasirkhansaikat', // default value if you want
+                'value' => '', // default value if you want
             ],
             [
                 'type' => 'text', // input fields type
@@ -112,7 +112,7 @@ return [
                 'label' => 'Youtube Channel URL', // you know what label it is
                 'rules' => 'nullable|max:191', // validation rule of laravel
                 'class' => '', // any class for input
-                'value' => 'https://www.youtube.com/@nasirkhan', // default value if you want
+                'value' => '', // default value if you want
             ],
             [
                 'type' => 'text', // input fields type

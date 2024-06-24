@@ -1,0 +1,13 @@
+{
+    "name": "BaseMaterial",
+    "alias": "basematerial",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\BaseMaterial\\Providers\\BaseMaterialServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

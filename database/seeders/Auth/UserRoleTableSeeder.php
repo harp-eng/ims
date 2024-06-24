@@ -24,7 +24,8 @@ class UserRoleTableSeeder extends Seeder
         User::findOrFail(4)->assignRole('executive');
         User::findOrFail(5)->assignRole('user');
         User::findOrFail(6)->assignRole('customer');
-        User::findOrFail(7)->assignRole('driver');
+        User::findOrFail(7)->assignRole('supplier');
+        User::findOrFail(8)->assignRole('employee');
 
         Artisan::call('cache:clear');
     }

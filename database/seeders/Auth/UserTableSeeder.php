@@ -73,6 +73,36 @@ class UserTableSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],
+            [
+                'id' => 6,
+                'username' => '100006',
+                'name' => 'customer',
+                'email' => 'customer@customer.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'id' => 7,
+                'username' => '100007',
+                'name' => 'supplier',
+                'email' => 'supplier@supplier.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'id' => 8,
+                'username' => '100008',
+                'name' => 'employee',
+                'email' => 'employee@employee.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
         ];
 
         foreach ($users as $user_data) {

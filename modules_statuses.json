@@ -1,6 +1,12 @@
 {
-    "Post": true,
-    "Category": true,
-    "Tag": true,
-    "Area": true
+    "Post": false,
+    "Category": false,
+    "Tag": false,
+    "Order": true,
+    "Product": true,
+    "Location": true,
+    "Supplier": true,
+    "Ingredient": true,
+    "BaseMaterial": true,
+    "Transaction": true
 }
