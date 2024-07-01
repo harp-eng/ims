@@ -5,6 +5,9 @@ namespace Modules\Ingredient\database\seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Modules\Ingredient\Models\Ingredient;
+use Modules\Ingredient\Models\RawMaterialPurchase;
+use Modules\Ingredient\Models\BaseMaterialIngredient;
+
 
 class IngredientDatabaseSeeder extends Seeder
 {
@@ -26,8 +29,12 @@ class IngredientDatabaseSeeder extends Seeder
         // DB::table('ingredients')->truncate();
         // echo "Truncate: ingredients \n";
 
-        Ingredient::factory()->count(20)->create();
+        Ingredient::factory()->count(10)->create();
         $rows = Ingredient::all();
+        echo " Insert: ingredients \n\n";
+
+        BaseMaterialIngredient::factory()->count(10)->create();
+        $rows = BaseMaterialIngredient::all();
         echo " Insert: ingredients \n\n";
 
         // Enable foreign key checks!

@@ -22,7 +22,6 @@ return new class extends Migration
             $table->unsignedInteger('CustomerID'); // Foreign key
             $table->date('OrderDate');
             $table->date('ShipDate')->nullable();
-            $table->string('Status', 50)->default('Pending');
             $table->decimal('TotalAmount', 10, 2);
             $table->text('ShippingAddressID')->nullable();
             $table->text('BillingAddressID')->nullable();

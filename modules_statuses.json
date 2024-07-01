@@ -8,5 +8,6 @@
     "Supplier": true,
     "Ingredient": true,
     "BaseMaterial": true,
-    "Transaction": true
+    "Transaction": true,
+    "RawMaterialPurchase": true
 }

@@ -1,4 +1,4 @@
-@props(["data"=>"", "module_name"])
+@props(["data"=>"", "module_name","column_show"=>""])
 <p>
     @lang("All values of :module_name (Id: :id)", ['module_name'=>ucwords(Str::singular($module_name)), 'id'=>$data->id])
 </p>
@@ -22,6 +22,11 @@
     </thead>
     <tbody>
         @foreach ($all_columns as $column)
+        @php
+            if(!empty($column_show) && !in_array($column->name,$column_show)){
+                continue;
+            }
+        @endphp
         <tr>
             <td>
                 <strong>

@@ -105,6 +105,7 @@ class BackendBaseController extends Controller
         return response()->json($$module_name);
     }
 
+    
     /**
      * Retrieves the data for the index page of the module.
      *

@@ -4,7 +4,8 @@ namespace Modules\BaseMaterial\database\factories;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use App\Models\User;
+use Modules\Location\Models\Location;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
@@ -24,13 +25,31 @@ class BaseMaterialFactory extends Factory
      */
     public function definition()
     {
+        // Generate a random number for SKU
+        $randomNumber = $this->faker->unique()->randomNumber(5);
+
+        // Create a unique SKU by concatenating a prefix with the random number
+        $sku = 'SKU-' . $randomNumber;
+
         return [
-            'name'              => substr($this->faker->text(15), 0, -1),
-            'slug'              => '',
-            'description'       => $this->faker->paragraph,
-            'status'            => 1,
-            'created_at'        => Carbon::now(),
-            'updated_at'        => Carbon::now(),
+            'name' => array_rand(trans('ingredient::text.products')),
+            'description' => $this->faker->paragraph,
+            'status' => $this->faker->randomElement([0, 1]), // Assuming 0 for unpublished, 1 for published
+            'SKU' => $sku, // Unique EAN-13 barcode
+            'Barcode' => $this->faker->ean13,
+            'QuantityProduced' => $this->faker->randomFloat(2, 0, 1000),
+            'QuantityInStock' => $this->faker->randomFloat(2, 0, 1000),
+            'LeadTimeDays' => $this->faker->numberBetween(1, 30),
+            'ExpiryDate' => $this->faker->dateTimeBetween('now', '+5 years')->format('Y-m-d'),
+            'IsPerishable' => $this->faker->randomElement(['yes', 'no']),
+            'IsHazardous' => $this->faker->randomElement(['yes', 'no']),
+            'UnitOfMeasure' => array_rand(trans('ingredient::text.units')),
+            'IsQualityCheck' => $this->faker->randomElement(['yes', 'no']),
+            'UserID' => User::factory(),
+            'LocationID' => Location::factory(),
+            'Notes' => $this->faker->optional()->text,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 }

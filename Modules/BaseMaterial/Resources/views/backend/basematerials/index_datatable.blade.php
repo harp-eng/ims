@@ -55,6 +55,31 @@
                                 @lang("basematerial::text.name")
                             </th>
                             <th>
+                                @lang("basematerial::text.status")
+                            </th>
+                            <th>
+                                @lang("basematerial::text.SKU")
+                            </th>
+                            
+                            <th>
+                                @lang("basematerial::text.QuantityProduced")
+                            </th>
+                            <th>
+                                @lang("basematerial::text.QuantityInStock")
+                            </th>
+                            <th>
+                                @lang("basematerial::text.ExpiryDate")
+                            </th>
+                            <th>
+                                @lang("basematerial::text.IsQualityCheck")
+                            </th>
+                            <th>
+                                @lang("basematerial::text.UserID")
+                            </th>
+                            <th>
+                                @lang("basematerial::text.LocationID")
+                            </th>                            
+                            <th>
                                 @lang("basematerial::text.updated_at")
                             </th>
                             <th class="text-end">
@@ -106,6 +131,38 @@
             {
                 data: 'name',
                 name: 'name'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'SKU',
+                name: 'SKU'
+            },
+            {
+                data: 'QuantityProduced',
+                name: 'QuantityProduced'
+            },
+            {
+                data: 'QuantityInStock',
+                name: 'QuantityInStock'
+            },
+            {
+                data: 'ExpiryDate',
+                name: 'ExpiryDate'
+            },
+            {
+                data: 'IsQualityCheck',
+                name: 'IsQualityCheck'
+            },
+            {
+                data: 'UserID',
+                name: 'UserID'
+            },
+            {
+                data: 'LocationID',
+                name: 'LocationID'
             },
             {
                 data: 'updated_at',

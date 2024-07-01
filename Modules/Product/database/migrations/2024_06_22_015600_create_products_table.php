@@ -30,14 +30,13 @@ return new class extends Migration
             $table->integer('ReorderLevel')->nullable();
             $table->integer('ReorderQuantity')->nullable();
             $table->string('StorageLocation', 100)->nullable();
-            $table->unsignedInteger('SupplierID')->nullable(); // Foreign key
             $table->integer('LeadTimeDays')->nullable();
             $table->date('ExpiryDate')->nullable();
             $table->integer('MinOrderQuantity')->nullable();
             $table->integer('MaxOrderQuantity')->nullable();
-            $table->integer('SafetyStockLevel')->nullable();
-            $table->boolean('IsPerishable')->default(false);
-            $table->boolean('IsHazardous')->default(false);
+            $table->integer('SafetyStockLevel')->nullable()->default(100);
+            $table->enum('IsPerishable', ['yes', 'no'])->default('no');
+            $table->enum('IsHazardous', ['yes', 'no'])->default('no');
             $table->text('Notes')->nullable();
 
             $table->integer('created_by')->unsigned()->nullable();

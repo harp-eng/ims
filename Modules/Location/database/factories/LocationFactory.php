@@ -25,10 +25,18 @@ class LocationFactory extends Factory
     public function definition()
     {
         return [
-            'name'              => substr($this->faker->text(15), 0, -1),
-            'slug'              => '',
-            'description'       => $this->faker->paragraph,
-            'status'            => 1,
+            'name'              =>  array_rand(trans('ingredient::text.inventoryLocations')),
+            'slug' => $this->faker->slug,
+            'description' => $this->faker->paragraph,
+            'status' => $this->faker->numberBetween(0, 1),
+            'Zone' => $this->faker->optional()->word,
+            'Aisle' => $this->faker->optional()->word,
+            'Rack' => $this->faker->optional()->word,
+            'Shelf' => $this->faker->optional()->word,
+            'Bin' => $this->faker->optional()->word,
+            'Capacity' => $this->faker->optional()->randomNumber(),
+            'CurrentOccupancy' => $this->faker->optional()->randomNumber(),
+            'Type' => array_rand(['Storage', 'Picking', 'Packing']),
             'created_at'        => Carbon::now(),
             'updated_at'        => Carbon::now(),
         ];

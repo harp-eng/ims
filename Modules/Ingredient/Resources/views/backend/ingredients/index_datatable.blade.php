@@ -55,6 +55,12 @@
                                 @lang("ingredient::text.name")
                             </th>
                             <th>
+                                @lang("ingredient::text.stock")
+                            </th>
+                            <th>
+                                @lang("ingredient::text.expiry_date")
+                            </th>
+                            <th>
                                 @lang("ingredient::text.updated_at")
                             </th>
                             <th class="text-end">
@@ -106,6 +112,14 @@
             {
                 data: 'name',
                 name: 'name'
+            },
+            {
+                data: 'QuantityInStock',
+                name: 'QuantityInStock'
+            },
+            {
+                data: 'ExpiryDate',
+                name: 'ExpiryDate'
             },
             {
                 data: 'updated_at',

@@ -19,17 +19,20 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1);
+            
 
-            $table->string('SKU', 50)->unique(); // Unique identifier
+            $table->string('SKU', 50)->unique()->nullable(); // Unique identifier
             $table->string('Barcode', 50)->nullable();
+            $table->double('QuantityProduced', 15, 2)->nullable(); // Unit price of the product or raw material
             $table->double('QuantityInStock', 15, 2)->nullable(); // Unit price of the product or raw material
             $table->integer('LeadTimeDays')->nullable();
             $table->date('ExpiryDate')->nullable();
-            $table->boolean('IsPerishable')->default(false);
-            $table->boolean('IsHazardous')->default(false);
-            $table->boolean('IsQualityCheck')->default(false);
-            $table->unsignedInteger('UserID'); // Foreign key to users table
-            $table->unsignedInteger('LocationID'); // Foreign key to users table
+            $table->enum('IsPerishable', ['yes', 'no'])->default('no');
+            $table->enum('IsHazardous', ['yes', 'no'])->default('no');
+            $table->string('UnitOfMeasure', 50)->nullable();
+            $table->enum('IsQualityCheck', ['yes', 'no'])->default('no');
+            $table->unsignedInteger('UserID')->nullable(); // Foreign key to users table
+            $table->unsignedInteger('LocationID')->nullable(); // Foreign key to users table
             $table->text('Notes')->nullable();
 
             $table->integer('created_by')->unsigned()->nullable();

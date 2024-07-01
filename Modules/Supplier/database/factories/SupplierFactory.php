@@ -25,12 +25,21 @@ class SupplierFactory extends Factory
     public function definition()
     {
         return [
-            'name'              => substr($this->faker->text(15), 0, -1),
-            'slug'              => '',
-            'description'       => $this->faker->paragraph,
-            'status'            => 1,
-            'created_at'        => Carbon::now(),
-            'updated_at'        => Carbon::now(),
+            'name' => substr($this->faker->text(15), 0, -1),
+            'slug' => '',
+            'description' => $this->faker->paragraph,
+            'description' => $this->faker->paragraph,
+            'status' => $this->faker->numberBetween(0, 1),
+            'ContactName' => $this->faker->name,
+            'ContactEmail' => $this->faker->email,
+            'ContactPhone' => $this->faker->phoneNumber,
+            'Address' => $this->faker->address,
+            'City' => $this->faker->city,
+            'State' => $this->faker->state,
+            'ZipCode' => $this->faker->postcode,
+            'Country' => $this->faker->country,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
     }
 }

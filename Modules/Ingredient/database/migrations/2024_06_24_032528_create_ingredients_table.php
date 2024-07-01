@@ -13,16 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
+        
+
         Schema::create('ingredients', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1);
 
-            $table->integer('QuantityInStock')->default(0);
-            $table->decimal('UnitPrice', 10, 2);
+            $table->string('SKU', 50)->unique()->nullable(); // Unique identifier
+
+            $table->double('QuantityInStock');
+            $table->decimal('UnitPrice', 10, 2)->default(0);
             $table->integer('ReorderLevel')->nullable();
             $table->integer('ReorderQuantity')->nullable();
             $table->string('StorageLocation', 100)->nullable();
@@ -32,34 +36,12 @@ return new class extends Migration
             $table->date('ExpiryDate')->nullable();
             $table->integer('MinOrderQuantity')->nullable();
             $table->integer('MaxOrderQuantity')->nullable();
-            $table->integer('SafetyStockLevel')->nullable();
-            $table->boolean('IsPerishable')->default(false);
-            $table->boolean('IsHazardous')->default(false);
+            $table->integer('SafetyStockLevel')->nullable()->default(100);
+            $table->enum('IsPerishable', ['yes', 'no'])->default('no');
+            $table->enum('IsHazardous', ['yes', 'no'])->default('no');
             $table->integer('AverageLeadTimeDays')->nullable();
             $table->integer('OrderFrequencyDays')->nullable();
             $table->date('LastReceivedDate')->nullable();
-            $table->text('Notes')->nullable();
-            
-            $table->integer('created_by')->unsigned()->nullable();
-            $table->integer('updated_by')->unsigned()->nullable();
-            $table->integer('deleted_by')->unsigned()->nullable();
-
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        Schema::create('raw_material_purchases', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->tinyInteger('status')->default(1);
-
-            $table->unsignedInteger('IngredientID');
-            $table->unsignedInteger('SupplierID');
-            $table->date('PurchaseDate');
-            $table->integer('QuantityPurchased');
-            $table->decimal('UnitPrice', 10, 2);
-            $table->decimal('TotalPrice', 10, 2);
-            $table->date('DeliveryDate')->nullable();
             $table->text('Notes')->nullable();
             
             $table->integer('created_by')->unsigned()->nullable();
@@ -75,8 +57,7 @@ return new class extends Migration
 
             $table->unsignedInteger('BaseMaterialID'); // Foreign key to base_materials table
             $table->unsignedInteger('IngredientID'); // Foreign key to ingredients table
-            $table->decimal('QuantityUsed', 10, 2); // Quantity of ingredient used
-            $table->string('UnitOfMeasure', 50); // Unit of measure for the quantity used
+            $table->double('QuantityUsed')->default(0);
 
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
@@ -96,7 +77,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('base_material_ingredients');
-        Schema::dropIfExists('raw_material_purchases');
         Schema::dropIfExists('ingredients');
     }
 };

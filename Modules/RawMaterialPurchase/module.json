@@ -1,0 +1,13 @@
+{
+    "name": "RawMaterialPurchase",
+    "alias": "rawmaterialpurchase",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\RawMaterialPurchase\\Providers\\RawMaterialPurchaseServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

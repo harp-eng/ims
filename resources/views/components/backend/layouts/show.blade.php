@@ -1,4 +1,4 @@
-@props(["data"=>"", "module_name", "module_path", "module_title"=>"", "module_icon"=>"", "module_action"=>""])
+@props(["data"=>"", "module_name", "module_path", "module_title"=>"", "module_icon"=>"", "module_action"=>"","column_show"=>""])
 <div class="card">
     @if ($slot != "")
     <div class="card-body">
@@ -12,7 +12,7 @@
         <div class="row mt-4">
             <div class="col-12">
 
-                <x-backend.section-show-table :data="$data" :module_name="$module_name" />
+                <x-backend.section-show-table :data="$data" :module_name="$module_name" :column_show="$column_show" />
 
             </div>
         </div>
