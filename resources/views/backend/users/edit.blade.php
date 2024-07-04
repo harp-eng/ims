@@ -158,26 +158,98 @@
                     </div>
                 </div>
 
-                @php
-                    $socialFieldsNames = $$module_name_singular->socialFieldsNames();
-                @endphp
                 <div class="row">
-                    @foreach ($$module_name_singular->socialFieldsNames() as $item)
+                    <!-- Billing Address Fields -->
+                    <div class="col-12 mb-4">
+                        <h3>Billing Address</h3>
+                    </div>
+                   
+                    <?php
+                    $billing_address=$$module_name_singular->billingAddress;
+                    $shipping_address=$$module_name_singular->shippingAddress;
+                    $fields = [
+                        'AddressLine1' => 'Address Line 1',
+                        'AddressLine2' => 'Address Line 2',
+                        'City' => 'City',
+                        'State' => 'State',
+                        'ZipCode' => 'Zip Code',
+                        'Country' => 'Country',
+                    ];
+                  
+                    foreach ($fields as $field_name => $field_label) {
+                        $field_placeholder = __($field_label);
+                        $required = 'required'; // Add condition here if the field is required
+                        $is_textarea = $field_name === 'AddressLine1' || $field_name === 'AddressLine2';
+                        ?>
+                
                         <div class="col-12 col-sm-6 mb-3">
                             <div class="form-group">
                                 <?php
-                                $field_name = 'social_profiles[' . $item . ']';
-                                $field_lable = label_case($item);
-                                $field_placeholder = $field_lable;
-                                $required = '';
+                                echo html()->label($field_label, $field_name)->class('form-label');
+                                echo field_required($required);
+                                if ($is_textarea) {
+                                    echo html()->textarea('billing_address['.$field_name.']')
+                                        ->placeholder($field_placeholder)
+                                        ->class('form-control')
+                                        ->value($billing_address->$field_name)
+                                        ->attributes(["$required"]);
+                                } else {
+                                    echo html()->text('billing_address['.$field_name.']')
+                                        ->placeholder($field_placeholder)
+                                        ->class('form-control')
+                                        ->value($billing_address->$field_name)
+                                        ->attributes(["$required"]);
+                                }
                                 ?>
-                                {{ html()->label($field_lable, $field_name)->class('form-label') }} {!! field_required($required) !!}
-                                {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
                             </div>
                         </div>
-                    @endforeach
-                </div>
+                
+                        <?php
+                    }
+                    ?>
+                
+                    <!-- Shipping Address Fields -->
+                    <div class="col-12 mb-4">
+                        <h3>Shipping Address</h3>
+                    </div>
+                   
+                    <?php
 
+                    foreach ($fields as $field_name => $field_label) {
+                        $field_placeholder = __($field_label);
+                        $required = 'required'; // Add condition here if the field is required
+                        $is_textarea = $field_name === 'AddressLine1' || $field_name === 'AddressLine2';
+                        ?>
+                
+                        <div class="col-12 col-sm-6 mb-3">
+                            <div class="form-group">
+                                <?php
+                                echo html()->label($field_label, $field_name . '_shipping')->class('form-label');
+                                echo field_required($required);
+                                if ($is_textarea) {
+                                    echo html()->textarea('shipping_address['.$field_name.']')
+                                        ->placeholder($field_placeholder)
+                                        ->class('form-control')
+                                        ->value($shipping_address->$field_name)
+                                        ->attributes(["$required"]);
+                                } else {
+                                    echo html()->text('shipping_address['.$field_name.']')
+                                        ->placeholder($field_placeholder)
+                                        ->class('form-control')
+                                        ->value($shipping_address->$field_name)
+                                        ->attributes(["$required"]);
+                                }
+                                ?>
+                            </div>
+                        </div>
+                
+                        <?php
+                    }
+                    ?>
+                </div>
+                
+
+               
                 <div class="row mb-3">
                     <?php
                     $field_name = 'password';

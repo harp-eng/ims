@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
+use Modules\Order\Models\Address;
 
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
@@ -24,20 +25,14 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     use UserPresenter;
     use HasApiTokens;
 
-    protected $guarded = [
-        'id',
-        'updated_at',
-    ];
+    protected $guarded = ['id', 'updated_at'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * Get the attributes that should be cast.
@@ -105,5 +100,21 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function getRolesListAttribute()
     {
         return array_map('intval', $this->roles->pluck('id')->toArray());
+    }
+
+    // Define the relationship to shippingAddress
+    public function shippingAddress()
+    {
+        return $this->hasOne(Address::class, 'EntityID', 'id')
+                    ->where('EntityType', 'Customer')
+                    ->where('AddressType', 'Shipping');
+    }
+
+    // Define the relationship to billingAddress
+    public function billingAddress()
+    {
+        return $this->hasOne(Address::class, 'EntityID', 'id')
+                    ->where('EntityType', 'Customer')
+                    ->where('AddressType', 'Billing');
     }
 }

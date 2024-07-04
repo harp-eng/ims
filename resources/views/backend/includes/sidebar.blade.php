@@ -104,7 +104,16 @@ $notifications_latest = optional($notifications)->take(5);
             $text = __('Employees');
             $icon = 'fa-solid fa-user-group';
             $permission = 'view_' . $module_name;
-            $url = route('backend.' . $module_name . '.index');
+            $url = route('backend.' . $module_name . '.index',['role'=>'employee']);
+        @endphp
+        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
+
+        @php
+            $module_name = 'users';
+            $text = __('Customers');
+            $icon = 'fa-solid fa-user-group';
+            $permission = 'view_' . $module_name;
+            $url = route('backend.' . $module_name . '.index',['role'=>'customer']);
         @endphp
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 

@@ -29,9 +29,6 @@ class SupplierDatabaseSeeder extends Seeder
 
         Supplier::factory()->count(20)->create();
         $rows = Supplier::all();
-        foreach ($rows as $key => $value) {
-            User::findOrFail($value->id)->assignRole('supplier');
-        }
         echo " Insert: suppliers \n\n";
 
         // Enable foreign key checks!

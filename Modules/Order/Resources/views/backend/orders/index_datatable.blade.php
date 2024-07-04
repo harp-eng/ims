@@ -52,10 +52,22 @@
                                 #
                             </th>
                             <th>
-                                @lang("order::text.name")
+                                Customer
                             </th>
                             <th>
-                                @lang("order::text.updated_at")
+                                Order Date
+                            </th>
+                            <th>
+                                Ship Date
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Total Amount
+                            </th>
+                            <th>
+                                Updated At
                             </th>
                             <th class="text-end">
                                 @lang("order::text.action")
@@ -104,8 +116,24 @@
                 name: 'id'
             },
             {
-                data: 'name',
-                name: 'name'
+                data: 'CustomerID',
+                name: 'CustomerID'
+            },
+            {
+                data: 'OrderDate',
+                name: 'OrderDate'
+            },
+            {
+                data: 'ShipDate',
+                name: 'ShipDate'
+            },
+            {
+                data: 'status',
+                name: 'status'
+            },
+            {
+                data: 'TotalAmount',
+                name: 'TotalAmount'
             },
             {
                 data: 'updated_at',

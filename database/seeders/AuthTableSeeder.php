@@ -11,6 +11,8 @@ use Modules\Location\database\seeders\LocationDatabaseSeeder;
 use Modules\Product\database\seeders\ProductDatabaseSeeder;
 use Modules\Supplier\database\seeders\SupplierDatabaseSeeder;
 use Modules\RawMaterialPurchase\database\seeders\RawMaterialPurchaseDatabaseSeeder;
+use Modules\Order\database\seeders\OrderDatabaseSeeder;
+use Modules\TimeSheet\database\seeders\TimeSheetDatabaseSeeder;
 
 
 
@@ -45,6 +47,8 @@ class AuthTableSeeder extends Seeder
         $this->call(SupplierDatabaseSeeder::class);
         echo "\n seeders Product Database Seeder. \n";
         $this->call(RawMaterialPurchaseDatabaseSeeder::class);
+        $this->call(OrderDatabaseSeeder::class);
+        $this->call(TimeSheetDatabaseSeeder::class);
         echo "\n seeders Product Database Seeder. \n";
         
         

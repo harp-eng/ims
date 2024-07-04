@@ -9,5 +9,6 @@
     "Ingredient": true,
     "BaseMaterial": true,
     "Transaction": true,
-    "RawMaterialPurchase": true
+    "RawMaterialPurchase": true,
+    "TimeSheet": true
 }

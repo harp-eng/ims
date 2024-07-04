@@ -25,9 +25,6 @@ class SupplierFactory extends Factory
     public function definition()
     {
         return [
-            'name' => substr($this->faker->text(15), 0, -1),
-            'slug' => '',
-            'description' => $this->faker->paragraph,
             'description' => $this->faker->paragraph,
             'status' => $this->faker->numberBetween(0, 1),
             'ContactName' => $this->faker->name,

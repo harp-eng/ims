@@ -17,10 +17,10 @@ return new class extends Migration
             $table->increments('id'); // Primary key
 
             $table->text('description')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->enum('status', ['Pending','Processing','Shipped','Delivered','Cancelled'])->default('Pending');
 
             $table->unsignedInteger('CustomerID'); // Foreign key
-            $table->date('OrderDate');
+            $table->date('OrderDate')->nullable();
             $table->date('ShipDate')->nullable();
             $table->decimal('TotalAmount', 10, 2);
             $table->text('ShippingAddressID')->nullable();
@@ -55,13 +55,13 @@ return new class extends Migration
             $table->increments('id'); // Primary key
             $table->string('EntityType', 50); // Type of entity (Customer, Supplier, etc.)
             $table->unsignedInteger('EntityID'); // Foreign key to entity's table
-            $table->string('AddressLine1', 255);
+            $table->string('AddressLine1', 255)->nullable();
             $table->string('AddressLine2', 255)->nullable();
-            $table->string('City', 100);
-            $table->string('State', 100);
-            $table->string('ZipCode', 20);
-            $table->string('Country', 100);
-            $table->string('AddressType', 50); // Billing, Shipping, etc.
+            $table->string('City', 100)->nullable();
+            $table->string('State', 100)->nullable();
+            $table->string('ZipCode', 20)->nullable();
+            $table->string('Country', 100)->nullable();
+            $table->string('AddressType', 50)->nullable(); // Billing, Shipping, etc.
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
             $table->integer('deleted_by')->unsigned()->nullable();

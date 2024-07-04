@@ -51,12 +51,11 @@
                             <th>
                                 #
                             </th>
+                            @foreach(['Contact Name','Contact Email','Contact Phone','Address','City','State','Zip Code','Updated At'] as $k=>$v)
                             <th>
-                                @lang("supplier::text.name")
+                                {{$v}}
                             </th>
-                            <th>
-                                @lang("supplier::text.updated_at")
-                            </th>
+                            @endforeach
                             <th class="text-end">
                                 @lang("supplier::text.action")
                             </th>
@@ -94,30 +93,32 @@
 <script type="module" src="{{ asset('vendor/datatable/datatables.min.js') }}"></script>
 
 <script type="module">
+    const keys = ['id','ContactName', 'ContactEmail', 'ContactPhone', 'Address', 'City', 'State', 'ZipCode', 'updated_at','action'];
+
+    const values = keys.map((key, index) => {
+        const value = {
+            data: key,
+            name: key
+        };
+        
+        // Add additional properties for specific fields if necessary
+        if (key !== 'updated_at') {
+            value.orderable = true;
+            value.searchable = true;
+        } else {
+            value.orderable = false;
+            value.searchable = false;
+        }
+        
+        return value;
+    });
+    console.log(values);
     $('#datatable').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
         ajax: '{{ route("backend.$module_name.index_data") }}',
-        columns: [{
-                data: 'id',
-                name: 'id'
-            },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'updated_at',
-                name: 'updated_at'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            }
-        ]
+        columns: values
     });
 </script>
 @endpush

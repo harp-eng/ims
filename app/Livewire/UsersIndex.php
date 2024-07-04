@@ -16,9 +16,21 @@ class UsersIndex extends Component
 
     public function render()
     {
-        $searchTerm = '%'.$this->searchTerm.'%';
-        $users = User::where('name', 'like', $searchTerm)->orWhere('email', 'like', $searchTerm)->orderBy('id', 'desc')->with(['permissions', 'roles', 'providers'])->paginate();
+        $searchTerm = '%' . $this->searchTerm . '%';
+        $roleName = request()->query('role'); // Replace with the desired role name
 
-        return view('livewire.users-index', compact('users'));
+        $users = User::where(function ($query) use ($searchTerm) {
+            $query->where('name', 'like', $searchTerm)->orWhere('email', 'like', $searchTerm);
+        });
+        if($roleName){
+            $users =  $users->whereHas('roles', function ($query) use ($roleName) {
+                $query->where('name', $roleName);
+            });
+        }
+            
+        $users =  $users->orderBy('id', 'desc')
+            ->with(['permissions', 'roles', 'providers'])
+            ->paginate();
+        return view('livewire.users-index', compact('users','roleName'));
     }
 }

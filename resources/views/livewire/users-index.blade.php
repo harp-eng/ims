@@ -10,10 +10,11 @@
                             <th>{{ __('labels.backend.users.fields.name') }}</th>
                             <th>{{ __('labels.backend.users.fields.email') }}</th>
                             <th>{{ __('labels.backend.users.fields.status') }}</th>
-                            <th>{{ __('labels.backend.users.fields.roles') }}</th>
-                            <th>{{ __('labels.backend.users.fields.permissions') }}</th>
-                            <th>{{ __('labels.backend.users.fields.social') }}</th>
-
+                            @if(empty($roleName))
+                                <th>{{ __('labels.backend.users.fields.roles') }}</th>
+                                <th>{{ __('labels.backend.users.fields.permissions') }}</th>
+                                <th>{{ __('labels.backend.users.fields.social') }}</th>
+                            @endif
                             <th class="text-end">{{ __('labels.backend.action') }}</th>
                         </tr>
                     </thead>
@@ -32,6 +33,7 @@
                                     {!! $user->status_label !!}
                                     {!! $user->confirmed_label !!}
                                 </td>
+                                @if(empty($roleName))
                                 <td>
                                     @if ($user->getRoleNames()->count() > 0)
                                         <ul class="fa-ul">
@@ -63,8 +65,12 @@
                                         @endforeach
                                     </ul>
                                 </td>
-
+                                @endif
                                 <td class="text-end">
+                                    <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
+                                        href="{{ route('backend.timesheets.index',['id'=>$user]) }}"
+                                        title="TimeSheet"><i
+                                            class="fas fa-solid fa-clock fa-fw"></i></a>
                                     <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
                                         href="{{ route('backend.users.show', $user) }}"
                                         title="{{ __('labels.backend.show') }}"><i
