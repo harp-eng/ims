@@ -31,7 +31,7 @@ class TimeSheetFactory extends Factory
          // Randomly select sign-in and sign-out times within a single day
          $signInTime = Carbon::today()->addMinutes(rand(0, 720)); // Random sign-in time within the first 12 hours
          $signOutTime = (clone $signInTime)->addHours(rand(1, 8)); // Random sign-out time, 1 to 8 hours after sign-in
-        if($employee->id){
+        if($employee){
          return [
              'employee_id' => $employee->id,
              'sign_in_time' => $signInTime,

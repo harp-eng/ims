@@ -6,6 +6,8 @@ use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 /**
  * Class PermissionRoleTableSeeder.
@@ -41,7 +43,20 @@ class PermissionRoleTableSeeder extends Seeder
         $user = Role::create(['id' => '7', 'name' => 'supplier']);
         // $user->givePermissionTo('view_backend');
         $user = Role::create(['id' => '8', 'name' => 'employee']);
-        // $user->givePermissionTo('view_backend');
+
+        $user->givePermissionTo('view_backend');
+        $user->givePermissionTo('view_dashboard');
+        $user->givePermissionTo('employee_dashboard');
+        $user->givePermissionTo('view_timesheets');
+        $user->givePermissionTo('view_ordersheets');
+        $user->givePermissionTo('view_circles');
+        $user->givePermissionTo('view_activity-log');
+
+        $user = Role::create(['id' => '9', 'name' => 'compounder']);
+
+        $user->givePermissionTo('view_basematerials');
+        $user->givePermissionTo('add_basematerials');
+        $user->givePermissionTo('edit_basematerials');
     }
 
     public function CreateDefaultPermissions()
@@ -74,6 +89,19 @@ class PermissionRoleTableSeeder extends Seeder
         ]);
         echo "\n _Comments_ Permissions Created.";
 
+        $modulesPath = base_path('Modules');
+        $moduleDirectories = File::directories($modulesPath);
+
+        foreach ($moduleDirectories as $moduleDirectory) {
+            $moduleName = basename($moduleDirectory);
+            $moduleName = Str::lower(Str::plural($moduleName));
+            
+            Artisan::call('auth:permissions', [
+                'name' => $moduleName,
+            ]);
+            echo "\n _".$moduleName."_ Permissions Created.";
+        }
+        
         echo "\n\n";
     }
 }

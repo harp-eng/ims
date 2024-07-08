@@ -197,7 +197,7 @@ $ingredientOptions = $ingredients->map(function ($ingredient) {
             </tr>
         </thead>
         <tbody>
-            @if(isset($data))
+            @if(isset($data->baseMaterialIngredients))
             
                 @foreach ($data->baseMaterialIngredients as $ingredient)
                     <tr>

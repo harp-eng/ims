@@ -35,6 +35,8 @@ class Permission extends \Spatie\Permission\Models\Permission
             'create_backups',
             'download_backups',
             'delete_backups',
+            'view_circles',
+            'view_activity-log',
         ];
     }
 

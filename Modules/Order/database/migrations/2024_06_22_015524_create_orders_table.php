@@ -54,7 +54,6 @@ return new class extends Migration
 
         Schema::table('order_details', function (Blueprint $table) {
             $table->unsignedBigInteger('id', true)->change(); // Ensuring the ID is an unsignedBigInteger
-            $table->enum('status', ['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled'])->default('Pending');
         });
 
         Schema::create('addresses', function (Blueprint $table) {
