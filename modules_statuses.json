@@ -10,5 +10,6 @@
     "BaseMaterial": true,
     "Transaction": true,
     "RawMaterialPurchase": true,
-    "TimeSheet": true
+    "TimeSheet": true,
+    "OrderSheet": true
 }

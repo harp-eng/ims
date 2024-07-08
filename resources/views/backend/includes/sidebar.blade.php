@@ -32,18 +32,23 @@ $notifications_latest = optional($notifications)->take(5);
                 @endif
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('backend.activity-log.index') }}">
+                <i class="nav-icon fa-a"></i>Activity Logs
+            </a>
+        </li>
         @php
             $module_name = 'ingredients';
             $text = __('Ingredients');
-            $icon = 'fa-regular fa-file-lines';
+            $icon = 'fa-regular fa-i';
             $permission = 'view_' . $module_name;
             $url = route('backend.' . $module_name . '.index');
         @endphp
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
         @php
             $module_name = 'basematerials';
-            $text = __('Base Material');
-            $icon = 'fa-regular fa-file-lines';
+            $text = __('Base Materials');
+            $icon = 'fa-regular fa-b';
             $permission = 'view_' . $module_name;
             $url = route('backend.' . $module_name . '.index');
         @endphp
@@ -51,15 +56,25 @@ $notifications_latest = optional($notifications)->take(5);
         @php
             $module_name = 'orders';
             $text = __('Orders');
-            $icon = 'fa-regular fa-file-lines';
+            $icon = 'fa-regular fa-o';
             $permission = 'view_' . $module_name;
             $url = route('backend.' . $module_name . '.index');
         @endphp
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
+
+        @php
+            $module_name = 'ordersheets';
+            $text = __('Order Sheets');
+            $icon = 'fa-regular fa-o';
+            $permission = 'view_' . $module_name;
+            $url = route('backend.' . $module_name . '.index');
+        @endphp
+        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
+
         @php
             $module_name = 'products';
             $text = __('Products');
-            $icon = 'fa-regular fa-file-lines';
+            $icon = 'fa-regular fa-p';
             $permission = 'view_' . $module_name;
             $url = route('backend.' . $module_name . '.index');
         @endphp
@@ -67,7 +82,7 @@ $notifications_latest = optional($notifications)->take(5);
         @php
             $module_name = 'locations';
             $text = __('Locations');
-            $icon = 'fa-regular fa-file-lines';
+            $icon = 'fa-regular fa-l';
             $permission = 'view_' . $module_name;
             $url = route('backend.' . $module_name . '.index');
         @endphp
@@ -75,12 +90,40 @@ $notifications_latest = optional($notifications)->take(5);
         @php
             $module_name = 'transactions';
             $text = __('Transactions');
-            $icon = 'fa-regular fa-file-lines';
+            $icon = 'fa-regular fa-t';
             $permission = 'view_' . $module_name;
             $url = route('backend.' . $module_name . '.index');
         @endphp
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
-        
+
+        @php
+            $module_name = 'suppliers';
+            $text = __('Suppliers');
+            $icon = 'fa-solid fa-s';
+            $permission = 'view_' . $module_name;
+            $url = route('backend.' . $module_name . '.index');
+        @endphp
+        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
+
+        @php
+            $module_name = 'users';
+            $text = __('Employees');
+            $icon = 'fa-solid fa-e';
+            $permission = 'view_' . $module_name;
+            $url = route('backend.' . $module_name . '.index', ['role' => 'employee']);
+        @endphp
+        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
+
+        @php
+            $module_name = 'users';
+            $text = __('Customers');
+            $icon = 'fa-solid fa-c';
+            $permission = 'view_' . $module_name;
+            $url = route('backend.' . $module_name . '.index', ['role' => 'customer']);
+        @endphp
+        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
+
+
         @php
             $module_name = 'settings';
             $text = __('Settings');
@@ -99,23 +142,7 @@ $notifications_latest = optional($notifications)->take(5);
         @endphp
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 
-        @php
-            $module_name = 'users';
-            $text = __('Employees');
-            $icon = 'fa-solid fa-user-group';
-            $permission = 'view_' . $module_name;
-            $url = route('backend.' . $module_name . '.index',['role'=>'employee']);
-        @endphp
-        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 
-        @php
-            $module_name = 'users';
-            $text = __('Customers');
-            $icon = 'fa-solid fa-user-group';
-            $permission = 'view_' . $module_name;
-            $url = route('backend.' . $module_name . '.index',['role'=>'customer']);
-        @endphp
-        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 
         @php
             $module_name = 'users';
@@ -126,14 +153,6 @@ $notifications_latest = optional($notifications)->take(5);
         @endphp
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 
-        @php
-            $module_name = 'suppliers';
-            $text = __('Suppliers');
-            $icon = 'fa-solid fa-user-group';
-            $permission = 'view_' . $module_name;
-            $url = route('backend.' . $module_name . '.index');
-        @endphp
-        <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 
         @php
             $module_name = 'roles';

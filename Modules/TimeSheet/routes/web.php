@@ -14,13 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 /*
-*
-* Frontend Routes
-*
-* --------------------------------------------------------------------
-*/
+ *
+ * Frontend Routes
+ *
+ * --------------------------------------------------------------------
+ */
 Route::group(['namespace' => '\Modules\TimeSheet\Http\Controllers\Frontend', 'as' => 'frontend.', 'middleware' => 'web', 'prefix' => ''], function () {
-
     /*
      *
      *  Frontend TimeSheets Routes
@@ -34,19 +33,19 @@ Route::group(['namespace' => '\Modules\TimeSheet\Http\Controllers\Frontend', 'as
 });
 
 /*
-*
-* Backend Routes
-*
-* --------------------------------------------------------------------
-*/
+ *
+ * Backend Routes
+ *
+ * --------------------------------------------------------------------
+ */
 Route::group(['namespace' => '\Modules\TimeSheet\Http\Controllers\Backend', 'as' => 'backend.', 'middleware' => ['web', 'auth', 'can:view_backend'], 'prefix' => 'admin'], function () {
     /*
-    * These routes need view-backend permission
-    * (good if you want to allow more than one group in the backend,
-    * then limit the backend features by different roles or permissions)
-    *
-    * Note: Administrator has all permissions so you do not have to specify the administrator role everywhere.
-    */
+     * These routes need view-backend permission
+     * (good if you want to allow more than one group in the backend,
+     * then limit the backend features by different roles or permissions)
+     *
+     * Note: Administrator has all permissions so you do not have to specify the administrator role everywhere.
+     */
 
     /*
      *
@@ -57,6 +56,8 @@ Route::group(['namespace' => '\Modules\TimeSheet\Http\Controllers\Backend', 'as'
     $module_name = 'timesheets';
     $controller_name = 'TimeSheetsController';
     Route::get("$module_name/index_list", ['as' => "$module_name.index_list", 'uses' => "$controller_name@index_list"]);
+    Route::post("$module_name/checkin", ['as' => "$module_name.checkin", 'uses' => "$controller_name@checkin"]);
+    Route::post("$module_name/checkout", ['as' => "$module_name.checkout", 'uses' => "$controller_name@checkout"]);
     Route::get("$module_name/index_data", ['as' => "$module_name.index_data", 'uses' => "$controller_name@index_data"]);
     Route::get("$module_name/trashed", ['as' => "$module_name.trashed", 'uses' => "$controller_name@trashed"]);
     Route::patch("$module_name/trashed/{id}", ['as' => "$module_name.restore", 'uses' => "$controller_name@restore"]);

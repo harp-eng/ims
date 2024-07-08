@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id'); // Primary key
 
             $table->text('description')->nullable();
-            $table->enum('status', ['Pending','Processing','Shipped','Delivered','Cancelled'])->default('Pending');
+            $table->enum('status', ['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled'])->default('Pending');
 
             $table->unsignedInteger('CustomerID'); // Foreign key
             $table->date('OrderDate')->nullable();
@@ -43,12 +43,18 @@ return new class extends Migration
             $table->decimal('UnitPrice', 10, 2);
             $table->decimal('TotalPrice', 10, 2);
             $table->text('Notes')->nullable();
+            $table->enum('status', ['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled'])->default('Pending');
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
             $table->integer('deleted_by')->unsigned()->nullable();
 
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::table('order_details', function (Blueprint $table) {
+            $table->unsignedBigInteger('id', true)->change(); // Ensuring the ID is an unsignedBigInteger
+            $table->enum('status', ['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled'])->default('Pending');
         });
 
         Schema::create('addresses', function (Blueprint $table) {

@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
+use Modules\TimeSheet\Models\TimeSheet;
 
 class TimeSheetsController extends BackendBaseController
 {
@@ -29,12 +31,36 @@ class TimeSheetsController extends BackendBaseController
         $this->module_icon = 'fa-regular fa-sun';
 
         // module model name, path
-        $this->module_model = "Modules\TimeSheet\Models\TimeSheet";
+        $this->module_model = 'Modules\TimeSheet\Models\TimeSheet';
     }
-   
 
+    public function checkIn(Request $request)
+    {
+        $user = Auth::user();
+        $timeSheet = new TimeSheet();
+        $timeSheet->employee_id = $user->id;
+        $timeSheet->sign_in_time = now();
+        $timeSheet->date = now()->toDateString();
+        $timeSheet->save();
 
-public function index_data()
+        return redirect()->back()->with('success', 'Checked in successfully.');
+    }
+
+    public function checkOut(Request $request)
+    {
+        $user = Auth::user();
+        $timeSheet = TimeSheet::where('employee_id', $user->id)
+            ->whereDate('date', now()->toDateString())
+            ->first();
+
+        if ($timeSheet) {
+            $timeSheet->sign_out_time = now();
+            $timeSheet->save();
+        }
+
+        return redirect()->back()->with('success', 'Checked out successfully.');
+    }
+    public function index_data()
     {
         $module_title = $this->module_title;
         $module_name = $this->module_name;
@@ -51,6 +77,10 @@ public function index_data()
         if (request()->query('id')) {
             $$module_name = $$module_name->where('employee_id', request()->query('id'));
         }
+        if (Auth::user()->hasRole('employee')) {
+            $$module_name = $$module_name->where('employee_id', Auth::user()->id);
+        }
+        
 
         $data = $$module_name;
 

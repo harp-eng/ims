@@ -14,6 +14,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
 use Modules\Order\Models\Address;
+use Modules\TimeSheet\Models\TimeSheet;
 
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
@@ -116,5 +117,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->hasOne(Address::class, 'EntityID', 'id')
                     ->where('EntityType', 'Customer')
                     ->where('AddressType', 'Billing');
+    }
+
+    public function todayTimeSheet()
+    {
+        return $this->hasOne(TimeSheet::class, 'employee_id', 'id')
+            ->whereDate('date', now());
     }
 }

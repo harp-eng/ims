@@ -1,0 +1,13 @@
+{
+    "name": "OrderSheet",
+    "alias": "ordersheet",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\OrderSheet\\Providers\\OrderSheetServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

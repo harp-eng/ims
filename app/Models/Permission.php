@@ -11,6 +11,8 @@ class Permission extends \Spatie\Permission\Models\Permission
     {
         return [
             'view_backend',
+            'view_dashboard',
+            'employee_dashboard',
             'edit_settings',
             'view_logs',
 

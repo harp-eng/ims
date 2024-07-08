@@ -109,14 +109,14 @@ class OrdersController extends BackendBaseController
     public function fetchCustomerAddresses($customerId)
     {
         // Fetch shipping and billing addresses for the customer
-        $addresses = Address::where('EntityID', $customerId)->where('EntityType','Customer')->get();
-    
+        $addresses = Address::where('EntityID', $customerId)->where('EntityType', 'Customer')->get();
+
         // Prepare addresses for JSON response
         $formattedAddresses = $addresses->map(function ($address) {
             return [
                 'id' => $address->id,
                 'address_line1' => $address->AddressLine1,
-                'address_line2' => $address->AddressLine2??'-',
+                'address_line2' => $address->AddressLine2 ?? '-',
                 'city' => $address->City,
                 'state' => $address->State,
                 'zip_code' => $address->ZipCode,
@@ -127,8 +127,7 @@ class OrdersController extends BackendBaseController
         ]);
     }
 
-
-     /**
+    /**
      * Store a new resource in the database.
      *
      * @param  Request  $request  The request object containing the data to be stored.
@@ -149,8 +148,8 @@ class OrdersController extends BackendBaseController
 
         $$module_name_singular = $module_model::create($request->all());
 
-           // Update related OrderDetail records
-           if ($request->filled('ProductID')) {
+        // Update related OrderDetail records
+        if ($request->filled('ProductID')) {
             // $$module_name_singular->ingredients()->delete();
             // Create/update related records
             foreach ($request->input('ProductID') as $key => $productId) {
@@ -163,15 +162,17 @@ class OrdersController extends BackendBaseController
                         'Quantity' => $request->input('Quantity')[$key],
                         'UnitPrice' => $request->input('UnitPrice')[$key],
                         'TotalPrice' => $request->input('TotalPrice')[$key],
+                        'status' => 'Pending',
                         // Add other fields here
-                    ]
+                    ],
                 );
             }
         }
+        flash("New '" . Str::singular($module_title) . "' Added")
+            ->success()
+            ->important();
 
-        flash("New '".Str::singular($module_title)."' Added")->success()->important();
-
-        logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+        logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         return redirect("admin/{$module_name}");
     }
@@ -196,12 +197,9 @@ class OrdersController extends BackendBaseController
 
         $$module_name_singular = $module_model::findOrFail($id);
 
-        logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+        logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
-        return view(
-            "{$module_path}.{$module_name}.edit",
-            compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "{$module_name_singular}")
-        );
+        return view("{$module_path}.{$module_name}.edit", compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "{$module_name_singular}"));
     }
 
     /**
@@ -245,14 +243,16 @@ class OrdersController extends BackendBaseController
                         'UnitPrice' => $request->input('UnitPrice')[$key],
                         'TotalPrice' => $request->input('TotalPrice')[$key],
                         // Add other fields here
-                    ]
+                    ],
                 );
             }
         }
 
-        flash(Str::singular($module_title)."' Updated Successfully")->success()->important();
+        flash(Str::singular($module_title) . "' Updated Successfully")
+            ->success()
+            ->important();
 
-        logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+        logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
     }
