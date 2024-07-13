@@ -157,7 +157,7 @@
                         </div>
                     </div>
                 </div>
-
+                @if($$module_name_singular->hasRole('customer'))
                 <div class="row">
                     <!-- Billing Address Fields -->
                     <div class="col-12 mb-4">
@@ -191,13 +191,13 @@
                                     echo html()->textarea('billing_address['.$field_name.']')
                                         ->placeholder($field_placeholder)
                                         ->class('form-control')
-                                        ->value($billing_address->$field_name)
+                                        ->value($billing_address->$field_name??'')
                                         ->attributes(["$required"]);
                                 } else {
                                     echo html()->text('billing_address['.$field_name.']')
                                         ->placeholder($field_placeholder)
                                         ->class('form-control')
-                                        ->value($billing_address->$field_name)
+                                        ->value($billing_address->$field_name??'')
                                         ->attributes(["$required"]);
                                 }
                                 ?>
@@ -230,13 +230,13 @@
                                     echo html()->textarea('shipping_address['.$field_name.']')
                                         ->placeholder($field_placeholder)
                                         ->class('form-control')
-                                        ->value($shipping_address->$field_name)
+                                        ->value($shipping_address->$field_name??'')
                                         ->attributes(["$required"]);
                                 } else {
                                     echo html()->text('shipping_address['.$field_name.']')
                                         ->placeholder($field_placeholder)
                                         ->class('form-control')
-                                        ->value($shipping_address->$field_name)
+                                        ->value($shipping_address->$field_name??'')
                                         ->attributes(["$required"]);
                                 }
                                 ?>
@@ -247,6 +247,7 @@
                     }
                     ?>
                 </div>
+                @endif
                 
 
                
@@ -324,6 +325,7 @@
                 </div>
 
                 @can('edit_users_permissions')
+                @if(!$$module_name_singular->hasRole('customer'))
                     <div class="form-group row mb-3">
                         {{ html()->label(__('Abilities'))->class('col-sm-2 form-label') }}
                         <div class="col">
@@ -397,6 +399,7 @@
                             </div>
                         </div>
                     </div>
+                @endif
                 @endcan
 
                 <div class="row">

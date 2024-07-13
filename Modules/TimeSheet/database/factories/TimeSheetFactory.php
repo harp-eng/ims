@@ -29,8 +29,8 @@ class TimeSheetFactory extends Factory
          $employee = User::role('employee')->inRandomOrder()->first();
 
          // Randomly select sign-in and sign-out times within a single day
-         $signInTime = Carbon::today()->addMinutes(rand(0, 720)); // Random sign-in time within the first 12 hours
-         $signOutTime = (clone $signInTime)->addHours(rand(1, 8)); // Random sign-out time, 1 to 8 hours after sign-in
+         $signInTime = Carbon::today()->addMinutes(rand(520, 540)); // Random sign-in time within the first 12 hours
+         $signOutTime = (clone $signInTime)->addHours(8)->addMinutes(rand(0, 10)); // Random sign-out time, 1 to 8 hours after sign-in
         if($employee){
          return [
              'employee_id' => $employee->id,

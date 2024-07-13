@@ -34,6 +34,15 @@ class PermissionRoleTableSeeder extends Seeder
         $manager = Role::create(['id' => '3', 'name' => 'manager']);
         $manager->givePermissionTo('view_backend');
 
+        $modulesPath = base_path('Modules');
+        $moduleDirectories = File::directories($modulesPath);
+
+        foreach ($moduleDirectories as $moduleDirectory) {
+            $moduleName = basename($moduleDirectory);
+            $moduleName = Str::lower(Str::plural($moduleName));
+            $manager->givePermissionTo($moduleName);
+        }
+
         $executive = Role::create(['id' => '4', 'name' => 'executive']);
         $executive->givePermissionTo('view_backend');
 

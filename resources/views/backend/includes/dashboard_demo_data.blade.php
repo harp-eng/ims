@@ -1,5 +1,6 @@
 <div class="row">
     @can('view_dashboard')
+    @can('admin_manager_dashboard')
         <!-- Dashboard Overview -->
         <section id="dashboard-overview">
             <div class="row text-center">
@@ -7,7 +8,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Pending Orders</h5>
-                            <p class="card-text" id="total-sales">$10,000</p>
+                            <p class="card-text" id="total-sales">234</p>
                         </div>
                     </div>
                 </div>
@@ -15,7 +16,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Pending Order items</h5>
-                            <p class="card-text" id="new-orders">50</p>
+                            <p class="card-text" id="new-orders">387</p>
                         </div>
                     </div>
                 </div>
@@ -23,7 +24,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Order items Filled</h5>
-                            <p class="card-text" id="revenue">$15,000</p>
+                            <p class="card-text" id="revenue">250</p>
                         </div>
                     </div>
                 </div>
@@ -31,7 +32,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Order items Lablled</h5>
-                            <p class="card-text" id="profit-margins">20%</p>
+                            <p class="card-text" id="profit-margins">100</p>
                         </div>
                     </div>
                 </div>
@@ -39,7 +40,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Order items Packed</h5>
-                            <p class="card-text" id="profit-margins">20%</p>
+                            <p class="card-text" id="profit-margins">50</p>
                         </div>
                     </div>
                 </div>
@@ -47,7 +48,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Order Ready to Ship</h5>
-                            <p class="card-text" id="profit-margins">20%</p>
+                            <p class="card-text" id="profit-margins">37</p>
                         </div>
                     </div>
                 </div>
@@ -55,7 +56,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Ingredient About to Expire</h5>
-                            <p class="card-text" id="profit-margins">20%</p>
+                            <p class="card-text" id="profit-margins">14</p>
                         </div>
                     </div>
                 </div>
@@ -63,7 +64,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Material About to Expire</h5>
-                            <p class="card-text" id="profit-margins">20%</p>
+                            <p class="card-text" id="profit-margins">5</p>
                         </div>
                     </div>
                 </div>
@@ -87,6 +88,7 @@
             </div>
 
         </section>
+    @endcan
     @endcan
     @can('employee_dashboard')
         @if (auth()->user()->hasRole('employee'))
@@ -237,10 +239,10 @@
         // Function to fetch and update dummy data
         function fetchData() {
             // Dummy data for dashboard overview
-            $('#total-sales').text('$10,000');
-            $('#new-orders').text('50');
-            $('#revenue').text('$15,000');
-            $('#profit-margins').text('20%');
+            // $('#total-sales').text('$10,000');
+            // $('#new-orders').text('50');
+            // $('#revenue').text('$15,000');
+            // $('#profit-margins').text('20%');
 
             // Dummy data for notifications
             $('#order-alerts').append('<li class="list-group-item">New order received</li>');
