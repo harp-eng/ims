@@ -28,7 +28,7 @@ class RawMaterialPurchaseDatabaseSeeder extends Seeder
 
         RawMaterialPurchase::factory()->count(20)->create();
         $rows = RawMaterialPurchase::all();
-        echo " Insert: rawmaterialpurchases \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

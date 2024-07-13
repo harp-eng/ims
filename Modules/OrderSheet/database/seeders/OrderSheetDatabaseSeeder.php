@@ -28,7 +28,7 @@ class OrderSheetDatabaseSeeder extends Seeder
 
         OrderSheet::factory()->count(20)->create();
         $rows = OrderSheet::all();
-        echo " Insert: ordersheets \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

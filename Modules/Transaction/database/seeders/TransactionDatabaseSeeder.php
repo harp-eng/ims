@@ -28,7 +28,7 @@ class TransactionDatabaseSeeder extends Seeder
 
         Transaction::factory()->count(20)->create();
         $rows = Transaction::all();
-        echo " Insert: transactions \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

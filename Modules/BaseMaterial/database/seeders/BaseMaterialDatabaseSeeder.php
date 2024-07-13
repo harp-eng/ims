@@ -28,7 +28,7 @@ class BaseMaterialDatabaseSeeder extends Seeder
 
         BaseMaterial::factory()->count(20)->create();
         $rows = BaseMaterial::all();
-        echo " Insert: basematerials \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

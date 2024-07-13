@@ -30,15 +30,15 @@ class OrderDatabaseSeeder extends Seeder
 
         Order::factory()->count(20)->create();
         $rows = Order::all();
-        echo " Insert: orders \n\n";
+        
 
         OrderDetail::factory()->count(20)->create();
         $rows = Order::all();
-        echo " Insert: orders \n\n";
+        
 
         Address::factory()->count(20)->create();
         $rows = Order::all();
-        echo " Insert: orders \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

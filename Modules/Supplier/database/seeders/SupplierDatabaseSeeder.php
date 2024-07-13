@@ -29,7 +29,7 @@ class SupplierDatabaseSeeder extends Seeder
 
         Supplier::factory()->count(20)->create();
         $rows = Supplier::all();
-        echo " Insert: suppliers \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

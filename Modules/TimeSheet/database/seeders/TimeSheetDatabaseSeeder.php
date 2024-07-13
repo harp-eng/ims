@@ -28,7 +28,7 @@ class TimeSheetDatabaseSeeder extends Seeder
 
         TimeSheet::factory()->count(20)->create();
         $rows = TimeSheet::all();
-        echo " Insert: timesheets \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

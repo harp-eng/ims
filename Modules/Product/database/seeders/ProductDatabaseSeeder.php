@@ -28,7 +28,7 @@ class ProductDatabaseSeeder extends Seeder
 
         Product::factory()->count(20)->create();
         $rows = Product::all();
-        echo " Insert: products \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

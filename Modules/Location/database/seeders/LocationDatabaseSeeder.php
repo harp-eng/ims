@@ -28,7 +28,7 @@ class LocationDatabaseSeeder extends Seeder
 
         Location::factory()->count(20)->create();
         $rows = Location::all();
-        echo " Insert: locations \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

@@ -24,6 +24,7 @@ require __DIR__ . '/auth.php';
  */
 
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('index');
+Route::get('home', [AuthenticatedSessionController::class, 'create'])->name('home');
 
 // Language Switch
 Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');

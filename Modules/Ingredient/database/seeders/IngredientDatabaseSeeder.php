@@ -31,11 +31,11 @@ class IngredientDatabaseSeeder extends Seeder
 
         Ingredient::factory()->count(10)->create();
         $rows = Ingredient::all();
-        echo " Insert: ingredients \n\n";
+        
 
         BaseMaterialIngredient::factory()->count(10)->create();
         $rows = BaseMaterialIngredient::all();
-        echo " Insert: ingredients \n\n";
+        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

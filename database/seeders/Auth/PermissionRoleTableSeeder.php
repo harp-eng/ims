@@ -40,7 +40,12 @@ class PermissionRoleTableSeeder extends Seeder
         foreach ($moduleDirectories as $moduleDirectory) {
             $moduleName = basename($moduleDirectory);
             $moduleName = Str::lower(Str::plural($moduleName));
-            $manager->givePermissionTo($moduleName);
+
+            $manager->givePermissionTo('add_'.$moduleName);
+            $manager->givePermissionTo('edit_'.$moduleName);
+            $manager->givePermissionTo('view_'.$moduleName);
+            $manager->givePermissionTo('delete_'.$moduleName);
+            $manager->givePermissionTo('restore_'.$moduleName);
         }
 
         $executive = Role::create(['id' => '4', 'name' => 'executive']);
@@ -81,22 +86,22 @@ class PermissionRoleTableSeeder extends Seeder
         Artisan::call('auth:permissions', [
             'name' => 'posts',
         ]);
-        echo "\n _Posts_ Permissions Created.";
+        
 
         Artisan::call('auth:permissions', [
             'name' => 'categories',
         ]);
-        echo "\n _Categories_ Permissions Created.";
+        
 
         Artisan::call('auth:permissions', [
             'name' => 'tags',
         ]);
-        echo "\n _Tags_ Permissions Created.";
+        
 
         Artisan::call('auth:permissions', [
             'name' => 'comments',
         ]);
-        echo "\n _Comments_ Permissions Created.";
+        
 
         $modulesPath = base_path('Modules');
         $moduleDirectories = File::directories($modulesPath);
@@ -108,9 +113,9 @@ class PermissionRoleTableSeeder extends Seeder
             Artisan::call('auth:permissions', [
                 'name' => $moduleName,
             ]);
-            echo "\n _".$moduleName."_ Permissions Created.";
+            
         }
         
-        echo "\n\n";
+        
     }
 }
