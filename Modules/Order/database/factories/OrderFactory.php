@@ -28,7 +28,7 @@ class OrderFactory extends Factory
     {
         return [
             'description' => $this->faker->paragraph,
-            'status' => $this->faker->randomElement(['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED']),
+            'status' => $this->faker->randomElement(['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled']),
             'CustomerID' => User::factory(), // Assuming you have at least 100 customers
             'OrderDate' => $this->faker->date,
             'ShipDate' => $this->faker->optional()->date,

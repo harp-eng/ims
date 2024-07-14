@@ -25,12 +25,13 @@ class TransactionFactory extends Factory
     public function definition()
     {
         return [
-            'name'              => substr($this->faker->text(15), 0, -1),
-            'slug'              => '',
-            'description'       => $this->faker->paragraph,
-            'status'            => 1,
-            'created_at'        => Carbon::now(),
-            'updated_at'        => Carbon::now(),
+            'description' => $this->faker->paragraph,
+            'status' => $this->faker->boolean ? 1 : 0,
+            'EntityType' => $this->faker->randomElement(['Customer', 'Supplier', 'Employee', 'Other']),
+            'EntityID' => $this->faker->numberBetween(1, 1000), // Assuming EntityID is within this range
+            'TransactionDate' => $this->faker->dateTime,
+            'UserID' => $this->faker->numberBetween(1, 100), // Assuming UserID is within this range
+            'Notes' => $this->faker->text,
         ];
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Unit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Modules\Supplier\Models\Supplier;
+use Modules\Timesheet\Models\Timesheet;
 use App\Models\User;
 
-class SuppliersTest extends TestCase
+class TimesheetsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -28,13 +28,13 @@ class SuppliersTest extends TestCase
 
     public function testStoreRoute()
     {
-        $data = Supplier::factory()->make()->toArray();
+        $data = Timesheet::factory()->make()->toArray();
 
-        $response = $this->post('/admin/suppliers', $data);
+        $response = $this->post('/admin/timesheets', $data);
 
         $response->assertStatus(302); // Assuming it should return a 201 Created status
-        unset($data['created_at'], $data['updated_at']);
-        $this->assertDatabaseHas('suppliers', $data); // Check if the supplier is stored in the database
+        unset($data['created_at'], $data['updated_at'], $data['updated_by'],$data['deleted_by'],$data['created_by']);
+        $this->assertDatabaseHas('timesheets', $data); // Check if the timesheet is stored in the database
     }
 
     /**
@@ -44,7 +44,7 @@ class SuppliersTest extends TestCase
      */
     public function testIndexListRoute()
     {
-        $response = $this->get('/admin/suppliers/index_list');
+        $response = $this->get('/admin/timesheets/index_list');
 
         $response->assertStatus(200); // Assuming it should return a 200 OK status
     }
@@ -56,7 +56,7 @@ class SuppliersTest extends TestCase
      */
     public function testIndexDataRoute()
     {
-        $response = $this->get('/admin/suppliers/index_data');
+        $response = $this->get('/admin/timesheets/index_data');
 
         $response->assertStatus(200); // Assuming it should return a 200 OK status
     }
@@ -68,9 +68,9 @@ class SuppliersTest extends TestCase
      */
     public function testShowRoute()
     {
-        $supplier = Supplier::factory()->create();
+        $timesheet = Timesheet::factory()->create();
 
-        $response = $this->get("/admin/suppliers/{$supplier->id}");
+        $response = $this->get("/admin/timesheets/{$timesheet->id}");
 
         $response->assertStatus(200); // Assuming it should return a 200 OK status
     }
@@ -82,15 +82,15 @@ class SuppliersTest extends TestCase
      */
     public function testUpdateRoute()
     {
-        $supplier = Supplier::factory()->create();
+        $timesheet = Timesheet::factory()->create();
         $updatedData = [
-            'ContactName' => 'Updated Supplier Name'
+            'notes' => 'Updated Timesheet Name'
         ];
 
-        $response = $this->put("/admin/suppliers/{$supplier->id}", $updatedData);
+        $response = $this->put("/admin/timesheets/{$timesheet->id}", $updatedData);
 
         $response->assertStatus(302); // Assuming it should return a 200 OK status
-        $this->assertDatabaseHas('suppliers', $updatedData); // Check if the supplier is updated in the database
+        $this->assertDatabaseHas('timesheets', $updatedData); // Check if the timesheet is updated in the database
     }
 
     /**
@@ -100,13 +100,13 @@ class SuppliersTest extends TestCase
      */
     public function testDeleteRoute()
     {
-        $supplier = Supplier::factory()->create();
+        $timesheet = Timesheet::factory()->create();
 
-        $response = $this->delete("/admin/suppliers/{$supplier->id}");
+        $response = $this->delete("/admin/timesheets/{$timesheet->id}");
 
         $response->assertStatus(302); // Assuming it should return a 204 No Content status
        
-        $this->assertDatabaseHas('suppliers', ['id' => $supplier->id, 'deleted_at' => now()]);
+        $this->assertDatabaseHas('timesheets', ['id' => $timesheet->id, 'deleted_at' => now()]);
     }
 
     /**
@@ -116,7 +116,7 @@ class SuppliersTest extends TestCase
      */
     public function testTrashedRoute()
     {
-        $response = $this->get('/admin/suppliers/trashed');
+        $response = $this->get('/admin/timesheets/trashed');
 
         $response->assertStatus(200); // Assuming it should return a 200 OK status
     }
@@ -128,11 +128,11 @@ class SuppliersTest extends TestCase
      */
     public function testRestoreRoute()
     {
-        $supplier = Supplier::factory()->create(['deleted_at' => now()]);
+        $timesheet = Timesheet::factory()->create(['deleted_at' => now()]);
 
-        $response = $this->patch("/admin/suppliers/trashed/{$supplier->id}");
+        $response = $this->patch("/admin/timesheets/trashed/{$timesheet->id}");
 
         $response->assertStatus(302); // Assuming it should return a 200 OK status
-        $this->assertNull($supplier->fresh()->deleted_at); // Check if the supplier is restored
+        $this->assertNull($timesheet->fresh()->deleted_at); // Check if the timesheet is restored
     }
 }

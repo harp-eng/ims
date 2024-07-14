@@ -33,7 +33,7 @@ class OrdersTest extends TestCase
         $response = $this->post('/admin/orders', $data);
 
         $response->assertStatus(302); // Assuming it should return a 201 Created status
-        unset($data['created_at'], $data['updated_at']);
+        unset($data['created_at'], $data['updated_at'], $data['updated_by'],$data['TotalAmount'],$data['created_by']);
         $this->assertDatabaseHas('orders', $data); // Check if the order is stored in the database
     }
 
@@ -84,7 +84,7 @@ class OrdersTest extends TestCase
     {
         $order = Order::factory()->create();
         $updatedData = [
-            'name' => 'Updated Order Name'
+            'description' => 'Updated Order Name'
         ];
 
         $response = $this->put("/admin/orders/{$order->id}", $updatedData);

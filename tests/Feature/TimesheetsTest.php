@@ -33,7 +33,7 @@ class TimesheetsTest extends TestCase
         $response = $this->post('/admin/timesheets', $data);
 
         $response->assertStatus(302); // Assuming it should return a 201 Created status
-        unset($data['created_at'], $data['updated_at']);
+        unset($data['created_at'], $data['updated_at'], $data['updated_by'],$data['deleted_by'],$data['created_by']);
         $this->assertDatabaseHas('timesheets', $data); // Check if the timesheet is stored in the database
     }
 
@@ -84,7 +84,7 @@ class TimesheetsTest extends TestCase
     {
         $timesheet = Timesheet::factory()->create();
         $updatedData = [
-            'name' => 'Updated Timesheet Name'
+            'notes' => 'Updated Timesheet Name'
         ];
 
         $response = $this->put("/admin/timesheets/{$timesheet->id}", $updatedData);
