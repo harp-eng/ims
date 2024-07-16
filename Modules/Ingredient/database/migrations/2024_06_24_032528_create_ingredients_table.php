@@ -18,14 +18,14 @@ return new class extends Migration
         Schema::create('ingredients', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(1);
 
             $table->string('SKU', 50)->unique()->nullable(); // Unique identifier
 
-            $table->double('QuantityInStock');
+            $table->double('QuantityInStock')->default(0);
             $table->decimal('UnitPrice', 10, 2)->default(0);
             $table->integer('ReorderLevel')->nullable();
             $table->integer('ReorderQuantity')->nullable();

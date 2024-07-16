@@ -55,6 +55,15 @@
                                 @lang("location::text.name")
                             </th>
                             <th>
+                                Capacity (sq meter)
+                            </th>
+                            <th>
+                                Current Occupancy (sq meter)
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
                                 @lang("location::text.updated_at")
                             </th>
                             <th class="text-end">
@@ -106,6 +115,18 @@
             {
                 data: 'name',
                 name: 'name'
+            },
+            {
+                data: 'Capacity',
+                name: 'Capacity'
+            },
+            {
+                data: 'CurrentOccupancy',
+                name: 'CurrentOccupancy'
+            },
+            {
+                data: 'Type',
+                name: 'Type'
             },
             {
                 data: 'updated_at',

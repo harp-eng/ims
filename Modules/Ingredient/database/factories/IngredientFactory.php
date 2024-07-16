@@ -31,18 +31,18 @@ class IngredientFactory extends Factory
         // Create a unique SKU by concatenating a prefix with the random number
         $sku = 'SKU-' . $randomNumber;
         return [
-            'name' => $this->faker->unique()->name,
+            'name' => array_rand(trans('ingredient::text.ingredients_name')),
             'slug' => '',
             'description' => $this->faker->paragraph,
             'SKU'=>$sku,
             'status' => 1,
-            'QuantityInStock' => 0,
+            'QuantityInStock' => rand(100,1000),
             'ExpiryDate' => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d'),
             'IsPerishable' => $this->faker->randomElement(['yes', 'no']),
             'IsHazardous' => $this->faker->randomElement(['yes', 'no']),
             'UnitOfMeasure' => array_rand(trans('ingredient::text.units')),
             'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'updated_at' => $this->faker->dateTimeBetween('-10 days', 'now'),
         ];
     }
 }

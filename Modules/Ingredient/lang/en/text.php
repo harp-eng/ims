@@ -14,10 +14,10 @@ return [
     'stock'=>'Quantity In Stock',
     'expiry_date'=>'Expire On',
     'units' => [
-        'Kg' => 'Kilogram',
-        'Gm' => 'Gram',
+        'KG' => 'Kilogram',
         'L' => 'Liter',
-        'mL' => 'Milliliter'
+        'Bottles' => 'Bottles',
+        'Packs' => 'Packs',
     ],
     'ingredients_name' => [
         'Oat Milk'=>'Oat Milk',

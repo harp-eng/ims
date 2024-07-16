@@ -13,12 +13,23 @@ class OrderDetailObserver
      */
     public function created(OrderDetail $orderDetail)
     {
+        
         if ($orderDetail->status == 'Pending') {
-            OrderSheet::create([
+            $module_name_singular = OrderSheet::create([
                 'order_item_id' => $orderDetail->id,
                 'name' => 'Work Sheet '.$orderDetail->id,
                 // Add other relevant data here
             ]);
+            $changes=$module_name_singular;
+            $module_title='Order Sheet';
+            $module_action='Created';
+            activity()
+            ->performedOn($module_name_singular)
+            ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
+                $activity->withProperties(['changes' => $changes]);
+            })
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$module_name_singular->name. ' on order create.');
         }
     }
 

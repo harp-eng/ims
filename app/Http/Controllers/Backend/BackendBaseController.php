@@ -201,6 +201,11 @@ class BackendBaseController extends Controller
 
         logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
 
+        activity()
+        ->withProperties($$module_name_singular)
+        ->event($module_title . ' ' . $module_action)
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+
         return redirect("admin/{$module_name}");
     }
 
@@ -289,6 +294,11 @@ class BackendBaseController extends Controller
 
         logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
 
+        activity()
+        ->withProperties($$module_name_singular)
+        ->event($module_title . ' ' . $module_action)
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
     }
 
@@ -320,6 +330,11 @@ class BackendBaseController extends Controller
         flash(label_case($module_name_singular).' Deleted Successfully!')->success()->important();
 
         logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+
+        activity()
+        ->withProperties($$module_name_singular)
+        ->event($module_title . ' ' . $module_action)
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
 
         return redirect("admin/{$module_name}");
     }
@@ -379,6 +394,11 @@ class BackendBaseController extends Controller
         flash(label_case($module_name_singular).' Data Restoreded Successfully!')->success()->important();
 
         logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+
+        activity()
+        ->withProperties($$module_name_singular)
+        ->event($module_title . ' ' . $module_action)
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
 
         return redirect("admin/{$module_name}");
     }

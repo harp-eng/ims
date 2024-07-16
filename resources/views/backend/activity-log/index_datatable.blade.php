@@ -29,7 +29,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Causer</th>
+                                    <th>Action By</th>
                                     <th>Subject</th>
                                     <th>Description</th>
                                     <th>Date</th>

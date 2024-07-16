@@ -13,6 +13,7 @@ use Modules\Supplier\database\seeders\SupplierDatabaseSeeder;
 use Modules\RawMaterialPurchase\database\seeders\RawMaterialPurchaseDatabaseSeeder;
 use Modules\Order\database\seeders\OrderDatabaseSeeder;
 use Modules\TimeSheet\database\seeders\TimeSheetDatabaseSeeder;
+use Modules\Transaction\database\seeders\TransactionDatabaseSeeder;
 
 
 
@@ -49,6 +50,7 @@ class AuthTableSeeder extends Seeder
         $this->call(RawMaterialPurchaseDatabaseSeeder::class);
         $this->call(OrderDatabaseSeeder::class);
         $this->call(TimeSheetDatabaseSeeder::class);
+        $this->call(TransactionDatabaseSeeder::class);
         
         
         

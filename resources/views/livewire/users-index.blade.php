@@ -15,6 +15,10 @@
                                 <th>{{ __('labels.backend.users.fields.permissions') }}</th>
                                 <th>{{ __('labels.backend.users.fields.social') }}</th>
                             @endif
+                            @if(!empty($roleName))
+                            <th>Mobile</th>
+                            <th>Order Count</th>
+                            @endif
                             <th class="text-end">{{ __('labels.backend.action') }}</th>
                         </tr>
                     </thead>
@@ -29,9 +33,12 @@
                                     </strong>
                                 </td>
                                 <td>{{ $user->email }}</td>
+                                
                                 <td>
                                     {!! $user->status_label !!}
+                                    @if(empty($roleName))
                                     {!! $user->confirmed_label !!}
+                                    @endif
                                 </td>
                                 @if(empty($roleName))
                                 <td>
@@ -66,11 +73,17 @@
                                     </ul>
                                 </td>
                                 @endif
+                                @if(!empty($roleName))
+                                <td>{{ $user->mobile??'-' }}</td>
+                                <td>{{ $user->orders->count()?$user->orders->count():'-' }}</td>
+                                @endif
                                 <td class="text-end">
+                                    @if($user->hasRole('employee'))
                                     <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
                                         href="{{ route('backend.timesheets.index',['id'=>$user]) }}"
                                         title="TimeSheet"><i
                                             class="fas fa-solid fa-clock fa-fw"></i></a>
+                                    @endif
                                     <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
                                         href="{{ route('backend.users.show', $user) }}"
                                         title="{{ __('labels.backend.show') }}"><i
@@ -79,10 +92,12 @@
                                         <a class="btn btn-primary btn-sm mt-1" data-toggle="tooltip"
                                             href="{{ route('backend.users.edit', $user) }}"
                                             title="{{ __('labels.backend.edit') }}"><i class="fas fa-wrench fa-fw"></i></a>
+                                        @if(!$user->hasRole('customer'))
                                         <a class="btn btn-info btn-sm mt-1" data-toggle="tooltip"
                                             href="{{ route('backend.users.changePassword', $user) }}"
                                             title="{{ __('labels.backend.changePassword') }}"><i
                                                 class="fas fa-key fa-fw"></i></a>
+                                        
                                         @if ($user->status != 2)
                                             <a class="btn btn-danger btn-sm mt-1" data-method="PATCH"
                                                 data-token="{{ csrf_token() }}" data-toggle="tooltip"
@@ -98,6 +113,7 @@
                                                 href="{{ route('backend.users.unblock', $user) }}"
                                                 title="{{ __('labels.backend.unblock') }}"><i
                                                     class="fas fa-check fa-fw"></i></a>
+                                        @endif
                                         @endif
                                         <a class="btn btn-danger btn-sm mt-1" data-method="DELETE"
                                             data-token="{{ csrf_token() }}" data-toggle="tooltip"

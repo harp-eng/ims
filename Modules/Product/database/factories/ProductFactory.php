@@ -24,13 +24,19 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
+         // Generate a random number for SKU
+         $randomNumber = $this->faker->unique()->randomNumber(5);
+
+         // Create a unique SKU by concatenating a prefix with the random number
+         $sku = 'SKU-' . $randomNumber;
         return [
             'name'              => array_rand(trans('ingredient::text.products')),
             'slug'              => '',
             'description'       => $this->faker->paragraph,
             'status' => $this->faker->numberBetween(0, 1),
             'CategoryID' => null, // Replace with actual logic if needed
-            'SKU' => $this->faker->ean13, // Generates a random SKU
+            'SKU' => $sku, // Generates a random SKU
+            'Unit' => array_rand(array_flip(['Bottles', 'Pots'])), // Generates a random SKU
             'Barcode' => $this->faker->ean13, // Generates a random Barcode
             'QuantityInStock' => $this->faker->numberBetween(0, 1000),
             'UnitPrice' => $this->faker->randomFloat(2, 1, 1000),

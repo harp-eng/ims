@@ -173,6 +173,16 @@ class OrdersController extends BackendBaseController
             ->important();
 
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
+        
+        $changes=$$module_name_singular;
+
+        activity()
+        ->performedOn($$module_name_singular)
+        ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
+            $activity->withProperties(['changes' => $changes]);
+        })
+        ->event($module_title . ' ' . $module_action)
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' ID: '.$$module_name_singular->id);
 
         return redirect("admin/{$module_name}");
     }
@@ -253,6 +263,14 @@ class OrdersController extends BackendBaseController
             ->important();
 
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
+
+        activity()
+        ->performedOn($$module_name_singular)
+        ->when(isset($changes), function ($activity) use ($changes) {
+            $activity->withProperties(['changes' => $changes]);
+        })
+        ->event($module_title . ' ' . $module_action)
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
 
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
     }

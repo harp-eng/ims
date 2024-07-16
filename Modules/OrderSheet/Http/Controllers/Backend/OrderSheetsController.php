@@ -162,31 +162,48 @@ class OrderSheetsController extends BackendBaseController
             'column' => 'required',
         ]);
         $column = $request->column;
-        $orderDetail = $module_model::find($request->order_id);
-        $orderDetail->$column = $request->worker_id;
-        $orderDetail->save();
+        $module_name_singular = $module_model::find($request->order_id);
+        $module_name_singular->$column = $request->worker_id;
+        $module_name_singular->save();
+
+        $changes=$module_name_singular;
+
+        activity()
+        ->performedOn($module_name_singular)
+        ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
+            $activity->withProperties(['changes' => $changes]);
+        })
+        ->event("Order Sheet Assigned To Worker")
+        ->log($module_name_singular->name." asigned to ".$module_name_singular->worker->name);
 
         return response()->json(['success' => true]);
     }
 
     public function updateOrderInfo(Request $request)
     {
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_action = "Order Sheet Status Update";
         // Validate request data as needed
         $module_model = $this->module_model;
         $order = $module_model::findOrFail($request->order_id);
+
         $order->status = $request->status;
+        $message ='Status changed to '.$order->status.".";
         if ($request->base_material_id) {
             $order->base_material_id = $request->base_material_id;
             $order->quantity_used = $request->quantity_used;
+            $message.=" Base Metrial Used: ".$order->baseMaterial->name." Quantity: ".$order->quantity_used."Kg";
         }
         $order->worker_id = null;
         $order->helper_id = null;
         $order->save();
 
         activity()
-            ->withProperties($order)
-            ->event('Order ' . $request->status)
-            ->log('Order ' . $request->status);
+        ->performedOn($order)
+        ->withProperties($order)
+        ->event($module_action)
+        ->log($message);
 
         return response()->json(['success' => true]);
     }

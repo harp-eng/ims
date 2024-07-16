@@ -105,13 +105,20 @@ class ActivityLogController extends Controller
 
            
             ->editColumn('description', function ($data) {
-                return $data->description;
+                $changes='';
+                if (isset($data->properties['changes']) && empty($data->properties['changes'])) {
+                    $changes= "Changes: <br>";
+                    foreach ($data->properties['changes'] as $attribute => $change) {
+                        $changes = ucfirst($attribute) . ": " . $change['old'] . " -> " . $change['new'] . "<br>";
+                    }
+                }
+                return $data->description." ".$changes;
             })
             ->editColumn('causer_id', function ($data) {
-                return $data->causer ? $data->causer->name : 'N/A';
+                return $data->causer ? $data->causer->name : '-';
             })
             ->editColumn('subject_id', function ($data) {
-                return $data->subject ? $data->subject->name : 'N/A';
+                return class_basename($data->subject)." : ".$data->subject->name ?? class_basename($data->subject)."  ".$data->subject->id;
             })
         
             ->editColumn('created_at', function ($data) {

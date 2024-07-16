@@ -23,6 +23,7 @@ return new class extends Migration
 
             $table->unsignedInteger('CategoryID')->nullable(); // Foreign key
             $table->string('SKU', 50)->unique(); // Unique identifier
+            $table->string('Unit', 50); // Unique identifier
             $table->string('Barcode', 50)->nullable();
             $table->integer('QuantityInStock')->default(0);
             $table->decimal('UnitPrice', 10, 2);

@@ -15,6 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Laravel\Passport\HasApiTokens;
 use Modules\Order\Models\Address;
 use Modules\TimeSheet\Models\TimeSheet;
+use Modules\Order\Models\Order;
 
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
@@ -93,6 +94,16 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function providers()
     {
         return $this->hasMany('App\Models\UserProvider');
+    }
+
+    /**
+     * Retrieve the providers associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'CustomerID', 'id');
     }
 
     /**

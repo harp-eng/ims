@@ -55,6 +55,18 @@
                                 @lang("product::text.name")
                             </th>
                             <th>
+                                SKU
+                            </th>
+                            <th>
+                                Quantity In Stock
+                            </th>
+                            <th>
+                                Unit Price($)
+                            </th>
+                            <th>
+                                Expiry Date
+                            </th>
+                            <th>
                                 @lang("product::text.updated_at")
                             </th>
                             <th class="text-end">
@@ -106,6 +118,18 @@
             {
                 data: 'name',
                 name: 'name'
+            },{
+                data: 'SKU',
+                name: 'SKU'
+            },{
+                data: 'QuantityInStock',
+                name: 'QuantityInStock'
+            },{
+                data: 'UnitPrice',
+                name: 'UnitPrice'
+            },{
+                data: 'ExpiryDate',
+                name: 'ExpiryDate'
             },
             {
                 data: 'updated_at',

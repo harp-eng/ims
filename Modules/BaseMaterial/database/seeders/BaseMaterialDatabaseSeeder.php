@@ -26,7 +26,7 @@ class BaseMaterialDatabaseSeeder extends Seeder
         // DB::table('basematerials')->truncate();
         // echo "Truncate: basematerials \n";
 
-        BaseMaterial::factory()->count(20)->create();
+        BaseMaterial::factory()->count(10)->create();
         $rows = BaseMaterial::all();
         
 

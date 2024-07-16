@@ -449,43 +449,46 @@ class UserController extends Controller
         $$module_name_singular->update(Arr::except($validated_data, ['roles', 'permissions']));
 
         //=================
-        // Ensure shipping address relationship exists
-        if (!$$module_name_singular->shippingAddress) {
-            $$module_name_singular->shippingAddress()->create([
-                'EntityType' => 'Customer',
-                'EntityID' => $$module_name_singular->id,
-                'AddressType' => 'Shipping',
-            ]);
+        if (!empty($request->shipping_address)) {
+            // Ensure shipping address relationship exists
+            if (!$$module_name_singular->shippingAddress) {
+                $$module_name_singular->shippingAddress()->create([
+                    'EntityType' => 'Customer',
+                    'EntityID' => $$module_name_singular->id,
+                    'AddressType' => 'Shipping',
+                ]);
+            }
+
+            // Update or create shipping address
+            $$module_name_singular->shippingAddress()->updateOrCreate(
+                [
+                    'EntityType' => 'Customer',
+                    'EntityID' => $$module_name_singular->id,
+                    'AddressType' => 'Shipping',
+                ],
+                $request->shipping_address,
+            );
         }
+        if (!empty($request->billing_address)) {
+            // Ensure billing address relationship exists
+            if (!$$module_name_singular->billingAddress) {
+                $$module_name_singular->billingAddress()->create([
+                    'EntityType' => 'Customer',
+                    'EntityID' => $$module_name_singular->id,
+                    'AddressType' => 'Billing',
+                ]);
+            }
 
-        // Update or create shipping address
-        $$module_name_singular->shippingAddress()->updateOrCreate(
-            [
-                'EntityType' => 'Customer',
-                'EntityID' => $$module_name_singular->id,
-                'AddressType' => 'Shipping',
-            ],
-            $request->shipping_address,
-        );
-
-        // Ensure billing address relationship exists
-        if (!$$module_name_singular->billingAddress) {
-            $$module_name_singular->billingAddress()->create([
-                'EntityType' => 'Customer',
-                'EntityID' => $$module_name_singular->id,
-                'AddressType' => 'Billing',
-            ]);
+            // Update or create billing address
+            $$module_name_singular->billingAddress()->updateOrCreate(
+                [
+                    'EntityType' => 'Customer',
+                    'EntityID' => $$module_name_singular->id,
+                    'AddressType' => 'Billing',
+                ],
+                $request->billing_address,
+            );
         }
-
-        // Update or create billing address
-        $$module_name_singular->billingAddress()->updateOrCreate(
-            [
-                'EntityType' => 'Customer',
-                'EntityID' => $$module_name_singular->id,
-                'AddressType' => 'Billing',
-            ],
-            $request->billing_address,
-        );
         //=================
         if ($id === 1) {
             $user->syncRoles(['super admin']);
@@ -504,10 +507,14 @@ class UserController extends Controller
         Artisan::call('cache:clear');
 
         // Sync Roles
-        $$module_name_singular->syncRoles(isset($validated_data['roles']) ? $validated_data['roles'] : []);
+        if (isset($validated_data['roles'])) {
+            $$module_name_singular->syncRoles(isset($validated_data['roles']) ? $validated_data['roles'] : []);
+        }
 
         // Sync Permissions
-        $$module_name_singular->syncPermissions(isset($validated_data['permissions']) ? $validated_data['permissions'] : []);
+        if (isset($validated_data['permissions'])) {
+            $$module_name_singular->syncPermissions(isset($validated_data['permissions']) ? $validated_data['permissions'] : []);
+        }
 
         // Clear Cache
         Artisan::call('cache:clear');

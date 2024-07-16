@@ -17,14 +17,16 @@ return new class extends Migration
             $table->increments('id'); // Primary key
 
             $table->text('description')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->string('transaction_status', 20)->nullable();
 
             
-            $table->string('EntityType', 50); // Type of entity (Customer, Supplier, etc.)
-            $table->unsignedInteger('EntityID'); // Foreign key to entity's table
-            $table->timestamp('TransactionDate'); // Date and time of transaction
-            $table->unsignedInteger('UserID'); // Foreign key to users table
-            $table->text('Notes')->nullable(); // Additional notes or comments
+            $table->foreignId('user_id')->constrained('users');
+            $table->string('payment_method', 50)->nullable();
+            $table->dateTime('transaction_date')->nullable();
+            $table->decimal('amount', 10, 2)->nullable();
+            $table->string('currency', 10)->nullable();
+            $table->json('transaction_data')->nullable();
+            $table->string('reference_number', 100)->unique();
             
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
