@@ -1,97 +1,105 @@
 <div class="row">
     @can('view_dashboard')
-    @can('admin_manager_dashboard')
-        <!-- Dashboard Overview -->
-        <section id="dashboard-overview">
-            <div class="row text-center">
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Pending Orders</h5>
-                            <p class="card-text" id="total-sales">234</p>
+        @can('admin_manager_dashboard')
+            <!-- Dashboard Overview -->
+            <section id="dashboard-overview">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Pending Orders</h5>
+                                <p class="card-text" id="total-sales">234</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Pending Order items</h5>
+                                <p class="card-text" id="new-orders">387</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Order items Filled</h5>
+                                <p class="card-text" id="revenue">250</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Order items Lablled</h5>
+                                <p class="card-text" id="profit-margins">100</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Order items Packed</h5>
+                                <p class="card-text" id="profit-margins">50</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Order Ready to Ship</h5>
+                                <p class="card-text" id="profit-margins">37</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Ingredient About to Expire</h5>
+                                <p class="card-text" id="profit-margins">14</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Material About to Expire</h5>
+                                <p class="card-text" id="profit-margins">5</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Pending Order items</h5>
-                            <p class="card-text" id="new-orders">387</p>
-                        </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="raw_material_wasted"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="base_material_wasted"></canvas>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Order items Filled</h5>
-                            <p class="card-text" id="revenue">250</p>
-                        </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="product-performance-chart"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="order-volume-chart"></canvas>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Order items Lablled</h5>
-                            <p class="card-text" id="profit-margins">100</p>
-                        </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="ingredient-stock-levels-chart"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <canvas id="base-materials-inventory-chart"></canvas>
                     </div>
                 </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Order items Packed</h5>
-                            <p class="card-text" id="profit-margins">50</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Order Ready to Ship</h5>
-                            <p class="card-text" id="profit-margins">37</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Ingredient About to Expire</h5>
-                            <p class="card-text" id="profit-margins">14</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Material About to Expire</h5>
-                            <p class="card-text" id="profit-margins">5</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          
-            <div class="row">
-                <div class="col-md-6">
-                    <canvas id="ingredient-stock-levels-chart"></canvas>
-                </div>
-                <div class="col-md-6">
-                    <canvas id="base-materials-inventory-chart"></canvas>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <canvas id="product-performance-chart"></canvas>
-                </div>
-                <div class="col-md-6">
-                    <canvas id="order-volume-chart"></canvas>
-                </div>
-            </div>
 
-        </section>
-    @endcan
+
+            </section>
+        @endcan
     @endcan
     @can('employee_dashboard')
-        @if (auth()->user()->hasRole('employee'))
+        @if (auth()->user()->hasRole('worker') || auth()->user()->hasRole('compounder'))
             @if (session('success'))
                 <div class="alert alert-success mt-3">
                     {{ session('success') }}
@@ -565,6 +573,73 @@
                     }
                 }
             });
+
+            // Order volume chart
+            var ctxOrderVolume = document.getElementById('base_material_wasted').getContext('2d');
+            var orderVolumeChart = new Chart(ctxOrderVolume, {
+                type: 'bar',
+                data: {
+                    labels: @json($wasted_base_material['months']),
+                    datasets: [{
+                        label: 'Expired Base Material (KG)',
+                        data: @json(array_values($wasted_base_material['quantities'])),
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            var ctxIngredientExpired = document.getElementById('raw_material_wasted').getContext('2d');
+            var ingredientExpiredChart = new Chart(ctxIngredientExpired, {
+                type: 'bar',
+                data: {
+                    labels: @json($wasted_raw_material['months']),
+                    datasets: [{
+                            label: 'Expired Ingredients (KG)',
+                            data: @json(array_values($wasted_raw_material['kg_data'])),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)', // Red
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Expired Ingredients (Liter)',
+                            data: @json(array_values($wasted_raw_material['liter_data'])),
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)', // Blue
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Expired Ingredients (Bottles)',
+                            data: @json(array_values($wasted_raw_material['bt_data'])),
+                            backgroundColor: 'rgba(255, 206, 86, 0.2)', // Yellow
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Expired Ingredients (Packs)',
+                            data: @json(array_values($wasted_raw_material['pk_data'])),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)', // Green
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
 
 
             // Dummy data for order trends

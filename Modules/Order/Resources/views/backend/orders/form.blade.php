@@ -12,7 +12,7 @@
                 $select_options = $customers->pluck('name', 'id')->prepend('-- Select Customer --', '');
 
             @endphp
-            {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
+            {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}   <x-buttons.create route='{{ route("backend.users.create",["role"=>"customer"]) }}' title="{{__('Create')}} {{ ucwords(Str::singular('Address')) }}" />
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
         </div>
     </div>

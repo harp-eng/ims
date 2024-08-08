@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Presenters\UserPresenter;
 use App\Models\Traits\HasHashedMediaTrait;
+use App\Models\TaskEfficiency;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -130,9 +131,47 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
                     ->where('AddressType', 'Billing');
     }
 
+    public function taskEfficiencies()
+    {
+        return $this->hasMany(TaskEfficiency::class);
+    }
+
+    // Define the relationship to billingAddress
+    public function addresses()
+    {
+        return $this->hasMany(Address::class, 'EntityID', 'id')
+                    ->where('EntityType', 'Customer');
+    }
+
     public function todayTimeSheet()
     {
         return $this->hasOne(TimeSheet::class, 'employee_id', 'id')
             ->whereDate('date', now());
+    }
+
+    // Other model properties and methods
+
+    /**
+     * Get the records created by the user.
+     */
+    public function createdRecords()
+    {
+        return $this->hasMany(BaseModel::class, 'created_by');
+    }
+
+    /**
+     * Get the records last updated by the user.
+     */
+    public function updatedRecords()
+    {
+        return $this->hasMany(BaseModel::class, 'updated_by');
+    }
+
+    /**
+     * Get the records deleted by the user.
+     */
+    public function deletedRecords()
+    {
+        return $this->hasMany(BaseModel::class, 'deleted_by');
     }
 }

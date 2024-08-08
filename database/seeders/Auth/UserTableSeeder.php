@@ -46,8 +46,8 @@ class UserTableSeeder extends Seeder
             [
                 'id' => 3,
                 'username' => '100003',
-                'name' => 'Manager User',
-                'email' => 'manager@manager.com',
+                'name' => 'Manager User 1',
+                'email' => 'manager-1@manager.com',
                 'password' => Hash::make('secret'),
                 'email_verified_at' => Carbon::now(),
                 'created_at' => Carbon::now(),
@@ -72,43 +72,77 @@ class UserTableSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-            ],
-            [
-                'id' => 6,
-                'username' => '100006',
-                'name' => 'customer',
-                'email' => 'customer@customer.com',
-                'password' => Hash::make('secret'),
-                'email_verified_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'id' => 7,
-                'username' => '100007',
-                'name' => 'supplier',
-                'email' => 'supplier@supplier.com',
-                'password' => Hash::make('secret'),
-                'email_verified_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
-            [
-                'id' => 8,
-                'username' => '100008',
-                'name' => 'employee',
-                'email' => 'employee@employee.com',
-                'password' => Hash::make('secret'),
-                'email_verified_at' => Carbon::now(),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ],
+            ]
         ];
 
         foreach ($users as $user_data) {
             $user = User::create($user_data);
 
             event(new UserCreated($user));
+        }
+        $i=1;
+        foreach (range(6,10) as $key) {
+            $user_data=[
+                'id' => $key,
+                'username' => '10000'.$key,
+                'name' => 'customer-'.$i,
+                'email' => 'customer-'.$key.'@customer.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+            $user = User::create($user_data);
+            event(new UserCreated($user));
+            $i++;
+        }
+        $i=1;
+        foreach (range(11,15) as $key) {
+            $user_data=[
+                'id' => $key,
+                'username' => '10000'.$key,
+                'name' => 'Worker-'.$i,
+                'email' => 'worker-'.$i.'@worker.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+            $user = User::create($user_data);
+            event(new UserCreated($user));
+            $i++;
+        }
+        $i=1;
+        foreach (range(16,20) as $key) {
+            $user_data=[
+                'id' => $key,
+                'username' => '10000'.$key,
+                'name' => 'compounder-'.$i,
+                'email' => 'compounder-'.$i.'@compounder.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+            $user = User::create($user_data);
+            event(new UserCreated($user));
+            $i++;
+        }
+        $i=2;
+        foreach (range(21,24) as $key) {
+            $user_data=[
+                'id' => $key,
+                'username' => '10000'.$key,
+                'name' => 'manager-'.$i,
+                'email' => 'manager-'.$i.'@manager.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+            $user = User::create($user_data);
+            event(new UserCreated($user));
+            $i++;
         }
     }
 }

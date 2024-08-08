@@ -7,7 +7,9 @@
             $field_label = label_case($field_name);
             $field_placeholder = "-- Select Employee --";
             $required = "required";
-            $employees = \App\Models\User::role('employee')->pluck('name', 'id');
+            $employees = \App\Models\User::whereHas('roles', function($query) {
+                $query->whereIn('name', ['worker', 'compounder']);
+            })->pluck('name', 'id');
             $select_options = $employees->prepend('-- Select Employee --', '');
             ?>
             {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}

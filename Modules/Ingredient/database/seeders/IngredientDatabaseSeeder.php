@@ -33,9 +33,6 @@ class IngredientDatabaseSeeder extends Seeder
         $rows = Ingredient::all();
         
 
-        BaseMaterialIngredient::factory()->count(10)->create();
-        $rows = BaseMaterialIngredient::all();
-        
 
         // Enable foreign key checks!
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

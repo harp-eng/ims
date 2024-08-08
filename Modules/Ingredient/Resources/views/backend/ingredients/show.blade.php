@@ -13,101 +13,41 @@
 
 @section('content')
 <x-backend.layouts.show :data="$$module_name_singular" :module_name="$module_name" :module_path="$module_path" :module_title="$module_title" :module_icon="$module_icon" :module_action="$module_action" :column_show="$column_show"/>
-@php
-$module_name='rawmaterialpurchases';
-@endphp
+
 <div class="card">
-    <div class="card-body">
+<div class="card-body">
+    <div class="container">
+    <h4>Use History</h4>
 
-        <x-backend.section-header>
-            <i class="{{ $module_icon }}"></i> {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
-
-            <x-slot name="subtitle">
-                @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)])
-            </x-slot>
-            <x-slot name="toolbar">
-                @can('add_'.$module_name)
-                <x-buttons.create route='{{ route("backend.$module_name.create") }}' title="{{__('Create')}} {{ ucwords(Str::singular($module_name)) }}" />
-                @endcan
-
-                @can('restore_'.$module_name)
-                <div class="btn-group">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href='{{ route("backend.$module_name.trashed") }}'>
-                                <i class="fas fa-eye-slash"></i> @lang("View trash")
-                            </a>
-                        </li>
-                        <!-- <li>
-                            <hr class="dropdown-divider">
-                        </li> -->
-                    </ul>
-                </div>
-                @endcan
-            </x-slot>
-        </x-backend.section-header>
-
-        <div class="row mt-4">
-            <div class="col">
-                <table id="datatable" class="table table-bordered table-hover table-responsive-sm">
-                    <thead>
-                        <tr>
-                            <th>
-                                #
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.Supplier")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.Location")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.PurchaseDate")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.QuantityPurchased")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.QuantityUsed")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.TotalPrice")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.DeliveryDate")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.ExpiryDate")
-                            </th>
-                            <th>
-                                @lang("rawmaterialpurchase::text.updated_at")
-                            </th>
-                            <th class="text-end">
-                                @lang("rawmaterialpurchase::text.action")
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="card-footer">
-        <div class="row">
-            <div class="col-7">
-                <div class="float-left">
-
-                </div>
-            </div>
-            <div class="col-5">
-                <div class="float-end">
-
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- DataTable -->
+    <table id="useHistoryTable" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Base Material</th>
+                <th>Quantity Used</th>
+                <th>Left Quantity</th>
+                <th>Created At</th>
+                <th>Created By</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if($$module_name_singular->useHistory)
+            @foreach($$module_name_singular->useHistory as $item)
+                <tr>
+                    <td>{{ $item->id }}</td>
+                    <td>{{ $item->baseMaterial?->name }}</td>
+                    <td>{{ number_format($item->QuantityUsed, 2).' '.$$module_name_singular->UnitOfMeasure }}</td>
+                    <td>{{ number_format($item->LeftQuantity, 2).' '.$$module_name_singular->UnitOfMeasure }}</td>
+                    <td>{{ $item->created_at }}</td>
+                    <td>{{ $item->creator?->name }}</td>
+                </tr>
+            @endforeach
+            @endif
+        </tbody>
+    </table>
+</div>
+</div>
 </div>
 @endsection
 
@@ -121,55 +61,10 @@ $module_name='rawmaterialpurchases';
 <script type="module" src="{{ asset('vendor/datatable/datatables.min.js') }}"></script>
 
 <script type="module">
-    $('#datatable').DataTable({
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        ajax: '{{ route("backend.".$module_name.".index_data",["id"=>$$module_name_singular->id]) }}',
-        columns: [{
-                data: 'id',
-                name: 'id'
-            },
-            {
-                data: 'SupplierID',
-                name: 'SupplierID'
-            },
-            {
-                data: 'LocationID',
-                name: 'LocationID'
-            },
-            {
-                data: 'PurchaseDate',
-                name: 'PurchaseDate'
-            },
-            {
-                data: 'QuantityPurchased',
-                name: 'QuantityPurchased'
-            },
-            {
-                data: 'QuantityUsed',
-                name: 'QuantityUsed'
-            },{
-                data: 'TotalPrice',
-                name: 'TotalPrice'
-            },{
-                data: 'DeliveryDate',
-                name: 'DeliveryDate'
-            },{
-                data: 'ExpiryDate',
-                name: 'ExpiryDate'
-            },
-            {
-                data: 'updated_at',
-                name: 'updated_at'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            }
-        ]
+    $(document).ready(function() {
+        $('#useHistoryTable').DataTable({
+            "order": [[0, 'desc']] // Assumes 'id' is in the first column (index 0)
+        });
     });
 </script>
 @endpush

@@ -36,16 +36,14 @@ class AuthTableSeeder extends Seeder
         $this->call(PermissionRoleTableSeeder::class);
         
         $this->call(UserRoleTableSeeder::class);
-        
-        $this->call(IngredientDatabaseSeeder::class);
-        
-        $this->call(BaseMaterialDatabaseSeeder::class);
-        
+
+        $this->call(SupplierDatabaseSeeder::class);
         $this->call(LocationDatabaseSeeder::class);
         
-        $this->call(ProductDatabaseSeeder::class);
+        $this->call(IngredientDatabaseSeeder::class);
+        $this->call(BaseMaterialDatabaseSeeder::class);
         
-        $this->call(SupplierDatabaseSeeder::class);
+        $this->call(ProductDatabaseSeeder::class);
         
         $this->call(RawMaterialPurchaseDatabaseSeeder::class);
         $this->call(OrderDatabaseSeeder::class);

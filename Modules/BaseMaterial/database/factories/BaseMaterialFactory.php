@@ -31,10 +31,16 @@ class BaseMaterialFactory extends Factory
         // Create a unique SKU by concatenating a prefix with the random number
         $sku = 'SKU-' . $randomNumber;
 
+        $LocationIDs = Location::pluck('id')->toArray();
+
+        $compunderIds = \App\Models\User::whereHas('roles', function($query) {
+            $query->where('name', 'compounder');
+        })->pluck('id')->toArray();
+
         return [
             'name' => array_rand(trans('ingredient::text.products')),
             'description' => $this->faker->paragraph,
-            'status' => $this->faker->randomElement([0, 1]), // Assuming 0 for unpublished, 1 for published
+            'status' => array_rand(trans('ingredient::text.status_array')),
             'SKU' => $sku, // Unique EAN-13 barcode
             'Barcode' => $this->faker->ean13,
             'QuantityProduced' => $this->faker->randomFloat(2, 0, 1000),
@@ -45,8 +51,8 @@ class BaseMaterialFactory extends Factory
             'IsHazardous' => $this->faker->randomElement(['yes', 'no']),
             'UnitOfMeasure' => 'KG',
             'IsQualityCheck' => $this->faker->randomElement(['yes']),
-            'UserID' => User::factory(),
-            'LocationID' => Location::factory(),
+            'UserID' => $this->faker->randomElement($compunderIds),
+            'LocationID' => $this->faker->randomElement($LocationIDs),
             'Notes' => $this->faker->optional()->text,
             'created_at' => now(),
             'updated_at' => now(),

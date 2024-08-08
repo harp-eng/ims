@@ -1,0 +1,1 @@
+Click <a href="{{ $paymentLink }}">here</a> to make payment.

@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 use Modules\Order\Models\OrderDetail;
 use Modules\Order\Models\Address;
+use Barryvdh\DomPDF\Facade as PDF;
+use App\Notifications\SendInvoice;
 
 class OrdersController extends BackendBaseController
 {
@@ -172,19 +174,30 @@ class OrdersController extends BackendBaseController
             ->success()
             ->important();
 
+        // Generate invoice for the order
+        $this->generateInvoicePdf($order);
+
+        // Send email with invoice and payment link
+        $this->sendInvoiceEmail($order);
+
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
-        
-        $changes=$$module_name_singular;
+
+        $changes = $$module_name_singular;
 
         activity()
-        ->performedOn($$module_name_singular)
-        ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
-            $activity->withProperties(['changes' => $changes]);
-        })
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' ID: '.$$module_name_singular->id);
+            ->performedOn($$module_name_singular)
+            ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
+                $activity->withProperties(['changes' => $changes]);
+            })
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' ID: ' . $$module_name_singular->id);
 
         return redirect("admin/{$module_name}");
+    }
+
+    public function sendInvoiceEmail(Order $order)
+    {
+        $order->customer->notify(new SendInvoice($order));
     }
 
     /**
@@ -265,13 +278,23 @@ class OrdersController extends BackendBaseController
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         activity()
-        ->performedOn($$module_name_singular)
-        ->when(isset($changes), function ($activity) use ($changes) {
-            $activity->withProperties(['changes' => $changes]);
-        })
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+            ->performedOn($$module_name_singular)
+            ->withProperties($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' name: ' . $$module_name_singular->name);
 
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
+    }
+
+    public function generateInvoicePdf(Order $order)
+    {
+        $data = [
+            'order' => $order,
+            // other necessary data for invoice
+        ];
+
+        $pdf = PDF::loadView('invoices.invoice_pdf', $data);
+
+        return $pdf->stream('invoice.pdf'); // or save('invoice.pdf')
     }
 }

@@ -56,17 +56,14 @@ return new class extends Migration
             $table->unsignedBigInteger('id', true)->change(); // Ensuring the ID is an unsignedBigInteger
         });
 
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('base_material_orders', function (Blueprint $table) {
             $table->increments('id'); // Primary key
-            $table->string('EntityType', 50); // Type of entity (Customer, Supplier, etc.)
-            $table->unsignedInteger('EntityID'); // Foreign key to entity's table
-            $table->string('AddressLine1', 255)->nullable();
-            $table->string('AddressLine2', 255)->nullable();
-            $table->string('City', 100)->nullable();
-            $table->string('State', 100)->nullable();
-            $table->string('ZipCode', 20)->nullable();
-            $table->string('Country', 100)->nullable();
-            $table->string('AddressType', 50)->nullable(); // Billing, Shipping, etc.
+
+            $table->unsignedInteger('BaseMaterialID'); // Foreign key to base_materials table
+            $table->unsignedInteger('orderDetailID'); // Foreign key to ingredients table
+            $table->double('QuantityUsed')->default(0);
+            $table->double('LeftQuantity')->default(0);
+
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
             $table->integer('deleted_by')->unsigned()->nullable();
@@ -74,7 +71,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // Optional: Foreign key constraints can be added dynamically if necessary
         });
     }
 

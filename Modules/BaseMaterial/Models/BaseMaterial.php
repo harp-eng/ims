@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Location\Models\Location;
 use Modules\Ingredient\Models\BaseMaterialIngredient;
+use Illuminate\Support\Str;
 
 class BaseMaterial extends BaseModel
 {
@@ -53,5 +54,11 @@ class BaseMaterial extends BaseModel
         return $this->hasMany(BaseMaterialIngredient::class, 'BaseMaterialID', 'id');
     }
 
-     
+    protected static function booted()
+    {
+        static::creating(function ($baseMaterial) {
+            // Generate SKU, you can adjust this logic as needed
+            $baseMaterial->sku = 'SKU-' . Str::padLeft(rand(1, 99999), 5, '0');
+        });
+    }
 }

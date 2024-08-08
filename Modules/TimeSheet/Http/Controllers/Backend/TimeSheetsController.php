@@ -77,7 +77,7 @@ class TimeSheetsController extends BackendBaseController
         if (request()->query('id')) {
             $$module_name = $$module_name->where('employee_id', request()->query('id'));
         }
-        if (Auth::user()->hasRole('employee')) {
+        if (Auth::user()->hasRole('worker')||Auth::user()->hasRole('compounder')) {
             $$module_name = $$module_name->where('employee_id', Auth::user()->id);
         }
         
@@ -103,6 +103,18 @@ class TimeSheetsController extends BackendBaseController
                 }
 
                 return $data->updated_at->isoFormat('llll');
+            })
+            ->filter(function ($query) {
+                // Handle search queries for employee_id and name fields
+                if (request()->filled('search.value')) {
+                    $searchTerm = request()->input('search.value');
+                    $query->where(function ($query) use ($searchTerm) {
+                        $query->where('employee_id', 'like', '%' . $searchTerm . '%')
+                              ->orWhereHas('employee', function ($query) use ($searchTerm) {
+                                  $query->where('name', 'like', '%' . $searchTerm . '%');
+                              });
+                    });
+                }
             })
             ->rawColumns(['action'])
             ->orderColumns(['id'], '-:column $1')

@@ -3,7 +3,7 @@
 /*
  * Global helpers file with misc functions.
  */
-if (! function_exists('app_name')) {
+if (!function_exists('app_name')) {
     /**
      * Helper to grab the application name.
      *
@@ -18,7 +18,7 @@ if (! function_exists('app_name')) {
 /*
  * Global helpers file with misc functions.
  */
-if (! function_exists('app_url')) {
+if (!function_exists('app_url')) {
     /**
      * Helper to grab the application name.
      *
@@ -33,7 +33,7 @@ if (! function_exists('app_url')) {
 /*
  * Global helpers file with misc functions.
  */
-if (! function_exists('user_registration')) {
+if (!function_exists('user_registration')) {
     /**
      * Helper to grab the application name.
      *
@@ -57,7 +57,7 @@ if (! function_exists('user_registration')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('label_case')) {
+if (!function_exists('label_case')) {
     /**
      * Prepare the Column Name for Lables.
      */
@@ -66,10 +66,24 @@ if (! function_exists('label_case')) {
         $order = ['_', '-'];
         $replace = ' ';
 
-        $new_text = trim(\Illuminate\Support\Str::title(str_replace('"', '', $text)));
-        $new_text = trim(\Illuminate\Support\Str::title(str_replace($order, $replace, $text)));
+        // Replace underscores and hyphens with spaces
+        $new_text = str_replace($order, $replace, $text);
 
-        return preg_replace('!\s+!', ' ', $new_text);
+        // Remove "id" if it appears at the end of the word (case-insensitive)
+        if (strlen($new_text) > 2) {
+            $new_text = preg_replace('/id$/i', '', $new_text);
+        }
+
+        // Add spaces before capital letters and capitalize the first letter of each word
+        $new_text = preg_replace('/(?<!^)([A-Z])/', ' $1', $new_text);
+
+        // Convert to title case
+        $new_text = \Illuminate\Support\Str::title($new_text);
+
+        // Remove extra spaces
+        $new_text = preg_replace('!\s+!', ' ', $new_text);
+
+        return trim($new_text);
     }
 }
 
@@ -79,7 +93,7 @@ if (! function_exists('label_case')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('show_column_value')) {
+if (!function_exists('show_column_value')) {
     /**
      * Generates the function comment for the given function.
      *
@@ -99,7 +113,7 @@ if (! function_exists('show_column_value')) {
 
         $value = $valueObject->$column_name;
 
-        if (! $value) {
+        if (!$value) {
             return $value;
         }
 
@@ -107,7 +121,7 @@ if (! function_exists('show_column_value')) {
             return $value;
         }
 
-        if (($column_type === 'date') && $value !== '') {
+        if ($column_type === 'date' && $value !== '') {
             $datetime = \Carbon\Carbon::parse($value);
 
             return $datetime->isoFormat('LL');
@@ -122,11 +136,20 @@ if (! function_exists('show_column_value')) {
         } elseif ($column_type !== 'json' && \Illuminate\Support\Str::endsWith(strtolower($value), ['png', 'jpg', 'jpeg', 'gif', 'svg'])) {
             $img_path = asset($value);
 
-            $return_text = '<figure class="figure">
-                                <a href="'.$img_path.'" data-lightbox="image-set" data-title="Path: '.$value.'">
-                                    <img src="'.$img_path.'" style="max-width:200px;" class="figure-img img-fluid rounded img-thumbnail" alt="">
+            $return_text =
+                '<figure class="figure">
+                                <a href="' .
+                $img_path .
+                '" data-lightbox="image-set" data-title="Path: ' .
+                $value .
+                '">
+                                    <img src="' .
+                $img_path .
+                '" style="max-width:200px;" class="figure-img img-fluid rounded img-thumbnail" alt="">
                                 </a>
-                                <figcaption class="figure-caption">Path: '.$value.'</figcaption>
+                                <figcaption class="figure-caption">Path: ' .
+                $value .
+                '</figcaption>
                             </figure>';
         } else {
             $return_text = $value;
@@ -143,7 +166,7 @@ if (! function_exists('show_column_value')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('field_required')) {
+if (!function_exists('field_required')) {
     /**
      * Prepare the Column Name for Lables.
      */
@@ -162,7 +185,7 @@ if (! function_exists('field_required')) {
 /**
  * Get or Set the Settings Values.
  */
-if (! function_exists('setting')) {
+if (!function_exists('setting')) {
     function setting($key, $default = null)
     {
         if (is_null($key)) {
@@ -182,7 +205,7 @@ if (! function_exists('setting')) {
 /*
  * Show Human readable file size
  */
-if (! function_exists('humanFilesize')) {
+if (!function_exists('humanFilesize')) {
     function humanFilesize($size, $precision = 2)
     {
         $units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -194,7 +217,7 @@ if (! function_exists('humanFilesize')) {
             $i++;
         }
 
-        return round($size, $precision).$units[$i];
+        return round($size, $precision) . $units[$i];
     }
 }
 
@@ -204,7 +227,7 @@ if (! function_exists('humanFilesize')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('encode_id')) {
+if (!function_exists('encode_id')) {
     /**
      * Encode Id to a Hashids / Sqids.
      */
@@ -222,7 +245,7 @@ if (! function_exists('encode_id')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('decode_id')) {
+if (!function_exists('decode_id')) {
     /**
      * Decode Id from Hashids / Sqids.
      */
@@ -245,7 +268,7 @@ if (! function_exists('decode_id')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('slug_format')) {
+if (!function_exists('slug_format')) {
     /**
      * Format a string to Slug.
      */
@@ -270,13 +293,13 @@ if (! function_exists('slug_format')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('icon')) {
+if (!function_exists('icon')) {
     /**
      * Format a string to Slug.
      */
     function icon($string = 'fa-regular fa-circle-check')
     {
-        return "<i class='".$string."'></i>&nbsp;";
+        return "<i class='" . $string . "'></i>&nbsp;";
     }
 }
 
@@ -288,7 +311,7 @@ if (! function_exists('icon')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('logUserAccess')) {
+if (!function_exists('logUserAccess')) {
     /**
      * Format a string to Slug.
      */
@@ -297,10 +320,10 @@ if (! function_exists('logUserAccess')) {
         $auth_text = '';
 
         if (\Auth::check()) {
-            $auth_text = 'User:'.\Auth::user()->name.' (ID:'.\Auth::user()->id.')';
+            $auth_text = 'User:' . \Auth::user()->name . ' (ID:' . \Auth::user()->id . ')';
         }
 
-        \Log::debug(label_case($text)." | {$auth_text}");
+        \Log::debug(label_case($text) . " | {$auth_text}");
     }
 }
 
@@ -311,7 +334,7 @@ if (! function_exists('logUserAccess')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('bn2enNumber')) {
+if (!function_exists('bn2enNumber')) {
     /**
      * Prepare the Column Name for Lables.
      */
@@ -331,7 +354,7 @@ if (! function_exists('bn2enNumber')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('en2bnNumber')) {
+if (!function_exists('en2bnNumber')) {
     /**
      * Prepare the Column Name for Lables.
      */
@@ -351,7 +374,7 @@ if (! function_exists('en2bnNumber')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('en2bnDate')) {
+if (!function_exists('en2bnDate')) {
     /**
      * Convert a English number to Bengali.
      */
@@ -393,7 +416,7 @@ if (! function_exists('en2bnDate')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('banglaDate')) {
+if (!function_exists('banglaDate')) {
     function banglaDate($date_input = '')
     {
         if ($date_input === '') {
@@ -426,11 +449,11 @@ if (! function_exists('banglaDate')) {
 
         // Year
         $bn_year = $en_year - 593;
-        if (($en_year < 4) || (($en_year === 4) && (($en_day < 14) || ($en_day === 14)))) {
+        if ($en_year < 4 || ($en_year === 4 && ($en_day < 14 || $en_day === 14))) {
             $bn_year -= 1;
         }
 
-        $return_bn_date = $bn_day.' '.$bn_month.' '.$bn_year;
+        $return_bn_date = $bn_day . ' ' . $bn_month . ' ' . $bn_year;
 
         return en2bnNumber($return_bn_date);
     }
@@ -442,7 +465,7 @@ if (! function_exists('banglaDate')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('generate_rgb_code')) {
+if (!function_exists('generate_rgb_code')) {
     /**
      * Prepare the Column Name for Lables.
      */
@@ -465,7 +488,7 @@ if (! function_exists('generate_rgb_code')) {
  *
  * ------------------------------------------------------------------------
  */
-if (! function_exists('date_today')) {
+if (!function_exists('date_today')) {
     /**
      * Return Date with weekday.
      *
@@ -480,7 +503,7 @@ if (! function_exists('date_today')) {
     }
 }
 
-if (! function_exists('language_direction')) {
+if (!function_exists('language_direction')) {
     /**
      * return direction of languages.
      *
@@ -522,7 +545,7 @@ if (! function_exists('language_direction')) {
 /*
  * Application Demo Mode check
  */
-if (! function_exists('demo_mode')) {
+if (!function_exists('demo_mode')) {
     /**
      * Helper to grab the application name.
      *
@@ -543,7 +566,7 @@ if (! function_exists('demo_mode')) {
 /*
  * Split Name to First Name and Last Name
  */
-if (! function_exists('split_name')) {
+if (!function_exists('split_name')) {
     /**
      * Split Name to First Name and Last Name.
      *
@@ -552,8 +575,8 @@ if (! function_exists('split_name')) {
     function split_name($name)
     {
         $name = trim($name);
-        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
-        $first_name = trim(preg_replace('#'.preg_quote($last_name, '#').'#', '', $name));
+        $last_name = strpos($name, ' ') === false ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+        $first_name = trim(preg_replace('#' . preg_quote($last_name, '#') . '#', '', $name));
 
         return [$first_name, $last_name];
     }

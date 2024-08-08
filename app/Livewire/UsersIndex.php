@@ -23,9 +23,16 @@ class UsersIndex extends Component
             $query->where('name', 'like', $searchTerm)->orWhere('email', 'like', $searchTerm);
         });
         if($roleName){
-            $users =  $users->whereHas('roles', function ($query) use ($roleName) {
-                $query->where('name', $roleName);
-            });
+            
+            if($roleName=='employee'){
+                $users =  $users->whereHas('roles', function ($query) use ($roleName) {
+                    $query->whereIn('name',['worker','compounder']);
+                });
+            }else{
+                $users =  $users->whereHas('roles', function ($query) use ($roleName) {
+                    $query->where('name', $roleName);
+                });
+            }
         }
             
         $users =  $users->orderBy('id', 'desc')

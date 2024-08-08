@@ -75,6 +75,40 @@ class BaseMaterialsController extends BackendBaseController
             ->editColumn('LocationID', function ($data) {
                 return $data->location?->name ?? '-';
             })
+            ->editColumn('status', function($row) {
+                // Define the Bootstrap badge class based on status
+                $badgeClass = 'badge'; // Base class for badges
+                switch($row->status) {
+                    case 'Low Stock':
+                        $badgeClass .= ' bg-warning'; // Yellow background
+                        break;
+                    case 'No Stock':
+                        $badgeClass .= ' bg-danger'; // Red background
+                        break;
+                    case 'In Stock':
+                        $badgeClass .= ' bg-success'; // Green background
+                        break;
+                    case 'Expired':
+                        $badgeClass .= ' bg-danger'; // Red background (could be same as No Stock)
+                        break;
+                    case 'On Order':
+                        $badgeClass .= ' bg-info'; // Light blue background
+                        break;
+                    case 'Overstocked':
+                        $badgeClass .= ' bg-primary'; // Blue background
+                        break;
+                    case 'Discontinued':
+                        $badgeClass .= ' bg-secondary'; // Gray background
+                        break;
+                    case 'Damaged':
+                        $badgeClass .= ' bg-dark'; // Dark background
+                        break;
+                    default:
+                        $badgeClass .= ' bg-secondary'; // Default to gray
+                        break;
+                }
+                return "<span class='{$badgeClass}'>{$row->status}</span>";
+            })
             ->editColumn('updated_at', function ($data) {
                 $module_name = $this->module_name;
 
@@ -86,7 +120,19 @@ class BaseMaterialsController extends BackendBaseController
 
                 return $data->updated_at->isoFormat('llll');
             })
-            ->rawColumns(['name', 'action'])
+            ->filter(function ($query) {
+                // Handle search queries for UserID and name fields
+                if (request()->filled('search.value')) {
+                    $searchTerm = request()->input('search.value');
+                    $query->where(function ($query) use ($searchTerm) {
+                        $query->where('UserID', 'like', '%' . $searchTerm . '%')
+                              ->orWhereHas('user', function ($query) use ($searchTerm) {
+                                  $query->where('name', 'like', '%' . $searchTerm . '%');
+                              });
+                    });
+                }
+            })
+            ->rawColumns(['name','status', 'action'])
             ->orderColumns(['id'], '-:column $1')
             ->make(true);
     }

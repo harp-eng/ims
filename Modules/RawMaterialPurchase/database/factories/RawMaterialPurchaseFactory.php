@@ -31,13 +31,20 @@ class RawMaterialPurchaseFactory extends Factory
         // Generate a random number for SKU
         $randomNumber = $this->faker->unique()->randomNumber(5);
 
+        $IngredientIDs = Ingredient::pluck('id')->toArray();
+        $SupplierIDs = Supplier::pluck('id')->toArray();
+        $LocationIDs = Location::pluck('id')->toArray();
+
+        $managerIds = \App\Models\User::whereHas('roles', function($query) {
+            $query->where('name', 'manager');
+        })->pluck('id')->toArray();
         // Create a unique SKU by concatenating a prefix with the random number
         $sku = 'SKU-' . $randomNumber;
         return [
             'status' => $this->faker->randomElement([0, 1, 2]), // Assuming 0, 1, 2 for statuses like Unpublished, Published, Draft
-            'IngredientID' => Ingredient::factory(), // Get a random Ingredient ID
-            'SupplierID' => Supplier::factory(), // Get a random Supplier ID
-            'LocationID' => Location::factory(), // Get a random Supplier ID
+            'IngredientID' => $this->faker->randomElement($IngredientIDs), // Get a random Ingredient ID
+            'SupplierID' => $this->faker->randomElement($SupplierIDs), // Get a random Supplier ID
+            'LocationID' => $this->faker->randomElement($LocationIDs), // Get a random Supplier ID
             'SKU'=>$sku,
             'PurchaseDate' => $this->faker->date(),
             'ExpiryDate'        => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d'),
@@ -49,8 +56,8 @@ class RawMaterialPurchaseFactory extends Factory
             },
             'DeliveryDate' => $this->faker->dateTimeBetween('-1 year','now')->format('Y-m-d'),
             'Notes' => $this->faker->optional()->text(),
-            'created_by' => User::factory(), // Assuming users IDs 1-10
-            'updated_by' => User::factory(), // Assuming users IDs 1-10
+            'created_by' => $this->faker->randomElement($managerIds), // Assuming users IDs 1-10
+            'updated_by' => $this->faker->randomElement($managerIds), // Assuming users IDs 1-10
             'created_at' => now(),
             'updated_at' => now(),
         ];

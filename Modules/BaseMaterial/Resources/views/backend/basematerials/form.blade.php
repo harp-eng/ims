@@ -13,17 +13,13 @@
     </div>
     <div class="col-12 col-sm-4 mb-3">
         <div class="form-group">
-            @php
-                $field_name = 'status';
-                $field_label = label_case($field_name);
-                $field_placeholder = '-- Select an option --';
-                $required = 'required';
-                $select_options = [
-                    '1' => 'Published',
-                    '0' => 'Unpublished',
-                    '2' => 'Draft',
-                ];
-            @endphp
+            <?php
+            $field_name = 'status';
+            $field_label = label_case($field_name);
+            $field_placeholder = "-- Select an option --";
+            $required = "required";
+            $select_options = trans('ingredient::text.status_array');
+            ?>
             {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
         </div>
@@ -121,21 +117,6 @@
     <div class="col-12 col-sm-4 mb-3">
         <div class="form-group">
             @php
-                $field_name = 'UnitOfMeasure';
-                $field_label = label_case($field_name);
-                $field_placeholder = $field_label;
-                $required = '';
-            @endphp
-            {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
-            {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-12 col-sm-4 mb-3">
-        <div class="form-group">
-            @php
                 $field_name = 'IsQualityCheck';
                 $field_label = label_case($field_name);
                 $field_placeholder = $field_label;
@@ -145,7 +126,11 @@
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
         </div>
     </div>
-    <div class="col-8 mb-3">
+</div>
+
+<div class="row">
+    
+    <div class="col-6 mb-3">
         <div class="form-group">
             @php
                 $field_name = 'Notes';
@@ -157,13 +142,7 @@
             {{ html()->textarea($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
     </div>
-
-
-</div>
-
-
-<div class="row">
-    <div class="col-12 mb-3">
+    <div class="col-6 mb-3">
         <div class="form-group">
             @php
                 $field_name = 'description';
@@ -175,7 +154,9 @@
             {{ html()->textarea($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
     </div>
+
 </div>
+
 @php
 $ingredients = \Modules\RawMaterialPurchase\Models\RawMaterialPurchase::all();
 

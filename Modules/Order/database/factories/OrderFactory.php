@@ -39,19 +39,21 @@ class OrderFactory extends Factory
             $formatted_ship_date=null;
         }
 
-        $user = User::factory()->create();
-        $customerRole = Role::firstOrCreate(['name' => 'customer']);
-        $user->roles()->attach($customerRole);
+        $customerIds = \App\Models\User::whereHas('roles', function($query) {
+            $query->where('name', 'customer');
+        })->pluck('id')->toArray();
+
+        $AddressIDs = Address::pluck('id')->toArray();
 
         return [
             'description' => $this->faker->paragraph,
             'status' => $this->faker->randomElement(['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled']),
-            'CustomerID' => $user, // Assuming you have at least 100 customers
+            'CustomerID' => $this->faker->randomElement($customerIds), // Assuming you have at least 100 customers
             'OrderDate' => $formatted_order_date,
             'ShipDate' => $formatted_ship_date,
             'TotalAmount' => $this->faker->randomFloat(2, 20, 1000), // Random amount between 20.00 and 1000.00
-            'ShippingAddressID' => Address::factory(),
-            'BillingAddressID' => Address::factory(),
+            'ShippingAddressID' => $this->faker->randomElement($AddressIDs),
+            'BillingAddressID' => $this->faker->randomElement($AddressIDs),
             'Notes' => $this->faker->optional()->paragraph,
             'created_by' => $this->faker->optional()->numberBetween(1, 50), // Assuming you have at least 50 users
             'updated_by' => $this->faker->optional()->numberBetween(1, 50),

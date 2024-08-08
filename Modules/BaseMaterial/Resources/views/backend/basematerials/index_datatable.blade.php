@@ -174,7 +174,22 @@
                 orderable: false,
                 searchable: false
             }
-        ]
+        ],
+            rowCallback: function(row, data) {
+                let expiryDate = new Date(data.ExpiryDate);
+                let today = new Date();
+                let timeDiff = expiryDate - today;
+                let daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                console.log(daysDiff);
+                // if (daysDiff < 100) {
+                //     $(row).addClass('highlight');
+                // }
+            }
     });
 </script>
 @endpush
+<style>
+    .highlight {
+        background-color: #f3e2e4 !important;
+    }
+</style>
