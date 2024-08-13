@@ -3,11 +3,13 @@
 namespace Modules\Ingredient\Models;
 
 use App\Models\BaseModel;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\BaseMaterial\Models\BaseMaterial;
 use Modules\Ingredient\Models\Ingredient;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\IngredientNotification;
 
 class BaseMaterialIngredient extends BaseModel
 {
@@ -44,10 +46,10 @@ class BaseMaterialIngredient extends BaseModel
 
                 $ingredient->QuantityInStock = $leftQuantity;
                 $ingredient->save();
-                
+
                 DB::table('base_material_ingredients')
-                ->where('id', $baseMaterialIngredient->id)
-                ->update(['LeftQuantity' => $leftQuantity]);
+                    ->where('id', $baseMaterialIngredient->id)
+                    ->update(['LeftQuantity' => $leftQuantity]);
             }
         });
 
@@ -58,19 +60,42 @@ class BaseMaterialIngredient extends BaseModel
             if ($ingredient) {
                 // Ensure QuantityUsed exists in the original attributes
                 $originalQuantityUsed = isset($original['QuantityUsed']) ? $original['QuantityUsed'] : 0;
-                $st_used=$baseMaterialIngredient->QuantityUsed - $originalQuantityUsed;
+                $st_used = $baseMaterialIngredient->QuantityUsed - $originalQuantityUsed;
                 // Adjust QuantityUsed based on the change in QuantityUsed
                 $ingredient->QuantityUsed += $st_used;
 
                 // Calculate leftQuantity
                 $leftQuantity = $ingredient->QuantityPurchased - $ingredient->QuantityUsed;
+                if ($leftQuantity < 0) {
+                    // Optionally, you can revert the changes or throw an exception
+                    throw new \Exception('You are trying to use more of ' . $ingredient->name . ' than is available in stock.');
+                }
 
                 $ingredient->QuantityInStock = $leftQuantity;
                 $ingredient->save();
 
+                if ($ingredient->SafetyStockLevel > $ingredient->QuantityInStock) {
+                    $ingredient->status='Low Stock';
+                    $ingredient->save();
+                    
+                    $users = User::role('manager')->get(); // Adjust the role based on your user setup
+
+                    foreach ($users as $user) {
+                        $notificationExists = DB::table('notifications')
+                            ->where('notifiable_id', $user->id)
+                            ->where('type', IngredientNotification::class)
+                            ->where('data', 'like', '%"ingredient_id":' . $ingredient->id . '%')
+                            ->exists();
+
+                        if (!$notificationExists) {
+                            $user->notify(new IngredientNotification($ingredient));
+                        }
+                    }
+                }
+
                 DB::table('base_material_ingredients')
-                ->where('id', $baseMaterialIngredient->id)
-                ->update(['LeftQuantity' => $st_used]);
+                    ->where('id', $baseMaterialIngredient->id)
+                    ->update(['LeftQuantity' => $leftQuantity]);
             }
         });
     }

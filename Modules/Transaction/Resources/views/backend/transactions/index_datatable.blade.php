@@ -48,18 +48,18 @@
                 <table id="datatable" class="table table-bordered table-hover table-responsive-sm">
                     <thead>
                         <tr>
-                            <th>
-                                #
-                            </th>
-                            <th>
-                                @lang("transaction::text.name")
-                            </th>
-                            <th>
-                                @lang("transaction::text.updated_at")
-                            </th>
-                            <th class="text-end">
-                                @lang("transaction::text.action")
-                            </th>
+                            <th>@lang("ID")</th>
+                            <th>@lang("Description")</th>
+                            <th>@lang("Status")</th>
+                            <th>@lang("User ID")</th>
+                            <th>@lang("Order ID")</th>
+                            <th>@lang("Payment Method")</th>
+                            <th>@lang("Transaction Date")</th>
+                            <th>@lang("Amount")</th>
+                            <th>@lang("Currency")</th>
+                            <th>@lang("Reference Number")</th>
+                            <th>@lang("Updated At")</th>
+                            <th class="text-end">@lang("Action")</th>
                         </tr>
                     </thead>
                 </table>
@@ -70,12 +70,12 @@
         <div class="row">
             <div class="col-7">
                 <div class="float-left">
-
+                    <!-- Additional content if needed -->
                 </div>
             </div>
             <div class="col-5">
                 <div class="float-end">
-
+                    <!-- Additional content if needed -->
                 </div>
             </div>
         </div>
@@ -99,24 +99,19 @@
         serverSide: true,
         responsive: true,
         ajax: '{{ route("backend.$module_name.index_data") }}',
-        columns: [{
-                data: 'id',
-                name: 'id'
-            },
-            {
-                data: 'name',
-                name: 'name'
-            },
-            {
-                data: 'updated_at',
-                name: 'updated_at'
-            },
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false
-            }
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'description', name: 'description' },
+            { data: 'transaction_status', name: 'transaction_status' },
+            { data: 'user_id', name: 'user_id' },
+            { data: 'order_id', name: 'order_id' },
+            { data: 'payment_method', name: 'payment_method' },
+            { data: 'transaction_date', name: 'transaction_date' },
+            { data: 'amount', name: 'amount' },
+            { data: 'currency', name: 'currency' },
+            { data: 'reference_number', name: 'reference_number' },
+            { data: 'updated_at', name: 'updated_at' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
         ]
     });
 </script>

@@ -58,7 +58,8 @@ class BaseMaterial extends BaseModel
     {
         static::creating(function ($baseMaterial) {
             // Generate SKU, you can adjust this logic as needed
-            $baseMaterial->sku = 'SKU-' . Str::padLeft(rand(1, 99999), 5, '0');
+            $baseMaterial->SKU = 'SKU-' . Str::padLeft(rand(1, 99999), 5, '0');
+            $baseMaterial->QuantityInStock = $baseMaterial->QuantityProduced;
         });
     }
 }

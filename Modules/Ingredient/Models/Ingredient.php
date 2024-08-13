@@ -9,6 +9,7 @@ use Modules\Supplier\Models\Supplier;
 use Modules\Location\Models\Location;
 use Modules\Ingredient\Models\BaseMaterialIngredient;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Ingredient extends BaseModel
 {
@@ -56,9 +57,11 @@ class Ingredient extends BaseModel
         static::created(function ($ingredient) {
             // Calculate and update QuantityInStock on create without triggering events
             $newQuantityInStock = $ingredient->QuantityPurchased - $ingredient->QuantityUsed;
+            $totalPrice=$ingredient->QuantityPurchased*$ingredient->UnitPrice;
+            $sku='ING-' . Str::padLeft(rand(1, 99999), 5, '0');
             DB::table('ingredients')
                 ->where('id', $ingredient->id)
-                ->update(['QuantityInStock' => $newQuantityInStock]);
+                ->update(['QuantityInStock' => $newQuantityInStock,'SKU'=>$sku,'TotalPrice'=>$totalPrice]);
         });
 
         static::updated(function ($ingredient) {

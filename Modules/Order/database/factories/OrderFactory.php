@@ -27,6 +27,12 @@ class OrderFactory extends Factory
      */
     public function definition()
     {
+        // Generate a random number for SKU
+        $randomNumber = $this->faker->unique()->randomNumber(5);
+
+        // Create a unique SKU by concatenating a prefix with the random number
+        $sku = 'ORDER-' . $randomNumber;
+
         $order_date = $this->faker->dateTimeBetween('-1 month', 'now');
         $ship_date = (clone $order_date)->modify('+2 days');
 
@@ -48,7 +54,9 @@ class OrderFactory extends Factory
         return [
             'description' => $this->faker->paragraph,
             'status' => $this->faker->randomElement(['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled']),
+            'payment_status' => $this->faker->randomElement(['Pending','Paid']),
             'CustomerID' => $this->faker->randomElement($customerIds), // Assuming you have at least 100 customers
+            'Order_number'=>$sku,
             'OrderDate' => $formatted_order_date,
             'ShipDate' => $formatted_ship_date,
             'TotalAmount' => $this->faker->randomFloat(2, 20, 1000), // Random amount between 20.00 and 1000.00

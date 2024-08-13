@@ -31,8 +31,9 @@
                 $field_label = label_case('Compounder');
                 $field_placeholder = $field_label;
                 $required = '';
-                $suppliers = \App\Models\User::all();
-                $select_options = $suppliers->pluck('name', 'id')->toArray();
+               
+                $compounders = \App\Models\User::role('compounder')->get();
+                $select_options = $compounders->pluck('name', 'id')->prepend('-- Select Compounder --', '');
             @endphp
             {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
@@ -47,7 +48,7 @@
         <div class="form-group">
             @php
                 $field_name = 'QuantityProduced';
-                $field_label = label_case('Quantity Produced');
+                $field_label = label_case('Quantity Produced (Kg )');
                 $field_placeholder = $field_label;
                 $required = '';
             @endphp
@@ -158,12 +159,12 @@
 </div>
 
 @php
-$ingredients = \Modules\RawMaterialPurchase\Models\RawMaterialPurchase::all();
+$ingredients = \Modules\Ingredient\Models\Ingredient::all();
 
 $ingredientOptions = $ingredients->map(function ($ingredient) {
     return [
         'id' => $ingredient->id,
-        'name' => $ingredient->ingredient->name . ' (' . $ingredient->SKU . ')', // Adjust as per your actual attribute name
+        'name' => $ingredient->name . ' (' . $ingredient->SKU . ')', // Adjust as per your actual attribute name
     ];
 })->pluck('name', 'id')->toArray();
 @endphp
@@ -208,7 +209,7 @@ $ingredientOptions = $ingredients->map(function ($ingredient) {
                         </select>
                     </td>
                     <td>
-                        <input type="text" name="quantity_used[]" class="form-control">
+                        <input type="text" name="quantity_used[]" required class="form-control">
                     </td>
                     <td>
                         <button type="button" class="btn btn-success add-row">+</button>

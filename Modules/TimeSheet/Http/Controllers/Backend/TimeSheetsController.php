@@ -60,6 +60,33 @@ class TimeSheetsController extends BackendBaseController
 
         return redirect()->back()->with('success', 'Checked out successfully.');
     }
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index()
+    {
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_path = $this->module_path;
+        $module_icon = $this->module_icon;
+        $module_model = $this->module_model;
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+
+        $$module_name = $module_model::paginate(15);
+
+        $id=request()->query('id');
+
+        logUserAccess($module_title.' '.$module_action);
+
+        return view(
+            "{$module_path}.{$module_name}.index_datatable",
+            compact('module_title', 'module_name', "{$module_name}", 'module_icon', 'module_name_singular', 'module_action','id')
+        );
+    }
     public function index_data()
     {
         $module_title = $this->module_title;

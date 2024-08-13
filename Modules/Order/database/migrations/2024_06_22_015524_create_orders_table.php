@@ -14,12 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->increments('id'); // Primary key
+            $table->id();
 
             $table->text('description')->nullable();
             $table->enum('status', ['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled'])->default('Pending');
+            $table->enum('payment_status', ['Pending','Paid'])->default('Pending');
 
             $table->unsignedInteger('CustomerID'); // Foreign key
+            $table->string('Order_number', 50)->unique()->nullable(); // Unique identifier
             $table->date('OrderDate')->nullable();
             $table->date('ShipDate')->nullable();
             $table->decimal('TotalAmount', 10, 2);
@@ -81,8 +83,14 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('orders', function (Blueprint $table) {
+            if (Schema::hasColumn('orders', 'order_id')) {
+                $table->dropForeign(['order_id']);
+            }
+        });
         Schema::dropIfExists('orders');
         Schema::dropIfExists('order_details');
         Schema::dropIfExists('addresses');
+        Schema::dropIfExists('base_material_orders');
     }
 };

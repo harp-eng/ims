@@ -89,7 +89,7 @@
                                     <td>
                                         @if (count($user->taskEfficiencies)>0)
                                             @foreach ($user->taskEfficiencies as $key => $value)
-                                                {{ $value->task_name }} => {{ $value->efficiency_score }}
+                                                {{ $value->task_name }} => {{ $value->efficiency_score }}<br>
                                             @endforeach
                                         @else
                                             -
@@ -97,7 +97,7 @@
                                     </td>
                                 @endif
                                 <td class="text-end">
-                                    @if ($user->hasRole('employee'))
+                                    @if ($user->hasRole('worker')||$user->hasRole('compounder'))
                                         <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
                                             href="{{ route('backend.timesheets.index', ['id' => $user]) }}"
                                             title="TimeSheet"><i class="fas fa-solid fa-clock fa-fw"></i></a>

@@ -106,7 +106,7 @@
                 @foreach ($data->orderDetails as $item)
                     <tr>
                         <td>
-                            <select name="ProductID[]" class="form-control product-select">
+                            <select name="ProductID[]" required class="form-control product-select">
                                 <option value="">-- Select Product --</option>
                                 @foreach ($productOptions as $id => $name)
                                     <option data-unit_price="{{ $unitPrices[$id] }}" value="{{ $id }}"
@@ -116,7 +116,7 @@
                             </select>
                         </td>
                         <td>
-                            <input type="text" name="Quantity[]" class="form-control quantity"
+                            <input type="text" name="Quantity[]" required class="form-control quantity"
                                 value="{{ $item->Quantity }}">
                         </td>
                         <td>
@@ -136,7 +136,7 @@
             @else
                 <tr>
                     <td>
-                        <select name="ProductID[]" class="form-control product-select">
+                        <select name="ProductID[]" required class="form-control product-select">
                             <option value="">-- Select Product --</option>
                             @foreach ($productOptions as $id => $name)
                                 <option value="{{ $id }}" data-unit_price="{{ $unitPrices[$id] }}">
@@ -145,7 +145,7 @@
                         </select>
                     </td>
                     <td>
-                        <input type="text" name="Quantity[]" class="form-control quantity">
+                        <input type="text" required name="Quantity[]" class="form-control quantity">
                     </td>
                     <td>
                         <input type="text" name="UnitPrice[]" class="form-control unit-price" value="">
@@ -172,13 +172,13 @@
             $(document).on('click', '.add-row', function() {
                 console.log('ddd');
                 var newRow = '<tr>' +
-                    '<td><select name="ProductID[]" class="form-control product-select">' +
+                    '<td><select name="ProductID[]" required class="form-control product-select">' +
                     '<option value="">-- Select Product --</option>' +
                     '@foreach ($productOptions as $id => $name)' +
                     '<option value="{{ $id }}" data-unit_price="{{ $unitPrices[$id] }}">{{ $name }}</option>' +
                     '@endforeach' +
                     '</select></td>' +
-                    '<td><input type="text" name="Quantity[]" class="form-control quantity"></td>' +
+                    '<td><input type="text" name="Quantity[]" required class="form-control quantity"></td>' +
                     '<td><input type="text" name="UnitPrice[]" class="form-control unit-price"></td>' +
                     '<td><input type="text" name="TotalPrice[]" class="form-control total-price"></td>' +
                     '<td>' +

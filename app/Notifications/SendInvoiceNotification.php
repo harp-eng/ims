@@ -1,7 +1,10 @@
 <?php
+namespace App\Notifications;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\MailMessage; // Import this class
 
 class SendInvoiceNotification extends Notification implements ShouldQueue
 {
@@ -10,10 +13,10 @@ class SendInvoiceNotification extends Notification implements ShouldQueue
     protected $order;
     protected $invoice;
 
-    public function __construct(Order $order, Invoice $invoice)
+    public function __construct($order)
     {
         $this->order = $order;
-        $this->invoice = $invoice;
+        $this->invoice = $order->invoice;
     }
 
     public function via($notifiable)
@@ -28,7 +31,7 @@ class SendInvoiceNotification extends Notification implements ShouldQueue
             ->view('emails.invoice_email', [
                 'order' => $this->order,
                 'invoice' => $this->invoice,
-                'paymentLink' => 'https://example.com/pay/' . $this->invoice->id, // Replace with actual payment link
+                'paymentLink' => route('stripe.getpost',$this->invoice->id), // Replace with actual payment link
             ]);
     }
 }

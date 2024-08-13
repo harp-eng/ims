@@ -16,14 +16,33 @@ class TaskEfficiencySeeder extends Seeder
     public function run()
     {
         // Assuming you have some users already created
-        $users = User::all();
+        $empIds = \App\Models\User::whereHas('roles', function($query) {
+            $query->whereIn('name', ['worker']);
+        })->pluck('id')->toArray();
 
-        $tasks = ['Filling', 'Labelling', 'Packing', 'Product Making'];
+        $tasks = ['Filling', 'Labelling', 'Packing'];
 
-        foreach ($users as $user) {
+        foreach ($empIds as $user) {
             foreach ($tasks as $task) {
                 TaskEfficiency::create([
-                    'user_id' => $user->id,
+                    'user_id' => $user,
+                    'task_name' => $task,
+                    'efficiency_score' => rand(1, 10), // Random efficiency score between 1 and 10
+                ]);
+            }
+        }
+
+        // Assuming you have some users already created
+        $empIds = \App\Models\User::whereHas('roles', function($query) {
+            $query->whereIn('name', ['compounder']);
+        })->pluck('id')->toArray();
+
+        $tasks = ['Product Making'];
+
+        foreach ($empIds as $user) {
+            foreach ($tasks as $task) {
+                TaskEfficiency::create([
+                    'user_id' => $user,
                     'task_name' => $task,
                     'efficiency_score' => rand(1, 10), // Random efficiency score between 1 and 10
                 ]);
