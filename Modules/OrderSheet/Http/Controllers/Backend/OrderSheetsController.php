@@ -67,6 +67,11 @@ class OrderSheetsController extends BackendBaseController
 
                 return view('backend.includes.action_column', compact('module_name', 'data'));
             })
+            ->addColumn('order_name', function ($data) {
+                
+                return $data?->orderItem?->order?->Order_number;
+            })
+            
             ->editColumn('status', function ($data) {
                 $statusOptions = ['pending', 'filled', 'labelled', 'packed'];
                 $options = '<select class="status-select" id="status_' . $data->id . '" data-id="' . $data->id . '">';

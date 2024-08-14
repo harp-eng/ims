@@ -581,3 +581,205 @@ if (!function_exists('split_name')) {
         return [$first_name, $last_name];
     }
 }
+
+//================ worker efficiency code=========================
+
+// Normalize data
+function normalize($data, $criteria)
+{
+    $normalized = [];
+    $minMax = [];
+
+    // Find min and max values for each criterion
+    foreach ($criteria as $criterion) {
+        $values = array_column($data, $criterion);
+        $minMax[$criterion] = ['min' => min($values), 'max' => max($values)];
+    }
+
+    // Normalize data
+    foreach ($data as $row) {
+        $normalizedRow = [];
+        foreach ($criteria as $criterion) {
+            $value = $row[$criterion];
+            if ($criterion === 'Task TimeTaken') {
+                // For Task TimeTaken, lower values are better
+                $normalizedRow[$criterion] = ($minMax[$criterion]['max'] - $value) / ($minMax[$criterion]['max'] - $minMax[$criterion]['min']);
+            } else {
+                // For Quality of Work and Quantity, higher values are better
+                $normalizedRow[$criterion] = ($value - $minMax[$criterion]['min']) / ($minMax[$criterion]['max'] - $minMax[$criterion]['min']);
+            }
+        }
+        $normalized[] = array_merge(['Worker' => $row['Worker']], $normalizedRow);
+    }
+
+    return $normalized;
+}
+
+// Calculate the ideal and negative-ideal solutions
+function idealSolutions($data, $criteria)
+{
+    $ideal = [];
+    $negativeIdeal = [];
+
+    foreach ($criteria as $criterion) {
+        $values = array_column($data, $criterion);
+        if ($criterion === 'Task TimeTaken') {
+            $ideal[$criterion] = min($values);
+            $negativeIdeal[$criterion] = max($values);
+        } else {
+            $ideal[$criterion] = max($values);
+            $negativeIdeal[$criterion] = min($values);
+        }
+    }
+
+    return ['ideal' => $ideal, 'negative_ideal' => $negativeIdeal];
+}
+
+// Compute distances to ideal and negative-ideal solutions
+function computeDistances($data, $ideal, $negativeIdeal, $criteria)
+{
+    $distances = [];
+
+    foreach ($data as $row) {
+        $distIdeal = $distNegIdeal = 0;
+
+        foreach ($criteria as $criterion) {
+            $value = $row[$criterion];
+            $distIdeal += pow($value - $ideal[$criterion], 2);
+            $distNegIdeal += pow($value - $negativeIdeal[$criterion], 2);
+        }
+
+        $distances[] = [
+            'Worker' => $row['Worker'],
+            'distance_to_ideal' => sqrt($distIdeal),
+            'distance_to_negative_ideal' => sqrt($distNegIdeal),
+        ];
+    }
+
+    return $distances;
+}
+
+// Calculate closeness to ideal solution
+function calculateCloseness($distances)
+{
+    foreach ($distances as &$distance) {
+        $totalDist = $distance['distance_to_ideal'] + $distance['distance_to_negative_ideal'];
+        $distance['closeness'] = $distance['distance_to_negative_ideal'] / $totalDist;
+    }
+
+    usort($distances, function ($a, $b) {
+        return $b['closeness'] <=> $a['closeness'];
+    });
+
+    return $distances;
+}
+
+function checkEff($task)
+{
+    switch ($task) {
+        case 'Filling':
+            $benchmark = ['Worker' => 'Benchmark', 'Task TimeTaken' => 55, 'Quality of Work' => 9, 'Quantity' => 90];
+            break;
+
+        case 'Labelling':
+            $benchmark = ['Worker' => 'Benchmark', 'Task TimeTaken' => 55, 'Quality of Work' => 9, 'Quantity' => 90];
+            break;
+
+        case 'Packing':
+            $benchmark = ['Worker' => 'Benchmark', 'Task TimeTaken' => 55, 'Quality of Work' => 9, 'Quantity' => 90];
+            break;
+
+        case 'ProductMaking':
+            $benchmark = ['Worker' => 'Benchmark', 'Task TimeTaken' => 55, 'Quality of Work' => 9, 'Quantity' => 90];
+            break;
+
+        default:
+            $benchmark = ['Worker' => 'Benchmark', 'Task TimeTaken' => 55, 'Quality of Work' => 9, 'Quantity' => 90];
+            break;
+    }
+    // Fetch records from worker_performances where efficiency is 0
+    $workerPerformances = \DB::table('worker_performances')->where('task_name', $task)->get();
+
+    // Format the records into the desired array format
+    $worker_records = $workerPerformances
+        ->map(function ($record) {
+            return [
+                'Worker' => $record->id,
+                'Task TimeTaken' => $record->task_time_taken,
+                'Quality of Work' => $record->quality_of_work,
+                'Quantity' => $record->quantity,
+            ];
+        })
+        ->toArray();
+
+    if (count($worker_records) > 2) {
+        // Input data
+        $data = array_merge([$benchmark], $worker_records);
+
+        // Define criteria
+        $criteria = ['Task TimeTaken', 'Quality of Work', 'Quantity'];
+
+        // Normalize data
+        $normalizedData = normalize($data, $criteria);
+
+        // Determine ideal and negative-ideal solutions
+        $solutions = idealSolutions($normalizedData, $criteria);
+
+        // Compute distances
+        $distances = computeDistances($normalizedData, $solutions['ideal'], $solutions['negative_ideal'], $criteria);
+
+        // Calculate and sort by closeness to ideal solution
+        $rankedWorkers = calculateCloseness($distances);
+
+        // Find the benchmark's closeness value
+        $benchmark_closeness = null;
+
+        foreach ($rankedWorkers as $worker) {
+            if ($worker['Worker'] === 'Benchmark') {
+                $benchmark_closeness = $worker['closeness'];
+                break;
+            }
+        }
+
+        if ($benchmark_closeness !== null) {
+            // Calculate the difference needed to make the benchmark's closeness equal to 1
+            $difference = 1 - $benchmark_closeness;
+
+            // Add the difference to each worker's closeness value
+            foreach ($rankedWorkers as &$worker) {
+                $worker['closeness'] += $difference;
+            }
+
+            foreach ($rankedWorkers as $worker) {
+                if ($worker['Worker'] != 'Benchmark') {
+                    DB::table('worker_performances')
+                        ->where('id', $worker['Worker'])
+                        ->update([
+                            'efficiency' => round($worker['closeness'] * 10, 2),
+                        ]);
+                }
+            }
+            DB::statement('DROP TEMPORARY TABLE IF EXISTS temp_mean_efficiencies');
+            \DB::statement('
+            CREATE TEMPORARY TABLE temp_mean_efficiencies AS
+            SELECT
+                worker_id AS user_id,
+                task_name,
+                AVG(efficiency) AS mean_efficiency
+            FROM
+                worker_performances
+            GROUP BY
+                worker_id,
+                task_name
+        ');
+
+            // Update the task_efficiencies table with mean efficiencies
+            \DB::statement('
+            UPDATE task_efficiencies te
+            JOIN temp_mean_efficiencies tme
+            ON te.user_id = tme.user_id AND te.task_name = tme.task_name
+            SET te.efficiency_score = ROUND(tme.mean_efficiency,2)
+        ');
+        }
+    }
+}

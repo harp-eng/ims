@@ -61,6 +61,9 @@
                                     Name
                                 </th>
                                 <th>
+                                    Order Name
+                                </th>
+                                <th>
                                     Order Item
                                 </th>
                                 <th>Quantity</th>
@@ -122,6 +125,9 @@
                 {
                     data: 'name',
                     name: 'name'
+                },{
+                    data: 'order_name',
+                    name: 'order_name'
                 },
                 {
                     data: 'order_item_id',
@@ -220,11 +226,11 @@
                     // Add other fields as needed
                 },
                 success: function(response) {
-                    location.reload();
+                    //location.reload();
                     // Optionally, update the DataTable or refresh data as needed
                 },
                 error: function(xhr, status, error) {
-                    location.reload();
+                    //location.reload();
                 }
             });
         }

@@ -17,7 +17,7 @@ class CreateTaskEfficienciesTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
             $table->string('task_name');
-            $table->integer('efficiency_score'); // Efficiency score for the task
+            $table->double('efficiency_score', 15, 2)->default(0)->nullable();
             $table->timestamps();
         });
     }
