@@ -94,7 +94,7 @@ class ActivityLogController extends Controller
 
         $$module_name = $module_model::query();
 
-        if (Auth::user()->hasRole('employee')) {
+        if (Auth::user()->hasRole('worker')||Auth::user()->hasRole('compounder')) {
             $$module_name = $$module_name->where('causer_id', Auth::user()->id);
         }
        // $$module_name = $module_model::query();
@@ -118,7 +118,7 @@ class ActivityLogController extends Controller
                 return $data->causer ? $data->causer->name : '-';
             })
             ->editColumn('subject_id', function ($data) {
-                return class_basename($data->subject)." : ".$data->subject->name ?? class_basename($data->subject)."  ".$data->subject->id;
+                return class_basename($data->subject)." : ".$data->subject?->name ??$data->subject->id;
             })
         
             ->editColumn('created_at', function ($data) {

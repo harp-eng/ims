@@ -110,7 +110,7 @@
         processing: true,
         serverSide: true,
         responsive: true,
-        ajax: '{{ route("backend.$module_name.index_data") }}',
+        ajax: '{{ route("backend.$module_name.index_data",["id"=>$id]) }}',
         columns: [{
                 data: 'id',
                 name: 'id'

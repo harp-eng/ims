@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BaseModel extends Model implements HasMedia
 {
@@ -193,7 +195,29 @@ class BaseModel extends Model implements HasMedia
             $table->save();
         });
     }
+/**
+     * Get the user that created the record.
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
+    /**
+     * Get the user that last updated the record.
+     */
+    public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Get the user that deleted the record.
+     */
+    public function deleter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
     /**
      * Set the 'meta title'.
      * If no value submitted use the 'Title'.

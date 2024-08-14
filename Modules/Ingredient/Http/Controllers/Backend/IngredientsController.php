@@ -52,7 +52,7 @@ class IngredientsController extends BackendBaseController
         $page_heading = label_case($module_title);
         $title = $page_heading . ' ' . label_case($module_action);
 
-        $$module_name = $module_model::select('id', 'name', 'ExpiryDate', 'UnitOfMeasure', 'QuantityInStock', 'updated_at');
+        $$module_name = $module_model::select('id', 'SupplierID', 'LocationID', 'QuantityInStock', 'PurchaseDate', 'ExpiryDate', 'QuantityPurchased', 'UnitPrice', 'TotalPrice', 'name', 'ExpiryDate', 'UnitOfMeasure', 'Status', 'QuantityInStock', 'updated_at', 'SafetyStockLevel');
 
         $data = $$module_name;
 
@@ -63,7 +63,50 @@ class IngredientsController extends BackendBaseController
                 return view('backend.includes.action_column', compact('module_name', 'data'));
             })
             ->editColumn('name', '<strong>{{ $name }}</strong>')
+            ->editColumn('QuantityPurchased', '{{ $QuantityPurchased }} {{ $UnitOfMeasure }}')
             ->editColumn('QuantityInStock', '{{ $QuantityInStock }} {{ $UnitOfMeasure }}')
+            ->editColumn('Status', function($row) {
+                // Define the Bootstrap badge class based on status
+                $badgeClass = 'badge'; // Base class for badges
+                switch($row->Status) {
+                    case 'Low Stock':
+                        $badgeClass .= ' bg-warning'; // Yellow background
+                        break;
+                    case 'No Stock':
+                        $badgeClass .= ' bg-danger'; // Red background
+                        break;
+                    case 'In Stock':
+                        $badgeClass .= ' bg-success'; // Green background
+                        break;
+                    case 'Expired':
+                        $badgeClass .= ' bg-danger'; // Red background (could be same as No Stock)
+                        break;
+                    case 'On Order':
+                        $badgeClass .= ' bg-info'; // Light blue background
+                        break;
+                    case 'Overstocked':
+                        $badgeClass .= ' bg-primary'; // Blue background
+                        break;
+                    case 'Discontinued':
+                        $badgeClass .= ' bg-secondary'; // Gray background
+                        break;
+                    case 'Damaged':
+                        $badgeClass .= ' bg-dark'; // Dark background
+                        break;
+                    default:
+                        $badgeClass .= ' bg-secondary'; // Default to gray
+                        break;
+                }
+                return "<span class='{$badgeClass}'>{$row->Status}</span>";
+            })
+            
+
+            ->editColumn('SupplierID', function ($data) {
+                return $data->supplier?->ContactName ?? '-';
+            })
+            ->editColumn('LocationID', function ($data) {
+                return $data->location?->name ?? '-';
+            })
             ->editColumn('updated_at', function ($data) {
                 $module_name = $this->module_name;
 
@@ -75,7 +118,7 @@ class IngredientsController extends BackendBaseController
 
                 return $data->updated_at->isoFormat('llll');
             })
-            ->rawColumns(['name', 'action'])
+            ->rawColumns(['name','Status', 'action'])
             ->orderColumns(['id'], '-:column $1')
             ->make(true);
     }
@@ -156,10 +199,10 @@ class IngredientsController extends BackendBaseController
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         activity()
-        ->withProperties($$module_name_singular)
-        ->performedOn($$module_name_singular)
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action);
+            ->withProperties($$module_name_singular)
+            ->performedOn($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action);
 
         return redirect("admin/{$module_name}");
     }
@@ -221,10 +264,10 @@ class IngredientsController extends BackendBaseController
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         activity()
-        ->performedOn($$module_name_singular)
-        ->withProperties($order)
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+            ->performedOn($$module_name_singular)
+            ->withProperties($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' name: ' . $$module_name_singular->name);
 
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
     }
@@ -261,10 +304,10 @@ class IngredientsController extends BackendBaseController
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         activity()
-        ->withProperties($$module_name_singular)
-        ->performedOn($$module_name_singular)
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+            ->withProperties($$module_name_singular)
+            ->performedOn($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' name: ' . $$module_name_singular->name);
 
         return redirect("admin/{$module_name}");
     }
@@ -325,10 +368,10 @@ class IngredientsController extends BackendBaseController
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         activity()
-        ->withProperties($$module_name_singular)
-        ->performedOn($$module_name_singular)
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+            ->withProperties($$module_name_singular)
+            ->performedOn($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' name: ' . $$module_name_singular->name);
 
         return redirect("admin/{$module_name}");
     }

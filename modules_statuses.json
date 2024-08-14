@@ -11,5 +11,6 @@
     "Transaction": true,
     "RawMaterialPurchase": true,
     "TimeSheet": true,
-    "OrderSheet": true
+    "OrderSheet": true,
+    "Address": true
 }

@@ -82,34 +82,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-sm-6 mb-3">
-                        <div class="form-group">
-                            <?php
-                            $field_name = 'password';
-                            $field_lable = label_case($field_name);
-                            $field_placeholder = $field_lable;
-                            $required = 'required';
-                            ?>
-                            {{ html()->label($field_lable, $field_name)->class('form-label') }} {!! field_required($required) !!}
-                            {{ html()->password($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
+                
+                    <div class="row  {{ $roleName?'d-none':'' }}">
+                        <div class="col-12 col-sm-6 mb-3">
+                            <div class="form-group">
+                                <?php
+                                $field_name = 'password';
+                                $field_lable = label_case($field_name);
+                                $field_placeholder = $field_lable;
+                                $required = 'required';
+                                ?>
+                                {{ html()->label($field_lable, $field_name)->class('form-label') }} {!! field_required($required) !!}
+                                {{ html()->password($field_name)->value('123456')->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 mb-3">
+                            <div class="form-group">
+                                <?php
+                                $field_name = 'password_confirmation';
+                                $field_lable = label_case($field_name);
+                                $field_placeholder = $field_lable;
+                                $required = 'required';
+                                ?>
+                                {{ html()->label($field_lable, $field_name)->class('form-label') }} {!! field_required($required) !!}
+                                {{ html()->password($field_name,'123456')->value('123456')->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-6 mb-3">
-                        <div class="form-group">
-                            <?php
-                            $field_name = 'password_confirmation';
-                            $field_lable = label_case($field_name);
-                            $field_placeholder = $field_lable;
-                            $required = 'required';
-                            ?>
-                            {{ html()->label($field_lable, $field_name)->class('form-label') }} {!! field_required($required) !!}
-                            {{ html()->password($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group row mb-3">
+                
+                <div class="form-group row mb-3 {{ $roleName?'d-none':'' }}">
                     {{ html()->label(__('labels.backend.users.fields.status'))->class('col-6 col-sm-2 form-label')->for('status') }}
 
                     <div class="col-6 col-sm-10">
@@ -117,7 +118,7 @@
                     </div>
                 </div>
 
-                <div class="form-group row mb-3">
+                <div class="form-group row mb-3 {{ $roleName?'d-none':'' }}">
                     {{ html()->label(__('labels.backend.users.fields.confirmed'))->class('col-6 col-sm-2 form-label')->for('confirmed') }}
 
                     <div class="col-6 col-sm-10">
@@ -125,15 +126,19 @@
                     </div>
                 </div>
 
-                <div class="form-group row mb-3">
+                <div class="form-group row mb-3 {{ $roleName?'d-none':'' }}">
                     {{ html()->label(__('labels.backend.users.fields.email_credentials'))->class('col-6 col-sm-2 form-label')->for('confirmed') }}
 
                     <div class="col-6 col-sm-10">
                         {{ html()->checkbox('email_credentials', true, '1') }} @lang('Email Credentials')
                     </div>
                 </div>
-
+                @if ($roleName)
                 <div class="form-group row mb-3">
+                    {{ html()->hidden('roles[]', 'customer') }}
+                </div>
+            @else
+                <div class="form-group row mb-3  {{ $roleName?'d-none':'' }}">
                     {{ html()->label('Abilities')->class('col-sm-2 form-label') }}
 
                     <div class="col">
@@ -192,6 +197,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <div class="row">
                     <div class="col-6">

@@ -53,7 +53,7 @@ class OrderSheetsController extends BackendBaseController
         if (request()->query('id')) {
             $$module_name = $$module_name->where('IngredientID', request()->query('id'));
         }
-        if (Auth::user()->hasRole('employee')) {
+        if (Auth::user()->hasRole('worker') || Auth::user()->hasRole('compounder')) {
             $$module_name = $$module_name->where(function ($query) {
                 $query->where('worker_id', Auth::user()->id)->orWhere('helper_id', Auth::user()->id);
             });
@@ -67,6 +67,11 @@ class OrderSheetsController extends BackendBaseController
 
                 return view('backend.includes.action_column', compact('module_name', 'data'));
             })
+            ->addColumn('order_name', function ($data) {
+                
+                return $data?->orderItem?->order?->Order_number;
+            })
+            
             ->editColumn('status', function ($data) {
                 $statusOptions = ['pending', 'filled', 'labelled', 'packed'];
                 $options = '<select class="status-select" id="status_' . $data->id . '" data-id="' . $data->id . '">';
@@ -75,7 +80,7 @@ class OrderSheetsController extends BackendBaseController
                     $options .= '<option value="' . $option . '" ' . $selected . '>' . ucfirst($option) . '</option>';
                 }
                 $options .= '</select>';
-                if (Auth::user()->hasRole('employee')) {
+                if (Auth::user()->hasRole('worker')) {
                     $label = '';
                     $status = '';
                     switch ($data->status) {
@@ -108,7 +113,7 @@ class OrderSheetsController extends BackendBaseController
                 return $options . $baseMaterialOptions;
             })
             ->editColumn('worker_id', function ($data) {
-                $workers = \App\Models\User::role('employee')->get(); // Fetch all workers
+                $workers = \App\Models\User::role('worker')->get(); // Fetch all workers
                 $options = '<option value="">Select Worker</option>';
                 foreach ($workers as $worker) {
                     $selected = $data->worker_id == $worker->id ? 'selected' : '';
@@ -117,7 +122,7 @@ class OrderSheetsController extends BackendBaseController
                 return "<select class='worker-select' data-id='{$data->id}' data-column='worker_id'>{$options}</select>";
             })
             ->editColumn('helper_id', function ($data) {
-                $workers = \App\Models\User::role('employee')->get(); // Fetch all workers
+                $workers = \App\Models\User::role('worker')->get(); // Fetch all workers
                 $options = '<option value="">Select Worker</option>';
                 foreach ($workers as $worker) {
                     $selected = $data->helper_id == $worker->id ? 'selected' : '';

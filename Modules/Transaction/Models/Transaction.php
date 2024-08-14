@@ -5,6 +5,8 @@ namespace Modules\Transaction\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\User;
+use Modules\Order\Models\Order;
 
 class Transaction extends BaseModel
 {
@@ -22,4 +24,16 @@ class Transaction extends BaseModel
     {
         return \Modules\Transaction\database\factories\TransactionFactory::new();
     }
+
+      // Define the relationship back to Order
+      public function order()
+      {
+          return $this->belongsTo(Order::class);
+      }
+  
+      // Define the relationship back to Order
+      public function user()
+      {
+          return $this->belongsTo(User::class);
+      }
 }

@@ -52,6 +52,9 @@
                                 #
                             </th>
                             <th>
+                                Order Number
+                            </th>
+                            <th>
                                 Customer
                             </th>
                             <th>
@@ -62,6 +65,9 @@
                             </th>
                             <th>
                                 Status
+                            </th>
+                            <th>
+                                Payment Status
                             </th>
                             <th>
                                 Total Amount
@@ -116,6 +122,10 @@
                 name: 'id'
             },
             {
+                data: 'Order_number',
+                name: 'Order_number'
+            },
+            {
                 data: 'CustomerID',
                 name: 'CustomerID'
             },
@@ -130,6 +140,11 @@
             {
                 data: 'status',
                 name: 'status'
+            }
+            ,
+            {
+                data: 'payment_status',
+                name: 'payment_status'
             },
             {
                 data: 'TotalAmount',

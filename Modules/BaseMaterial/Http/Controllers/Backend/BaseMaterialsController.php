@@ -52,7 +52,7 @@ class BaseMaterialsController extends BackendBaseController
         $page_heading = label_case($module_title);
         $title = $page_heading . ' ' . label_case($module_action);
 
-        $$module_name = $module_model::select('id', 'name', 'status', 'SKU', 'Barcode','QuantityProduced', 'QuantityInStock', 'LeadTimeDays', 'ExpiryDate', 'IsPerishable', 'IsHazardous', 'UnitOfMeasure', 'IsQualityCheck', 'UserID', 'LocationID', 'updated_at');
+        $$module_name = $module_model::select('id', 'name', 'status', 'SKU', 'Barcode', 'QuantityProduced', 'QuantityInStock', 'LeadTimeDays', 'ExpiryDate', 'IsPerishable', 'IsHazardous', 'UnitOfMeasure', 'IsQualityCheck', 'UserID', 'LocationID', 'updated_at');
 
         $data = $$module_name;
 
@@ -64,16 +64,50 @@ class BaseMaterialsController extends BackendBaseController
             })
             ->editColumn('name', '<strong>{{ $name }}</strong>')
             ->editColumn('QuantityInStock', function ($data) {
-                return $data->QuantityInStock." ".$data->UnitOfMeasure;
+                return $data->QuantityInStock . ' ' . $data->UnitOfMeasure;
             })
             ->editColumn('QuantityProduced', function ($data) {
-                return $data->QuantityProduced." ".$data->UnitOfMeasure;
+                return $data->QuantityProduced . ' ' . $data->UnitOfMeasure;
             })
             ->editColumn('UserID', function ($data) {
                 return $data->user?->name ?? '-';
             })
             ->editColumn('LocationID', function ($data) {
                 return $data->location?->name ?? '-';
+            })
+            ->editColumn('status', function ($row) {
+                // Define the Bootstrap badge class based on status
+                $badgeClass = 'badge'; // Base class for badges
+                switch ($row->status) {
+                    case 'Low Stock':
+                        $badgeClass .= ' bg-warning'; // Yellow background
+                        break;
+                    case 'No Stock':
+                        $badgeClass .= ' bg-danger'; // Red background
+                        break;
+                    case 'In Stock':
+                        $badgeClass .= ' bg-success'; // Green background
+                        break;
+                    case 'Expired':
+                        $badgeClass .= ' bg-danger'; // Red background (could be same as No Stock)
+                        break;
+                    case 'On Order':
+                        $badgeClass .= ' bg-info'; // Light blue background
+                        break;
+                    case 'Overstocked':
+                        $badgeClass .= ' bg-primary'; // Blue background
+                        break;
+                    case 'Discontinued':
+                        $badgeClass .= ' bg-secondary'; // Gray background
+                        break;
+                    case 'Damaged':
+                        $badgeClass .= ' bg-dark'; // Dark background
+                        break;
+                    default:
+                        $badgeClass .= ' bg-secondary'; // Default to gray
+                        break;
+                }
+                return "<span class='{$badgeClass}'>{$row->status}</span>";
             })
             ->editColumn('updated_at', function ($data) {
                 $module_name = $this->module_name;
@@ -86,7 +120,18 @@ class BaseMaterialsController extends BackendBaseController
 
                 return $data->updated_at->isoFormat('llll');
             })
-            ->rawColumns(['name', 'action'])
+            ->filter(function ($query) {
+                // Handle search queries for UserID and name fields
+                if (request()->filled('search.value')) {
+                    $searchTerm = request()->input('search.value');
+                    $query->where(function ($query) use ($searchTerm) {
+                        $query->where('UserID', 'like', '%' . $searchTerm . '%')->orWhereHas('user', function ($query) use ($searchTerm) {
+                            $query->where('name', 'like', '%' . $searchTerm . '%');
+                        });
+                    });
+                }
+            })
+            ->rawColumns(['name', 'status', 'action'])
             ->orderColumns(['id'], '-:column $1')
             ->make(true);
     }
@@ -98,27 +143,31 @@ class BaseMaterialsController extends BackendBaseController
      * @return \Illuminate\Contracts\View\View
      */
 
-     public function show($id)
-     {
-         $module_title = $this->module_title;
-         $module_name = $this->module_name;
-         $module_path = $this->module_path;
-         $module_icon = $this->module_icon;
-         $module_model = $this->module_model;
-         $module_name_singular = Str::singular($module_name);
- 
-         $module_action = 'Show';
- 
-         $$module_name_singular = $module_model::findOrFail($id);
- 
-         $column_show=['id', 'name', 'status', 'SKU', 'Barcode','QuantityProduced', 'QuantityInStock', 'ExpiryDate', 'IsPerishable', 'IsHazardous', 'UnitOfMeasure', 'IsQualityCheck', 'UserID', 'LocationID', 'updated_at', 'created_at'];
- 
-         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
- 
-         return view("{$module_path}.{$module_name}.show", compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_name_singular', 'module_action','column_show', "{$module_name_singular}"));
-     }
+    public function show($id)
+    {
+        checkEff('Filling');
+        checkEff('Labelling');
+        checkEff('Packing');
+        checkEff('ProductMaking');
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_path = $this->module_path;
+        $module_icon = $this->module_icon;
+        $module_model = $this->module_model;
+        $module_name_singular = Str::singular($module_name);
 
-     /**
+        $module_action = 'Show';
+
+        $$module_name_singular = $module_model::findOrFail($id);
+
+        $column_show = ['id', 'name', 'status', 'SKU', 'Barcode', 'QuantityProduced', 'QuantityInStock', 'ExpiryDate', 'IsPerishable', 'IsHazardous', 'UnitOfMeasure', 'IsQualityCheck', 'UserID', 'LocationID', 'updated_at', 'created_at'];
+
+        logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
+
+        return view("{$module_path}.{$module_name}.show", compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_name_singular', 'module_action', 'column_show', "{$module_name_singular}"));
+    }
+
+    /**
      * Store a new resource in the database.
      *
      * @param  Request  $request  The request object containing the data to be stored.
@@ -145,14 +194,16 @@ class BaseMaterialsController extends BackendBaseController
                 BaseMaterialIngredient::create([
                     'BaseMaterialID' => $$module_name_singular->id,
                     'IngredientID' => $ingredientId,
-                    'QuantityUsed' => $request->input('quantity_used')[$key],
+                    'QuantityUsed' => $request->input('quantity_used')[$key] ?? 0,
                 ]);
             }
         }
 
-        flash("New '".Str::singular($module_title)."' Added")->success()->important();
+        flash("New '" . Str::singular($module_title) . "' Added")
+            ->success()
+            ->important();
 
-        logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+        logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         return redirect("admin/{$module_name}");
     }
@@ -177,12 +228,9 @@ class BaseMaterialsController extends BackendBaseController
 
         $$module_name_singular = $module_model::findOrFail($id);
 
-        logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+        logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
-        return view(
-            "{$module_path}.{$module_name}.edit",
-            compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "{$module_name_singular}")
-        );
+        return view("{$module_path}.{$module_name}.edit", compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', "{$module_name_singular}"));
     }
 
     /**
@@ -206,33 +254,42 @@ class BaseMaterialsController extends BackendBaseController
         $module_name_singular = Str::singular($module_name);
 
         $module_action = 'Update';
+        try {
+            $$module_name_singular = $module_model::findOrFail($id);
 
-        $$module_name_singular = $module_model::findOrFail($id);
+            $$module_name_singular->update($request->all());
 
-        $$module_name_singular->update($request->all());
-
-        // Update related BaseMaterialIngredient records
-        if ($request->filled('ingredient_id')) {
-            // // Delete existing related records (optional, if needed)
-            // $$module_name_singular->ingredients()->delete();
-            // Create/update related records
-            foreach ($request->input('ingredient_id') as $key => $ingredientId) {
-                BaseMaterialIngredient::updateOrCreate(
-                    [
-                        'BaseMaterialID' => $$module_name_singular->id,
-                        'IngredientID' => $ingredientId,
-                    ],
-                    [
-                        'QuantityUsed' => $request->input('quantity_used')[$key],
-                        // Add other fields here
-                    ]
-                );
+            // Update related BaseMaterialIngredient records
+            if ($request->filled('ingredient_id')) {
+                // // Delete existing related records (optional, if needed)
+                // $$module_name_singular->ingredients()->delete();
+                // Create/update related records
+                foreach ($request->input('ingredient_id') as $key => $ingredientId) {
+                    BaseMaterialIngredient::updateOrCreate(
+                        [
+                            'BaseMaterialID' => $$module_name_singular->id,
+                            'IngredientID' => $ingredientId,
+                        ],
+                        [
+                            'QuantityUsed' => $request->input('quantity_used')[$key] ?? 0,
+                            // Add other fields here
+                        ],
+                    );
+                }
             }
+
+            flash(Str::singular($module_title) . "' Updated Successfully")
+                ->success()
+                ->important();
+        }catch (\Exception $e) {
+            flash($e->getMessage())
+                ->error()
+                ->important();
+            // Handle other exceptions
+            return redirect()->back();
         }
 
-        flash(Str::singular($module_title)."' Updated Successfully")->success()->important();
-
-        logUserAccess($module_title.' '.$module_action.' | Id: '.$$module_name_singular->id);
+        logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
     }

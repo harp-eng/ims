@@ -17,6 +17,7 @@
         "php": "^8.2",
         "ext-bcmath": "*",
         "arcanedev/log-viewer": "^11.0",
+        "barryvdh/laravel-dompdf": "^2.2",
         "intervention/image-laravel": "^1.2",
         "kreait/firebase-php": "^7.12",
         "laracasts/flash": "^3.2",
@@ -32,6 +33,7 @@
         "spatie/laravel-medialibrary": "^11.4",
         "spatie/laravel-permission": "^6.4",
         "sqids/sqids": "^0.4.1",
+        "stripe/stripe-php": "^15.2",
         "unisharp/laravel-filemanager": "^2.9",
         "yajra/laravel-datatables-oracle": "^11.0"
     },

@@ -52,11 +52,10 @@ class PermissionRoleTableSeeder extends Seeder
         $executive->givePermissionTo('view_backend');
 
         $user = Role::create(['id' => '5', 'name' => 'user']);
+
         $user = Role::create(['id' => '6', 'name' => 'customer']);
-        // $user->givePermissionTo('view_backend');
-        $user = Role::create(['id' => '7', 'name' => 'supplier']);
-        // $user->givePermissionTo('view_backend');
-        $user = Role::create(['id' => '8', 'name' => 'employee']);
+        
+        $user = Role::create(['id' => '7', 'name' => 'worker']);
 
         $user->givePermissionTo('view_backend');
         $user->givePermissionTo('view_dashboard');
@@ -66,7 +65,7 @@ class PermissionRoleTableSeeder extends Seeder
         $user->givePermissionTo('view_circles');
         $user->givePermissionTo('view_activity-log');
 
-        $user = Role::create(['id' => '9', 'name' => 'compounder']);
+        $user = Role::create(['id' => '8', 'name' => 'compounder']);
 
         $user->givePermissionTo('view_basematerials');
         $user->givePermissionTo('add_basematerials');

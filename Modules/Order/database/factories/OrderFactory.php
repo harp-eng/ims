@@ -27,6 +27,12 @@ class OrderFactory extends Factory
      */
     public function definition()
     {
+        // Generate a random number for SKU
+        $randomNumber = $this->faker->unique()->randomNumber(5);
+
+        // Create a unique SKU by concatenating a prefix with the random number
+        $sku = 'ORDER-' . $randomNumber;
+
         $order_date = $this->faker->dateTimeBetween('-1 month', 'now');
         $ship_date = (clone $order_date)->modify('+2 days');
 
@@ -39,19 +45,23 @@ class OrderFactory extends Factory
             $formatted_ship_date=null;
         }
 
-        $user = User::factory()->create();
-        $customerRole = Role::firstOrCreate(['name' => 'customer']);
-        $user->roles()->attach($customerRole);
+        $customerIds = \App\Models\User::whereHas('roles', function($query) {
+            $query->where('name', 'customer');
+        })->pluck('id')->toArray();
+
+        $AddressIDs = Address::pluck('id')->toArray();
 
         return [
             'description' => $this->faker->paragraph,
             'status' => $this->faker->randomElement(['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled']),
-            'CustomerID' => $user, // Assuming you have at least 100 customers
+            'payment_status' => $this->faker->randomElement(['Pending','Paid']),
+            'CustomerID' => $this->faker->randomElement($customerIds), // Assuming you have at least 100 customers
+            'Order_number'=>$sku,
             'OrderDate' => $formatted_order_date,
             'ShipDate' => $formatted_ship_date,
             'TotalAmount' => $this->faker->randomFloat(2, 20, 1000), // Random amount between 20.00 and 1000.00
-            'ShippingAddressID' => Address::factory(),
-            'BillingAddressID' => Address::factory(),
+            'ShippingAddressID' => $this->faker->randomElement($AddressIDs),
+            'BillingAddressID' => $this->faker->randomElement($AddressIDs),
             'Notes' => $this->faker->optional()->paragraph,
             'created_by' => $this->faker->optional()->numberBetween(1, 50), // Assuming you have at least 50 users
             'updated_by' => $this->faker->optional()->numberBetween(1, 50),

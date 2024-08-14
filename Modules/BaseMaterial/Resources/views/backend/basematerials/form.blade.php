@@ -13,17 +13,13 @@
     </div>
     <div class="col-12 col-sm-4 mb-3">
         <div class="form-group">
-            @php
-                $field_name = 'status';
-                $field_label = label_case($field_name);
-                $field_placeholder = '-- Select an option --';
-                $required = 'required';
-                $select_options = [
-                    '1' => 'Published',
-                    '0' => 'Unpublished',
-                    '2' => 'Draft',
-                ];
-            @endphp
+            <?php
+            $field_name = 'status';
+            $field_label = label_case($field_name);
+            $field_placeholder = "-- Select an option --";
+            $required = "required";
+            $select_options = trans('ingredient::text.status_array');
+            ?>
             {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
         </div>
@@ -35,8 +31,9 @@
                 $field_label = label_case('Compounder');
                 $field_placeholder = $field_label;
                 $required = '';
-                $suppliers = \App\Models\User::all();
-                $select_options = $suppliers->pluck('name', 'id')->toArray();
+               
+                $compounders = \App\Models\User::role('compounder')->get();
+                $select_options = $compounders->pluck('name', 'id')->prepend('-- Select Compounder --', '');
             @endphp
             {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
@@ -51,7 +48,7 @@
         <div class="form-group">
             @php
                 $field_name = 'QuantityProduced';
-                $field_label = label_case('Quantity Produced');
+                $field_label = label_case('Quantity Produced (Kg )');
                 $field_placeholder = $field_label;
                 $required = '';
             @endphp
@@ -121,21 +118,6 @@
     <div class="col-12 col-sm-4 mb-3">
         <div class="form-group">
             @php
-                $field_name = 'UnitOfMeasure';
-                $field_label = label_case($field_name);
-                $field_placeholder = $field_label;
-                $required = '';
-            @endphp
-            {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
-            {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-12 col-sm-4 mb-3">
-        <div class="form-group">
-            @php
                 $field_name = 'IsQualityCheck';
                 $field_label = label_case($field_name);
                 $field_placeholder = $field_label;
@@ -145,7 +127,11 @@
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
         </div>
     </div>
-    <div class="col-8 mb-3">
+</div>
+
+<div class="row">
+    
+    <div class="col-6 mb-3">
         <div class="form-group">
             @php
                 $field_name = 'Notes';
@@ -157,13 +143,7 @@
             {{ html()->textarea($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
     </div>
-
-
-</div>
-
-
-<div class="row">
-    <div class="col-12 mb-3">
+    <div class="col-6 mb-3">
         <div class="form-group">
             @php
                 $field_name = 'description';
@@ -175,14 +155,16 @@
             {{ html()->textarea($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
     </div>
+
 </div>
+
 @php
-$ingredients = \Modules\RawMaterialPurchase\Models\RawMaterialPurchase::all();
+$ingredients = \Modules\Ingredient\Models\Ingredient::all();
 
 $ingredientOptions = $ingredients->map(function ($ingredient) {
     return [
         'id' => $ingredient->id,
-        'name' => $ingredient->ingredient->name . ' (' . $ingredient->SKU . ')', // Adjust as per your actual attribute name
+        'name' => $ingredient->name . ' (' . $ingredient->SKU . ')', // Adjust as per your actual attribute name
     ];
 })->pluck('name', 'id')->toArray();
 @endphp
@@ -227,7 +209,7 @@ $ingredientOptions = $ingredients->map(function ($ingredient) {
                         </select>
                     </td>
                     <td>
-                        <input type="text" name="quantity_used[]" class="form-control">
+                        <input type="text" name="quantity_used[]" required class="form-control">
                     </td>
                     <td>
                         <button type="button" class="btn btn-success add-row">+</button>

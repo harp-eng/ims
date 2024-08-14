@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
 use App\Models\Role;
+use Modules\Order\Models\Order;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -26,17 +27,20 @@ class TransactionFactory extends Factory
      */
     public function definition()
     {
-        $user = User::factory()->create();
-        $customerRole = Role::firstOrCreate(['name' => 'customer']);
-        $user->roles()->attach($customerRole);
+        $customerIds = \App\Models\User::whereHas('roles', function ($query) {
+            $query->where('name', 'customer');
+        })->pluck('id')->toArray();
+
+        $orderIds=Order::pluck('id')->toArray();
 
         return [
-            'user_id' => $user->id,
+            'user_id' => $this->faker->randomElement($customerIds),
+            'order_id' => $this->faker->randomElement($orderIds),
             'payment_method' => $this->faker->randomElement(['Bank Transfer']),
             'transaction_date' => $this->faker->dateTimeThisYear(),
             'amount' => $this->faker->randomFloat(2, 1, 1000),
             'currency' => 'USD',
-            'status' => $this->faker->randomElement(['Pending', 'Completed', 'Failed']),
+            'transaction_status' => $this->faker->randomElement(['Pending', 'Completed', 'Failed']),
             'reference_number' => $this->faker->unique()->regexify('[A-Z0-9]{10}'),
             'description' => $this->faker->sentence,
         ];

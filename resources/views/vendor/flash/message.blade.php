@@ -1,54 +1,57 @@
+<!-- Include SweetAlert CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- Include SweetAlert JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 @foreach (session('flash_notification', collect())->toArray() as $message)
     <?php
     $variable = $message['level'];
     
     switch ($variable) {
         case 'primary':
-            $icon = '<i class="fa-solid fa-circle-info fa-fw"></i>';
-            break;
         case 'secondary':
-            $icon = '<i class="fa-solid fa-circle-info fa-fw"></i>';
+        case 'info':
+            $icon = 'info';
             break;
         case 'success':
-            $icon = '<i class="fa-solid fa-circle-check fa-fw"></i>';
+            $icon = 'success';
             break;
         case 'danger':
-            $icon = '<i class="fa-solid fa-triangle-exclamation fa-fw"></i>';
-            break;
         case 'warning':
-            $icon = '<i class="fa-solid fa-triangle-exclamation fa-fw"></i>';
-            break;
-        case 'info':
-            $icon = '<i class="fa-solid fa-circle-info fa-fw"></i>';
+            $icon = 'warning';
             break;
         case 'light':
-            $icon = '<i class="fa-solid fa-bullhorn fa-fw"></i>';
-            break;
         case 'dark':
-            $icon = '<i class="fa-solid fa-circle-question fa-fw"></i>';
+            $icon = 'question';
             break;
         default:
-            $icon = '<i class="fa-solid fa-bullhorn fa-fw"></i>';
+            $icon = 'info';
             break;
     }
     ?>
 
     @if ($message['overlay'])
-        @include('flash::modal', [
-            'modalClass' => 'flash-modal',
-            'title' => $message['title'],
-            'body' => $message['message'],
-        ])
+        <script>
+            Swal.fire({
+                title: "{{ $message['title'] }}",
+                html: "{!! $message['message'] !!}",
+                icon: "{{ $icon }}",
+                showCloseButton: true,
+                focusConfirm: false,
+            });
+        </script>
     @else
-        <div class="alert alert-{{ $message['level'] }} {{ $message['important'] ? 'alert-dismissible' : '' }}"
-            role="alert" fade show>
-
-            {!! $icon !!}&nbsp;{!! $message['message'] !!}
-
-            @if ($message['important'])
-                <button class="btn-close" data-coreui-dismiss="alert" type="button" aria-label="Close"></button>
-            @endif
-        </div>
+        <script>
+            Swal.fire({
+                icon: "{{ $icon }}",
+                title: "{{ ucfirst($message['level']) }}",
+                html: "{!! $message['message'] !!}",
+                @if($message['important'])
+                    showCloseButton: true,
+                @endif
+            });
+        </script>
     @endif
 @endforeach
 

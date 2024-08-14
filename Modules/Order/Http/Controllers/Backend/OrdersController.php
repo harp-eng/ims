@@ -11,6 +11,10 @@ use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 use Modules\Order\Models\OrderDetail;
 use Modules\Order\Models\Address;
+use App\Models\Invoice;
+
+use App\Notifications\SendInvoiceNotification;
+use PDF;
 
 class OrdersController extends BackendBaseController
 {
@@ -46,7 +50,7 @@ class OrdersController extends BackendBaseController
 
         $page_heading = label_case($module_title);
         $title = $page_heading . ' ' . label_case($module_action);
-        $$module_name = $module_model::select('id', 'status', 'CustomerID', 'OrderDate', 'ShipDate', 'TotalAmount', 'updated_at');
+        $$module_name = $module_model::select('id', 'status','payment_status','Order_number', 'CustomerID', 'OrderDate', 'ShipDate', 'TotalAmount', 'updated_at');
 
         if (request()->query('id')) {
             $$module_name = $$module_name->where('IngredientID', request()->query('id'));
@@ -63,6 +67,53 @@ class OrdersController extends BackendBaseController
             ->editColumn('CustomerID', function ($data) {
                 return $data->customer?->name ?? '-';
             })
+            ->editColumn('status', function($row) {
+                // Define the Bootstrap badge class based on status
+                $badgeClass = 'badge'; // Base class for badges
+                switch($row->status) {
+                    case 'Pending':
+                        $badgeClass .= ' bg-primary'; // Blue background
+                        break;
+                    case 'Processing':
+                        $badgeClass .= ' bg-warning'; // Yellow background
+                        break;
+                    case 'Ready To Ship':
+                        $badgeClass .= ' bg-info'; // Light blue background
+                        break;
+                    case 'Shipped':
+                        $badgeClass .= ' bg-success'; // Green background
+                        break;
+                    case 'Delivered':
+                        $badgeClass .= ' bg-success'; // Green background (could be same as Shipped)
+                        break;
+                    case 'Cancelled':
+                        $badgeClass .= ' bg-danger'; // Red background
+                        break;
+                    default:
+                        $badgeClass .= ' bg-secondary'; // Default to gray
+                        break;
+                }
+                return "<span class='{$badgeClass}'>{$row->status}</span>";
+            })
+            ->editColumn('payment_status', function($row) {
+                // Define the Bootstrap badge class based on status
+                $badgeClass = 'badge'; // Base class for badges
+                switch($row->payment_status) {
+                    case 'Pending':
+                        $badgeClass .= ' bg-warning'; // Blue background
+                        break;
+                   
+                    case 'Paid':
+                        $badgeClass .= ' bg-success'; // Green background (could be same as Shipped)
+                        break;
+                   
+                    default:
+                        $badgeClass .= ' bg-secondary'; // Default to gray
+                        break;
+                }
+                return "<span class='{$badgeClass}'>{$row->payment_status}</span>";
+            })
+            
             ->editColumn('updated_at', function ($data) {
                 $module_name = $this->module_name;
 
@@ -74,7 +125,7 @@ class OrdersController extends BackendBaseController
 
                 return $data->updated_at->isoFormat('llll');
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action','status','payment_status'])
             ->orderColumns(['id'], '-:column $1')
             ->make(true);
     }
@@ -172,19 +223,27 @@ class OrdersController extends BackendBaseController
             ->success()
             ->important();
 
+        // Send email with invoice and payment link
+        $this->sendInvoiceEmail($$module_name_singular);
+
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
-        
-        $changes=$$module_name_singular;
+
+        $changes = $$module_name_singular;
 
         activity()
-        ->performedOn($$module_name_singular)
-        ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
-            $activity->withProperties(['changes' => $changes]);
-        })
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' ID: '.$$module_name_singular->id);
+            ->performedOn($$module_name_singular)
+            ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
+                $activity->withProperties(['changes' => $changes]);
+            })
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' ID: ' . $$module_name_singular->id);
 
         return redirect("admin/{$module_name}");
+    }
+
+    public function sendInvoiceEmail($order)
+    {
+        $order->customer->notify(new SendInvoiceNotification($order));
     }
 
     /**
@@ -265,12 +324,10 @@ class OrdersController extends BackendBaseController
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
         activity()
-        ->performedOn($$module_name_singular)
-        ->when(isset($changes), function ($activity) use ($changes) {
-            $activity->withProperties(['changes' => $changes]);
-        })
-        ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+            ->performedOn($$module_name_singular)
+            ->withProperties($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' name: ' . $$module_name_singular->name);
 
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
     }

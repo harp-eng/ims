@@ -21,12 +21,20 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->string('status')->default('In Stock');
 
             $table->string('SKU', 50)->unique()->nullable(); // Unique identifier
 
+            $table->unsignedInteger('SupplierID');
+            $table->unsignedInteger('LocationID');
+            $table->date('PurchaseDate');
+            $table->double('QuantityPurchased');
+            $table->double('QuantityUsed')->default(0);
+            $table->date('DeliveryDate')->nullable();
+
             $table->double('QuantityInStock')->default(0);
             $table->decimal('UnitPrice', 10, 2)->default(0);
+            $table->decimal('TotalPrice', 10, 2)->default(0);
             $table->integer('ReorderLevel')->nullable();
             $table->integer('ReorderQuantity')->nullable();
             $table->string('StorageLocation', 100)->nullable();
@@ -58,6 +66,7 @@ return new class extends Migration
             $table->unsignedInteger('BaseMaterialID'); // Foreign key to base_materials table
             $table->unsignedInteger('IngredientID'); // Foreign key to ingredients table
             $table->double('QuantityUsed')->default(0);
+            $table->double('LeftQuantity')->default(0);
 
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
@@ -67,6 +76,7 @@ return new class extends Migration
             $table->softDeletes();
 
         });
+        
     }
 
     /**

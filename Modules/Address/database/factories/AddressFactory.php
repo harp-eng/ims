@@ -1,10 +1,9 @@
 <?php
 
-namespace Modules\Order\database\factories;
+namespace Modules\Address\database\factories;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -16,7 +15,7 @@ class AddressFactory extends Factory
      *
      * @var string
      */
-    protected $model = \Modules\Order\Models\Address::class;
+    protected $model = \Modules\Address\Models\Address::class;
 
     /**
      * Define the model's default state.
@@ -25,9 +24,13 @@ class AddressFactory extends Factory
      */
     public function definition()
     {
+        $customerIds = \App\Models\User::whereHas('roles', function($query) {
+            $query->where('name', 'customer');
+        })->pluck('id')->toArray();
+
         return [
             'EntityType' => $this->faker->randomElement(['Customer', 'Supplier', 'Employee', 'Partner']), // Example entity types
-            'EntityID' => User::factory(), // Assuming you have at least 100 entities of each type
+            'EntityID' => $this->faker->randomElement($customerIds), // Assuming you have at least 100 entities of each type
             'AddressLine1' => $this->faker->streetAddress,
             'AddressLine2' => $this->faker->optional()->secondaryAddress,
             'City' => $this->faker->city,

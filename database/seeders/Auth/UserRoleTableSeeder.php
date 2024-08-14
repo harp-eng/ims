@@ -24,9 +24,24 @@ class UserRoleTableSeeder extends Seeder
         User::findOrFail(4)->assignRole('executive');
         User::findOrFail(5)->assignRole('user');
         User::findOrFail(6)->assignRole('customer');
-        User::findOrFail(7)->assignRole('supplier');
-        User::findOrFail(8)->assignRole('employee');
-        User::findOrFail(8)->assignRole('compounder');
+        User::findOrFail(7)->assignRole('customer');
+        User::findOrFail(8)->assignRole('customer');
+        User::findOrFail(9)->assignRole('customer');
+        User::findOrFail(10)->assignRole('customer');
+        User::findOrFail(11)->assignRole('worker');
+        User::findOrFail(12)->assignRole('worker');
+        User::findOrFail(13)->assignRole('worker');
+        User::findOrFail(14)->assignRole('worker');
+        User::findOrFail(15)->assignRole('worker');
+        User::findOrFail(16)->assignRole('compounder');
+        User::findOrFail(17)->assignRole('compounder');
+        User::findOrFail(18)->assignRole('compounder');
+        User::findOrFail(19)->assignRole('compounder');
+        User::findOrFail(20)->assignRole('compounder');
+        User::findOrFail(21)->assignRole('manager');
+        User::findOrFail(22)->assignRole('manager');
+        User::findOrFail(23)->assignRole('manager');
+        User::findOrFail(24)->assignRole('manager');
 
         Artisan::call('cache:clear');
     }

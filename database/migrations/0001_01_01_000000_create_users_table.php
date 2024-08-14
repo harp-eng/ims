@@ -59,6 +59,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Schema::table('invoices', function (Blueprint $table) {
+        //     if (Schema::hasColumn('invoices', 'user_id')) {
+        //         $table->dropForeign(['user_id']);
+        //     }
+        // });
+        
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');

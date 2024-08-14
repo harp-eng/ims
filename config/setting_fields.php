@@ -63,6 +63,24 @@ return [
         ],
 
     ],
+    'inventory' => [
+        'title' => 'Inventory',
+        'desc' => 'Inventory settings for app',
+        'icon' => 'fas fa-i',
+
+        'elements' => [
+            [
+                'type' => 'number', // input fields type
+                'data' => 'string', // data type, string, int, boolean
+                'name' => 'SafetyStockLevel', // unique name for field
+                'label' => 'Safety Stock Level', // you know what label it is
+                'rules' => 'required|number', // validation rule of laravel
+                'class' => '', // any class for input
+                'value' => '100', // default value if you want
+            ],
+        ],
+
+    ],
     'social' => [
         'title' => 'Social Profiles',
         'desc' => 'Link of all the online/social profiles.',

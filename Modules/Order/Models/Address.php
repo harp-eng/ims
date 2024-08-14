@@ -20,6 +20,6 @@ class Address extends BaseModel
      */
     protected static function newFactory()
     {
-        return \Modules\Order\database\factories\AddressFactory::new();
+        return \Modules\Address\database\factories\AddressFactory::new();
     }
 }

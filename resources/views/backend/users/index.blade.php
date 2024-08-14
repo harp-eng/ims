@@ -22,7 +22,7 @@
                 <x-slot name="toolbar">
                     @can('add_' . $module_name)
                         <x-backend.buttons.create title="{{ __('Create') }} {{ ucwords(Str::singular($module_name)) }}"
-                            route='{{ route("backend.$module_name.create") }}' :small=true />
+                            route='{{ route("backend.$module_name.create",["role"=>$roleName]) }}' :small=true />
                     @endcan
 
                     @can('restore_' . $module_name)

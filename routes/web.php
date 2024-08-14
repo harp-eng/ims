@@ -26,6 +26,9 @@ require __DIR__ . '/auth.php';
 Route::get('/', [AuthenticatedSessionController::class, 'create'])->name('index');
 Route::get('home', [AuthenticatedSessionController::class, 'create'])->name('home');
 
+Route::get("stripe/{invoice_id}", ['as' => "stripe.getpost", 'uses' => "App\Http\Controllers\Backend\StripePaymentController@stripe"]);
+Route::post("stripe", ['as' => "stripe.post", 'uses' => "App\Http\Controllers\Backend\StripePaymentController@stripePost"]);
+
 // Language Switch
 Route::get('language/{language}', [LanguageController::class, 'switch'])->name('language.switch');
 

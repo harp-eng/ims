@@ -60,6 +60,33 @@ class TimeSheetsController extends BackendBaseController
 
         return redirect()->back()->with('success', 'Checked out successfully.');
     }
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index()
+    {
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_path = $this->module_path;
+        $module_icon = $this->module_icon;
+        $module_model = $this->module_model;
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+
+        $$module_name = $module_model::paginate(15);
+
+        $id=request()->query('id');
+
+        logUserAccess($module_title.' '.$module_action);
+
+        return view(
+            "{$module_path}.{$module_name}.index_datatable",
+            compact('module_title', 'module_name', "{$module_name}", 'module_icon', 'module_name_singular', 'module_action','id')
+        );
+    }
     public function index_data()
     {
         $module_title = $this->module_title;
@@ -77,7 +104,7 @@ class TimeSheetsController extends BackendBaseController
         if (request()->query('id')) {
             $$module_name = $$module_name->where('employee_id', request()->query('id'));
         }
-        if (Auth::user()->hasRole('employee')) {
+        if (Auth::user()->hasRole('worker')||Auth::user()->hasRole('compounder')) {
             $$module_name = $$module_name->where('employee_id', Auth::user()->id);
         }
         
@@ -103,6 +130,18 @@ class TimeSheetsController extends BackendBaseController
                 }
 
                 return $data->updated_at->isoFormat('llll');
+            })
+            ->filter(function ($query) {
+                // Handle search queries for employee_id and name fields
+                if (request()->filled('search.value')) {
+                    $searchTerm = request()->input('search.value');
+                    $query->where(function ($query) use ($searchTerm) {
+                        $query->where('employee_id', 'like', '%' . $searchTerm . '%')
+                              ->orWhereHas('employee', function ($query) use ($searchTerm) {
+                                  $query->where('name', 'like', '%' . $searchTerm . '%');
+                              });
+                    });
+                }
             })
             ->rawColumns(['action'])
             ->orderColumns(['id'], '-:column $1')

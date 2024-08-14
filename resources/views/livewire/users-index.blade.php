@@ -1,3 +1,6 @@
+@php
+    $tasks = ['Filling', 'Labelling', 'Packing', 'Product Making'];
+@endphp
 <div>
     <div class="row mt-4">
         <div class="col">
@@ -10,14 +13,17 @@
                             <th>{{ __('labels.backend.users.fields.name') }}</th>
                             <th>{{ __('labels.backend.users.fields.email') }}</th>
                             <th>{{ __('labels.backend.users.fields.status') }}</th>
-                            @if(empty($roleName))
+                            @if (empty($roleName))
                                 <th>{{ __('labels.backend.users.fields.roles') }}</th>
                                 <th>{{ __('labels.backend.users.fields.permissions') }}</th>
                                 <th>{{ __('labels.backend.users.fields.social') }}</th>
                             @endif
-                            @if(!empty($roleName))
-                            <th>Mobile</th>
-                            <th>Order Count</th>
+                            @if (!empty($roleName) && $roleName == 'customer')
+                                <th>Mobile</th>
+                                <th>Order Count</th>
+                            @endif
+                            @if (!empty($roleName) && $roleName == 'employee')
+                                <th>Task & Ranking(1-10)</th>
                             @endif
                             <th class="text-end">{{ __('labels.backend.action') }}</th>
                         </tr>
@@ -33,56 +39,68 @@
                                     </strong>
                                 </td>
                                 <td>{{ $user->email }}</td>
-                                
+
                                 <td>
                                     {!! $user->status_label !!}
-                                    @if(empty($roleName))
-                                    {!! $user->confirmed_label !!}
+                                    @if (empty($roleName))
+                                        {!! $user->confirmed_label !!}
                                     @endif
                                 </td>
-                                @if(empty($roleName))
-                                <td>
-                                    @if ($user->getRoleNames()->count() > 0)
-                                        <ul class="fa-ul">
-                                            @foreach ($user->getRoleNames() as $role)
+                                @if (empty($roleName))
+                                    <td>
+                                        @if ($user->getRoleNames()->count() > 0)
+                                            <ul class="fa-ul">
+                                                @foreach ($user->getRoleNames() as $role)
+                                                    <li>
+                                                        <span class="fa-li"><i
+                                                                class="fa-solid fa-user-shield fa-fw"></i></span>
+                                                        {{ ucwords($role) }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($user->getAllPermissions()->count() > 0)
+                                            <ul>
+                                                @foreach ($user->getDirectPermissions() as $permission)
+                                                    <li>{{ $permission->name }}</li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <ul class="list-unstyled">
+                                            @foreach ($user->providers as $provider)
                                                 <li>
-                                                    <span class="fa-li"><i class="fa-solid fa-user-shield fa-fw"></i></span>
-                                                    {{ ucwords($role) }}
+                                                    <i class="fab fa-{{ $provider->provider }}"></i>
+                                                    {{ label_case($provider->provider) }}
                                                 </li>
                                             @endforeach
                                         </ul>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($user->getAllPermissions()->count() > 0)
-                                        <ul>
-                                            @foreach ($user->getDirectPermissions() as $permission)
-                                                <li>{{ $permission->name }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </td>
-                                <td>
-                                    <ul class="list-unstyled">
-                                        @foreach ($user->providers as $provider)
-                                            <li>
-                                                <i class="fab fa-{{ $provider->provider }}"></i>
-                                                {{ label_case($provider->provider) }}
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </td>
+                                    </td>
                                 @endif
-                                @if(!empty($roleName))
-                                <td>{{ $user->mobile??'-' }}</td>
-                                <td>{{ $user->orders->count()?$user->orders->count():'-' }}</td>
+                                @if (!empty($roleName) && $roleName == 'customer')
+                                    <td>{{ $user->mobile ?? '-' }}</td>
+                                    <td>{{ $user->orders->count() ? $user->orders->count() : '-' }}</td>
+                                @endif
+
+                                @if (!empty($roleName) && $roleName == 'employee')
+                                    <td>
+                                        @if (count($user->taskEfficiencies)>0)
+                                            @foreach ($user->taskEfficiencies as $key => $value)
+                                                {{ $value->task_name }} => {{ $value->efficiency_score }}<br>
+                                            @endforeach
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                 @endif
                                 <td class="text-end">
-                                    @if($user->hasRole('employee'))
-                                    <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
-                                        href="{{ route('backend.timesheets.index',['id'=>$user]) }}"
-                                        title="TimeSheet"><i
-                                            class="fas fa-solid fa-clock fa-fw"></i></a>
+                                    @if ($user->hasRole('worker')||$user->hasRole('compounder'))
+                                        <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
+                                            href="{{ route('backend.timesheets.index', ['id' => $user]) }}"
+                                            title="TimeSheet"><i class="fas fa-solid fa-clock fa-fw"></i></a>
                                     @endif
                                     <a class="btn btn-success btn-sm mt-1" data-toggle="tooltip"
                                         href="{{ route('backend.users.show', $user) }}"
@@ -92,28 +110,28 @@
                                         <a class="btn btn-primary btn-sm mt-1" data-toggle="tooltip"
                                             href="{{ route('backend.users.edit', $user) }}"
                                             title="{{ __('labels.backend.edit') }}"><i class="fas fa-wrench fa-fw"></i></a>
-                                        @if(!$user->hasRole('customer'))
-                                        <a class="btn btn-info btn-sm mt-1" data-toggle="tooltip"
-                                            href="{{ route('backend.users.changePassword', $user) }}"
-                                            title="{{ __('labels.backend.changePassword') }}"><i
-                                                class="fas fa-key fa-fw"></i></a>
-                                        
-                                        @if ($user->status != 2)
-                                            <a class="btn btn-danger btn-sm mt-1" data-method="PATCH"
-                                                data-token="{{ csrf_token() }}" data-toggle="tooltip"
-                                                data-confirm="Are you sure?"
-                                                href="{{ route('backend.users.block', $user) }}"
-                                                title="{{ __('labels.backend.block') }}"><i
-                                                    class="fas fa-ban fa-fw"></i></a>
-                                        @endif
-                                        @if ($user->status == 2)
-                                            <a class="btn btn-info btn-sm mt-1" data-method="PATCH"
-                                                data-token="{{ csrf_token() }}" data-toggle="tooltip"
-                                                data-confirm="Are you sure?"
-                                                href="{{ route('backend.users.unblock', $user) }}"
-                                                title="{{ __('labels.backend.unblock') }}"><i
-                                                    class="fas fa-check fa-fw"></i></a>
-                                        @endif
+                                        @if (!$user->hasRole('customer'))
+                                            <a class="btn btn-info btn-sm mt-1" data-toggle="tooltip"
+                                                href="{{ route('backend.users.changePassword', $user) }}"
+                                                title="{{ __('labels.backend.changePassword') }}"><i
+                                                    class="fas fa-key fa-fw"></i></a>
+
+                                            @if ($user->status != 2)
+                                                <a class="btn btn-danger btn-sm mt-1" data-method="PATCH"
+                                                    data-token="{{ csrf_token() }}" data-toggle="tooltip"
+                                                    data-confirm="Are you sure?"
+                                                    href="{{ route('backend.users.block', $user) }}"
+                                                    title="{{ __('labels.backend.block') }}"><i
+                                                        class="fas fa-ban fa-fw"></i></a>
+                                            @endif
+                                            @if ($user->status == 2)
+                                                <a class="btn btn-info btn-sm mt-1" data-method="PATCH"
+                                                    data-token="{{ csrf_token() }}" data-toggle="tooltip"
+                                                    data-confirm="Are you sure?"
+                                                    href="{{ route('backend.users.unblock', $user) }}"
+                                                    title="{{ __('labels.backend.unblock') }}"><i
+                                                        class="fas fa-check fa-fw"></i></a>
+                                            @endif
                                         @endif
                                         <a class="btn btn-danger btn-sm mt-1" data-method="DELETE"
                                             data-token="{{ csrf_token() }}" data-toggle="tooltip"

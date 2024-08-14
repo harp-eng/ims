@@ -5,6 +5,9 @@ namespace Database\Seeders;
 use Database\Seeders\Auth\PermissionRoleTableSeeder;
 use Database\Seeders\Auth\UserRoleTableSeeder;
 use Database\Seeders\Auth\UserTableSeeder;
+use Database\Seeders\TaskEfficiencySeeder;
+use Database\Seeders\InvoiceSeeder;
+use Database\Seeders\WorkerPerformancesTableSeeder;
 use Modules\Ingredient\database\seeders\IngredientDatabaseSeeder;
 use Modules\BaseMaterial\database\seeders\BaseMaterialDatabaseSeeder;
 use Modules\Location\database\seeders\LocationDatabaseSeeder;
@@ -36,21 +39,22 @@ class AuthTableSeeder extends Seeder
         $this->call(PermissionRoleTableSeeder::class);
         
         $this->call(UserRoleTableSeeder::class);
-        
-        $this->call(IngredientDatabaseSeeder::class);
-        
-        $this->call(BaseMaterialDatabaseSeeder::class);
-        
+
+        $this->call(SupplierDatabaseSeeder::class);
         $this->call(LocationDatabaseSeeder::class);
         
-        $this->call(ProductDatabaseSeeder::class);
+        $this->call(IngredientDatabaseSeeder::class);
+        $this->call(BaseMaterialDatabaseSeeder::class);
         
-        $this->call(SupplierDatabaseSeeder::class);
+        $this->call(ProductDatabaseSeeder::class);
         
         $this->call(RawMaterialPurchaseDatabaseSeeder::class);
         $this->call(OrderDatabaseSeeder::class);
         $this->call(TimeSheetDatabaseSeeder::class);
         $this->call(TransactionDatabaseSeeder::class);
+        $this->call(TaskEfficiencySeeder::class);
+        $this->call(InvoiceSeeder::class);
+        $this->call(WorkerPerformancesTableSeeder::class);
         
         
         

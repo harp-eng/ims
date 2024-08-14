@@ -55,10 +55,30 @@
                                 @lang("ingredient::text.name")
                             </th>
                             <th>
-                                @lang("ingredient::text.stock")
+                                @lang("ingredient::text.Supplier")
                             </th>
                             <th>
-                                @lang("ingredient::text.expiry_date")
+                                @lang("ingredient::text.Location")
+                            </th>
+                            <th>
+                                @lang("ingredient::text.PurchaseDate")
+                            </th>
+                            <th>
+                                @lang("ingredient::text.QuantityPurchased")
+                            </th>
+                          
+                            <th>
+                                @lang("ingredient::text.QuantityInStock")
+                            </th>
+                            <th>
+                                @lang("ingredient::text.TotalPrice")
+                            </th>
+                           
+                            <th>
+                                @lang("ingredient::text.ExpiryDate")
+                            </th>
+                            <th>
+                                @lang("ingredient::text.status")
                             </th>
                             <th>
                                 @lang("ingredient::text.updated_at")
@@ -114,12 +134,33 @@
                 name: 'name'
             },
             {
-                data: 'QuantityInStock',
-                name: 'QuantityInStock'
+                data: 'SupplierID',
+                name: 'SupplierID'
             },
             {
+                data: 'LocationID',
+                name: 'LocationID'
+            },
+            {
+                data: 'PurchaseDate',
+                name: 'PurchaseDate'
+            },
+            {
+                data: 'QuantityPurchased',
+                name: 'QuantityPurchased'
+            },
+            {
+                data: 'QuantityInStock',
+                name: 'QuantityInStock'
+            },{
+                data: 'TotalPrice',
+                name: 'TotalPrice'
+            },{
                 data: 'ExpiryDate',
                 name: 'ExpiryDate'
+            },{
+                data: 'Status',
+                name: 'Status'
             },
             {
                 data: 'updated_at',
@@ -131,7 +172,19 @@
                 orderable: false,
                 searchable: false
             }
-        ]
+        ],
+            rowCallback: function(row, data) {
+                let expiryDate = new Date(data.ExpiryDate);
+                let today = new Date();
+                let timeDiff = expiryDate - today;
+                let daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                
+            }
     });
 </script>
 @endpush
+<style>
+    .highlight {
+        background-color: #f3e2e4 !important;
+    }
+</style>

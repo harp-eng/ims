@@ -14,12 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->increments('id'); // Primary key
+            $table->id();
 
             $table->text('description')->nullable();
             $table->enum('status', ['Pending','Processing','Ready To Ship','Shipped','Delivered','Cancelled'])->default('Pending');
+            $table->enum('payment_status', ['Pending','Paid'])->default('Pending');
 
             $table->unsignedInteger('CustomerID'); // Foreign key
+            $table->string('Order_number', 50)->unique()->nullable(); // Unique identifier
             $table->date('OrderDate')->nullable();
             $table->date('ShipDate')->nullable();
             $table->decimal('TotalAmount', 10, 2);
@@ -56,17 +58,14 @@ return new class extends Migration
             $table->unsignedBigInteger('id', true)->change(); // Ensuring the ID is an unsignedBigInteger
         });
 
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::create('base_material_orders', function (Blueprint $table) {
             $table->increments('id'); // Primary key
-            $table->string('EntityType', 50); // Type of entity (Customer, Supplier, etc.)
-            $table->unsignedInteger('EntityID'); // Foreign key to entity's table
-            $table->string('AddressLine1', 255)->nullable();
-            $table->string('AddressLine2', 255)->nullable();
-            $table->string('City', 100)->nullable();
-            $table->string('State', 100)->nullable();
-            $table->string('ZipCode', 20)->nullable();
-            $table->string('Country', 100)->nullable();
-            $table->string('AddressType', 50)->nullable(); // Billing, Shipping, etc.
+
+            $table->unsignedInteger('BaseMaterialID'); // Foreign key to base_materials table
+            $table->unsignedInteger('orderDetailID'); // Foreign key to ingredients table
+            $table->double('QuantityUsed')->default(0);
+            $table->double('LeftQuantity')->default(0);
+
             $table->integer('created_by')->unsigned()->nullable();
             $table->integer('updated_by')->unsigned()->nullable();
             $table->integer('deleted_by')->unsigned()->nullable();
@@ -74,7 +73,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // Optional: Foreign key constraints can be added dynamically if necessary
         });
     }
 
@@ -85,8 +83,14 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('orders', function (Blueprint $table) {
+            if (Schema::hasColumn('orders', 'order_id')) {
+                $table->dropForeign(['order_id']);
+            }
+        });
         Schema::dropIfExists('orders');
         Schema::dropIfExists('order_details');
         Schema::dropIfExists('addresses');
+        Schema::dropIfExists('base_material_orders');
     }
 };

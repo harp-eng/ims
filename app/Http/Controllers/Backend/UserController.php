@@ -75,7 +75,7 @@ class UserController extends Controller
         if ($roleName) {
             $module_title = ucfirst($roleName);
         }
-        return view("{$module_path}.{$module_name}.index", compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', 'page_heading', 'title'));
+        return view("{$module_path}.{$module_name}.index", compact('module_title','roleName', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', 'page_heading', 'title'));
     }
 
     public function index_data()
@@ -196,7 +196,9 @@ class UserController extends Controller
 
         logUserAccess($module_title . ' ' . $module_action);
 
-        return view("{$module_path}.{$module_name}.create", compact('module_title', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', 'roles', 'permissions'));
+        $roleName = request()->query('role');
+
+        return view("{$module_path}.{$module_name}.create", compact('module_title','roleName', 'module_name', 'module_path', 'module_icon', 'module_action', 'module_name_singular', 'roles', 'permissions'));
     }
 
     /**
@@ -268,6 +270,12 @@ class UserController extends Controller
         Artisan::call('cache:clear');
 
         logUserAccess($module_title . ' ' . $module_action);
+
+        $hasCustomerRole = $$module_name_singular->hasRole('customer');
+
+        if ($hasCustomerRole) {
+            return redirect("admin/{$module_name}?role=customer"); // Replace 'resident-url' with your actual URL for residents
+        }
 
         return redirect("admin/{$module_name}");
     }
@@ -526,6 +534,12 @@ class UserController extends Controller
             ->important();
 
         logUserAccess("{$module_title} {$module_action} {$$module_name_singular->name} ($id)");
+
+        $hasCustomerRole = $$module_name_singular->hasRole('customer');
+
+        if ($hasCustomerRole) {
+            return redirect("admin/{$module_name}?role=customer"); // Replace 'resident-url' with your actual URL for residents
+        }
 
         return redirect("admin/{$module_name}");
     }

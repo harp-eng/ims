@@ -187,4 +187,63 @@
             </div>
         </div>
     </x-backend.layouts.show>
+    <div class="card">
+        <div class="card-body">
+            <div class="container">
+            <h4>Address <x-buttons.create route='{{ route("backend.addresses.create",["user_id"=>$user->id]) }}' title="{{__('Create')}} {{ ucwords(Str::singular('Address')) }}" /></h4>
+            
+            <!-- DataTable -->
+            <table id="useHistoryTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Address Line 1</th>
+                        <th>Address Line 2</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Zip Code</th>
+                        <th>Country</th>
+                        <th>Address Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if($$module_name_singular->addresses)
+                    @foreach($$module_name_singular->addresses as $item)
+                        <tr>
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->AddressLine1 }}</td>
+                            <td>{{ $item->AddressLine2 }}</td>
+                            <td>{{ $item->City }}</td>
+                            <td>{{ $item->State }}</td>
+                            <td>{{ $item->ZipCode }}</td>
+                            <td>{{ $item->Country }}</td>
+                            <td>{{ $item->AddressType }}</td>
+                            <td><a href="{{route('backend.addresses.edit', $item)}}" class="btn btn-primary btn-sm mt-1" data-toggle="tooltip" title="{{__('labels.backend.edit')}}"><i class="fas fa-pencil"></i></a></td>
+                        </tr>
+                    @endforeach
+                    @endif
+                </tbody>
+            </table>
+            
+        </div>
+        </div>
+        </div>
 @endsection
+@push ('after-styles')
+<!-- DataTables Core and Extensions -->
+<link rel="stylesheet" href="{{ asset('vendor/datatable/datatables.min.css') }}">
+@endpush
+
+@push ('after-scripts')
+<!-- DataTables Core and Extensions -->
+<script type="module" src="{{ asset('vendor/datatable/datatables.min.js') }}"></script>
+
+<script type="module">
+    $(document).ready(function() {
+        $('#useHistoryTable').DataTable({
+            "order": [[0, 'desc']] // Assumes 'id' is in the first column (index 0)
+        });
+    });
+</script>
+@endpush
