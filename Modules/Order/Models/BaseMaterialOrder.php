@@ -37,10 +37,10 @@ class BaseMaterialOrder extends BaseModel
             // Update Order QuantityInStock and leftQuantity when a new record is created
             $order = $baseMaterialOrder->baseMaterial;
             if ($order) {
-                $order->QuantityUsed += $baseMaterialOrder->QuantityUsed;
+                $order->QuantityUsed += $baseMaterialOrder->quantity_used;
 
                 // Calculate leftQuantity
-                $leftQuantity = $order->QuantityPurchased - $order->QuantityUsed;
+                $leftQuantity = $order->QuantityProduced - $order->QuantityUsed;
 
                 $order->QuantityInStock = $leftQuantity;
                 $order->save();
@@ -63,14 +63,14 @@ class BaseMaterialOrder extends BaseModel
                 $order->QuantityUsed += $st_used;
 
                 // Calculate leftQuantity
-                $leftQuantity = $order->QuantityPurchased - $order->QuantityUsed;
+                $leftQuantity = $order->QuantityProduced - $order->QuantityUsed;
 
                 $order->QuantityInStock = $leftQuantity;
                 $order->save();
 
                 DB::table('base_material_orders')
                 ->where('id', $baseMaterialOrder->id)
-                ->update(['LeftQuantity' => $st_used]);
+                ->update(['LeftQuantity' => $leftQuantity]);
             }
         });
     }

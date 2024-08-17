@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Modules\Order\Models\OrderDetail;
 
 class BackendController extends Controller
 {
@@ -96,7 +97,46 @@ class BackendController extends Controller
     $wasted_base_material = $data;
     //=============================================
 
-    return view('backend.index', compact('wasted_raw_material', 'wasted_base_material'));
+    
+    $pendingOrders = DB::table('orders')->where('status', 'pending')->count();
+
+    // Calculate Pending Order Items
+    $pendingOrderItems = OrderDetail::whereHas('order', function($query) {
+        $query->where('status', 'pending');
+    })->count();
+
+    // Calculate Order Items Filled
+    $orderItemsFilled = OrderDetail::whereHas('order', function($query) {
+        $query->where('status', 'filled');
+    })->count();
+
+    // Calculate Order Items Labelled
+    $orderItemsLabelled = OrderDetail::whereHas('order', function($query) {
+        $query->where('status', 'labelled');
+    })->count();
+
+    // Calculate Order Items Packed
+    $orderItemsPacked = OrderDetail::whereHas('order', function($query) {
+        $query->where('status', 'packed');
+    })->count();
+
+    // Calculate Order Ready to Ship
+    $orderReadyToShip = DB::table('orders')->where('status', 'Ready To Ship')->count();
+    $orderProcessing = DB::table('orders')->where('status', 'Processing')->count();
+    $orderShipped = DB::table('orders')->where('status', 'Shipped')->count();
+    $orderDelivered = DB::table('orders')->where('status', 'Delivered')->count();
+    $orderCancelled = DB::table('orders')->where('status', 'Cancelled')->count();
+
+    // Calculate Ingredients About to Expire
+    $ingredientAboutToExpire = DB::table('ingredients')->where('ExpiryDate', '<=', now()->addDays(30))->count();
+
+    // Calculate Materials About to Expire
+    $materialAboutToExpire = DB::table('basematerials')->where('ExpiryDate', '<=', now()->addDays(30))->count();
+
+    // Pass the calculated data to the view
+    
+
+    return view('backend.index', compact('wasted_raw_material', 'wasted_base_material','pendingOrders','pendingOrderItems','orderItemsFilled','orderItemsLabelled','orderItemsPacked','orderReadyToShip','ingredientAboutToExpire','materialAboutToExpire','orderProcessing','orderShipped','orderDelivered','orderCancelled'));
 }
 
 }

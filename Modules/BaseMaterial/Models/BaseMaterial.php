@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Location\Models\Location;
 use Modules\Ingredient\Models\BaseMaterialIngredient;
+use Modules\Order\Models\BaseMaterialOrder;
 use Illuminate\Support\Str;
 
 class BaseMaterial extends BaseModel
@@ -52,6 +53,13 @@ class BaseMaterial extends BaseModel
     public function baseMaterialIngredients()
     {
         return $this->hasMany(BaseMaterialIngredient::class, 'BaseMaterialID', 'id');
+    }
+    /**
+     * Get the user that created the base material.
+     */
+    public function useHistory()
+    {
+        return $this->hasmany(BaseMaterialOrder::class, 'BaseMaterialID');
     }
 
     protected static function booted()

@@ -145,10 +145,7 @@ class BaseMaterialsController extends BackendBaseController
 
     public function show($id)
     {
-        checkEff('Filling');
-        checkEff('Labelling');
-        checkEff('Packing');
-        checkEff('ProductMaking');
+        
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;

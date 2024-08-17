@@ -50,12 +50,11 @@ class OrderSheet extends BaseModel
     protected static function boot()
     {
         parent::boot();
-        
+
         static::updated(function ($ordersheet) {
             // Only check status updates for 'packed' state
-            
+
             if ($ordersheet->status == 'packed') {
-            
                 DB::table('order_details')
                     ->where('id', $ordersheet->order_item_id)
                     ->update(['Status' => 'Ready To Ship']);
@@ -65,7 +64,7 @@ class OrderSheet extends BaseModel
                     ->selectRaw('SUM(status = "Ready To Ship") as ready_to_ship_count, COUNT(*) as total_count')
                     ->where('OrderID', $ordersheet->orderItem->OrderID)
                     ->first();
-                
+
                 // Check if all related order items are 'Ready To Ship'
                 if ($orderSummary->ready_to_ship_count == $orderSummary->total_count) {
                     // Update the order status to 'Ready To Ship'
@@ -73,6 +72,30 @@ class OrderSheet extends BaseModel
                         ->where('id', $ordersheet->orderItem->OrderID)
                         ->update(['Status' => 'Ready To Ship']);
                 }
+            }
+
+            if ($ordersheet->status == 'filled') {
+                DB::table('orders')
+                    ->where('id', $ordersheet->orderItem->OrderID)
+                    ->update(['Status' => 'Processing']);
+
+                //     DB::table('order_details')
+                //         ->where('id', $ordersheet->order_item_id)
+                //         ->update(['Status' => 'Ready To Ship']);
+                //     // Check if all related order items are 'Ready To Ship'
+
+                //     $orderSummary = DB::table('order_details')
+                //         ->selectRaw('SUM(status = "Ready To Ship") as ready_to_ship_count, COUNT(*) as total_count')
+                //         ->where('OrderID', $ordersheet->orderItem->OrderID)
+                //         ->first();
+
+                //     // Check if all related order items are 'Ready To Ship'
+                //     if ($orderSummary->ready_to_ship_count == $orderSummary->total_count) {
+                //         // Update the order status to 'Ready To Ship'
+                //         DB::table('orders')
+                //             ->where('id', $ordersheet->orderItem->OrderID)
+                //             ->update(['Status' => 'Ready To Ship']);
+                //     }
             }
         });
     }

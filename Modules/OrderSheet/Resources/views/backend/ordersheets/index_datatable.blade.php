@@ -226,11 +226,11 @@
                     // Add other fields as needed
                 },
                 success: function(response) {
-                    //location.reload();
+                    location.reload();
                     // Optionally, update the DataTable or refresh data as needed
                 },
                 error: function(xhr, status, error) {
-                    //location.reload();
+                    location.reload();
                 }
             });
         }
@@ -255,7 +255,12 @@
                         column: column,
                     },
                     success: function(response) {
-                        alert('Worker ID updated successfully.');
+                        Swal.fire({
+            title: 'Success!',
+            text: 'Worker ID updated successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
                     },
                     error: function(xhr, status, error) {
                         alert('An error occurred while updating the worker ID.');
