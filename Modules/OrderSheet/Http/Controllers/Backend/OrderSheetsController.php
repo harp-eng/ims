@@ -10,8 +10,11 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use Yajra\DataTables\DataTables;
 use Modules\Order\Models\OrderDetail;
+use Modules\Order\Models\BaseMaterialOrder;
 use Modules\Order\Models\Address;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\TaskEfficiency;
 
 class OrderSheetsController extends BackendBaseController
 {
@@ -68,10 +71,9 @@ class OrderSheetsController extends BackendBaseController
                 return view('backend.includes.action_column', compact('module_name', 'data'));
             })
             ->addColumn('order_name', function ($data) {
-                
                 return $data?->orderItem?->order?->Order_number;
             })
-            
+
             ->editColumn('status', function ($data) {
                 $statusOptions = ['pending', 'filled', 'labelled', 'packed'];
                 $options = '<select class="status-select" id="status_' . $data->id . '" data-id="' . $data->id . '">';
@@ -171,15 +173,15 @@ class OrderSheetsController extends BackendBaseController
         $module_name_singular->$column = $request->worker_id;
         $module_name_singular->save();
 
-        $changes=$module_name_singular;
+        $changes = $module_name_singular;
 
         activity()
-        ->performedOn($module_name_singular)
-        ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
-            $activity->withProperties(['changes' => $changes]);
-        })
-        ->event("Order Sheet Assigned To Worker")
-        ->log($module_name_singular->name." asigned to ".$module_name_singular->worker->name);
+            ->performedOn($module_name_singular)
+            ->when(isset($changes) && !empty($changes), function ($activity) use ($changes) {
+                $activity->withProperties(['changes' => $changes]);
+            })
+            ->event('Order Sheet Assigned To Worker')
+            ->log($module_name_singular->name . ' asigned to ' . $module_name_singular->worker->name);
 
         return response()->json(['success' => true]);
     }
@@ -188,27 +190,59 @@ class OrderSheetsController extends BackendBaseController
     {
         $module_title = $this->module_title;
         $module_name = $this->module_name;
-        $module_action = "Order Sheet Status Update";
+        $module_action = 'Order Sheet Status Update';
         // Validate request data as needed
         $module_model = $this->module_model;
         $order = $module_model::findOrFail($request->order_id);
 
         $order->status = $request->status;
-        $message ='Status changed to '.$order->status.".";
+        $message = 'Status changed to ' . $order->status . '.';
         if ($request->base_material_id) {
             $order->base_material_id = $request->base_material_id;
             $order->quantity_used = $request->quantity_used;
-            $message.=" Base Metrial Used: ".$order->baseMaterial->name." Quantity: ".$order->quantity_used."Kg";
+            $message .= ' Base Metrial Used: ' . $order->baseMaterial->name . ' Quantity: ' . $order->quantity_used . 'Kg';
+
+            BaseMaterialOrder::updateOrCreate(
+                [
+                    'BaseMaterialID' => $order->base_material_id,
+                    'orderDetailID' => $order->order_item_id,
+                ],
+                [
+                    'QuantityUsed' => $request->quantity_used ?? 0,
+                    // Add other fields here
+                ],
+            );
+        }
+        $time_taken = getTimeTakenToday($order->worker_id);
+        // Insert a new entry into the worker_performances table
+        $task = maptask($order->status);
+        if ($order->worker_id) {
+            
+
+            DB::table('worker_performances')->insert([
+                'worker_id' => $order->worker_id,
+                'task_name' => $task,
+                'task_time_taken' => $time_taken,
+                'quality_of_work' => 10,
+                'quantity' => $order->orderItem->Quantity,
+                'efficiency' => 0, // Optional efficiency calculation
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+            TaskEfficiency::updateOrCreate(
+                [
+                    'user_id' => $order->worker_id,
+                    'task_name' => $task,
+                ]
+            );
         }
         $order->worker_id = null;
         $order->helper_id = null;
         $order->save();
 
-        activity()
-        ->performedOn($order)
-        ->withProperties($order)
-        ->event($module_action)
-        ->log($message);
+        checkEff($task);
+
+        activity()->performedOn($order)->withProperties($order)->event($module_action)->log($message);
 
         return response()->json(['success' => true]);
     }

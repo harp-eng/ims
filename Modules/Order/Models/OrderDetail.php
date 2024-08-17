@@ -39,6 +39,11 @@ class OrderDetail extends BaseModel
     {
         return $this->belongsTo(Order::class, 'OrderID');
     }
+
+    public function orderSheet()
+    {
+        return $this->HasOne(Order::class, 'order_item_id');
+    }
     
 
     protected static function boot()

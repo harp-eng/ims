@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 /*
  * Global helpers file with misc functions.
  */
@@ -782,4 +784,68 @@ function checkEff($task)
         ');
         }
     }
+}
+
+function getTimeTakenToday($employeeId)
+{
+    // Fetch the sign_in_time for the employee today
+    $signInTime = DB::table('timesheets')
+        ->where('employee_id', $employeeId)
+        ->whereDate('date', Carbon::today())
+        ->value('sign_in_time');
+
+    // Check if sign_in_time exists
+    if (!$signInTime) {
+        return 0;
+    }
+
+    // Get the current time
+    $currentTime = Carbon::now();
+
+    // Convert sign_in_time to a Carbon instance
+    $signInTime = Carbon::parse($signInTime);
+
+    // Calculate the difference in minutes
+    $timeTakenInMinutes = $signInTime->diffInMinutes($currentTime);
+
+    // Fetch the total task time taken from the worker_performances table for the worker today
+    $taskTimeTaken = DB::table('worker_performances')
+        ->where('worker_id', $employeeId)
+        ->whereDate('created_at', Carbon::today())
+        ->sum('task_time_taken');  // Summing up all task_time_taken for today
+
+    // Calculate the net time taken by subtracting task time from total time
+    $netTimeTakenInMinutes = $timeTakenInMinutes - $taskTimeTaken;
+
+    return $netTimeTakenInMinutes;
+}
+
+function maptask($task){
+    switch ($task) {
+        case 'filled':
+            
+            $task='Filling';
+            break;
+
+        case 'labelled':
+            
+            $task='Labelling';
+            break;
+
+        case 'packed':
+            
+            $task='Packing';
+            break;
+
+        case 'making':
+            
+            $task='ProductMaking';
+            break;
+
+        default:
+            
+            $task='Filling';
+            break;
+    }
+    return $task;
 }
