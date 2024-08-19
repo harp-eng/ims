@@ -1,4 +1,4 @@
-# Laravel Project
+# IMS Project
 
 This repository contains a Laravel application. The instructions below will guide you through the setup and installation process.
 
