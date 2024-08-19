@@ -1,29 +1,34 @@
-Laravel Project
+# Laravel Project
+
 This repository contains a Laravel application. The instructions below will guide you through the setup and installation process.
 
-Table of Contents
-Requirements
-Installation
-Configuration
-Database Migration & Seeding
-Running the Application
-Testing
-Troubleshooting
-License
-Requirements
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Database Migration & Seeding](#database-migration--seeding)
+- [Running the Application](#running-the-application)
+- [Testing](#testing)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+
+## Requirements
+
 Before installing, ensure you have the following installed on your local machine:
 
-PHP 8.1 or higher
-Composer
-Node.js & npm
-MySQL/MariaDB or any other supported database
-Installation
-Clone the Repository:
+- **PHP 8.1 or higher**
+- **Composer**
+- **Node.js & npm**
+- **MySQL/MariaDB or any other supported database**
 
-bash
-Copy code
-git clone https://github.com/harp-eng/ims.git
-cd your-repository
+## Installation
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/your-username/your-repository.git
+   cd your-repository
 Install PHP Dependencies:
 
 Install the PHP dependencies using Composer:
