@@ -36,14 +36,7 @@
             <div class="col">
                 <div class="table-responsive">
                     <table class="table-bordered table-hover table">
-                        <tr>
-                            <th>{{ __('labels.backend.users.fields.avatar') }}</th>
-                            <td>
-                                <img class="user-profile-image img-fluid img-thumbnail"
-                                    src="{{ asset($$module_name_singular->avatar) }}"
-                                    style="max-height:200px; max-width:200px;" />
-                            </td>
-                        </tr>
+                        
 
                         @php
                             $fields_array = [
