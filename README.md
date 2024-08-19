@@ -27,7 +27,7 @@ Before installing, ensure you have the following installed on your local machine
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/your-username/your-repository.git
+   git clone https://github.com/harp-eng/ims.git
    cd your-repository
 
 2. **Install PHP Dependencies:**
