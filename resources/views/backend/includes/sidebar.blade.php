@@ -142,8 +142,6 @@ $notifications_latest = optional($notifications)->take(5);
         @endphp
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
 
-
-
         @php
             $module_name = 'users';
             $text = __('Users');
@@ -151,8 +149,9 @@ $notifications_latest = optional($notifications)->take(5);
             $permission = 'view_' . $module_name;
             $url = route('backend.' . $module_name . '.index');
         @endphp
+        @unless(auth()->user()->hasRole('manager'))
         <x-backend.sidebar-nav-item :permission="$permission" :url="$url" :icon="$icon" :text="$text" />
-
+        @endunless
 
         @php
             $module_name = 'roles';

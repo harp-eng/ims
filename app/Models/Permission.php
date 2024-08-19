@@ -37,6 +37,7 @@ class Permission extends \Spatie\Permission\Models\Permission
             'delete_backups',
             'view_circles',
             'view_activity-log',
+            'admin_manager_dashboard',
         ];
     }
 

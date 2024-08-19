@@ -35,17 +35,7 @@
             <div class="col">
                 {{ html()->modelForm($user, 'PATCH', route('backend.users.update', $user->id))->class('form-horizontal')->acceptsFiles()->open() }}
 
-                <div class="form-group row">
-                    {{ html()->label(__('labels.backend.users.fields.avatar'))->class('col-md-2 form-label')->for('name') }}
-
-                    <div class="col-md-5 mb-3">
-                        <img class="user-profile-image img-fluid img-thumbnail"
-                            src="{{ asset($$module_name_singular->avatar) }}" style="max-height:200px; max-width:200px;" />
-                    </div>
-                    <div class="col-md-5 mb-3">
-                        <input id="file-multiple-input" name="avatar" type="file" multiple="">
-                    </div>
-                </div>
+                
 
                 <div class="row">
                     <div class="col-12 col-sm-6 mb-3">

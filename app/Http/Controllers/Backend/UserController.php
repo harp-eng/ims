@@ -250,6 +250,7 @@ class UserController extends Controller
         $id = $$module_name_singular->id;
         $username = config('app.initial_username') + $id;
         $$module_name_singular->username = $username;
+        $$module_name_singular->email_verified_at=now();
         $$module_name_singular->save();
 
         event(new UserCreated($$module_name_singular));
@@ -275,6 +276,10 @@ class UserController extends Controller
 
         if ($hasCustomerRole) {
             return redirect("admin/{$module_name}?role=customer"); // Replace 'resident-url' with your actual URL for residents
+        }
+        $hasemployeeRole = $$module_name_singular->hasRole(['worker','compounder']);
+        if ($hasemployeeRole) {
+            return redirect("admin/{$module_name}?role=employee"); // Replace 'resident-url' with your actual URL for residents
         }
 
         return redirect("admin/{$module_name}");
@@ -539,6 +544,10 @@ class UserController extends Controller
 
         if ($hasCustomerRole) {
             return redirect("admin/{$module_name}?role=customer"); // Replace 'resident-url' with your actual URL for residents
+        }
+        $hasemployeeRole = $$module_name_singular->hasRole(['worker','compounder']);
+        if ($hasemployeeRole) {
+            return redirect("admin/{$module_name}?role=employee"); // Replace 'resident-url' with your actual URL for residents
         }
 
         return redirect("admin/{$module_name}");

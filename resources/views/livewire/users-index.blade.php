@@ -23,6 +23,7 @@
                                 <th>Order Count</th>
                             @endif
                             @if (!empty($roleName) && $roleName == 'employee')
+                                <th>Role</th>
                                 <th>Task & Ranking(1-10)</th>
                             @endif
                             <th class="text-end">{{ __('labels.backend.action') }}</th>
@@ -86,6 +87,15 @@
                                 @endif
 
                                 @if (!empty($roleName) && $roleName == 'employee')
+                                    <td><ul class="fa-ul">
+                                        @foreach ($user->getRoleNames() as $role)
+                                            <li>
+                                                <span class="fa-li"><i
+                                                        class="fa-solid fa-user-shield fa-fw"></i></span>
+                                                {{ ucwords($role) }}
+                                            </li>
+                                        @endforeach
+                                    </ul></td>
                                     <td>
                                         @if (count($user->taskEfficiencies)>0)
                                             @foreach ($user->taskEfficiencies as $key => $value)

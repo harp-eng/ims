@@ -47,6 +47,18 @@ class PermissionRoleTableSeeder extends Seeder
             $manager->givePermissionTo('delete_'.$moduleName);
             $manager->givePermissionTo('restore_'.$moduleName);
         }
+        $manager->givePermissionTo('view_backend');
+        $manager->givePermissionTo('view_dashboard');
+        $manager->givePermissionTo('view_circles');
+        $manager->givePermissionTo('view_activity-log');
+        $manager->givePermissionTo('admin_manager_dashboard');
+        $manager->givePermissionTo('view_users');
+        $manager->givePermissionTo('add_users');
+        $manager->givePermissionTo('edit_users');
+        // $manager->givePermissionTo('edit_users_permissions');
+        $manager->givePermissionTo('delete_users');
+        // $manager->givePermissionTo('restore_users');
+        // $manager->givePermissionTo('block_users');
 
         $executive = Role::create(['id' => '4', 'name' => 'executive']);
         $executive->givePermissionTo('view_backend');
