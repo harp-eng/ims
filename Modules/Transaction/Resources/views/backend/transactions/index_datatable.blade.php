@@ -19,27 +19,8 @@
                 @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)])
             </x-slot>
             <x-slot name="toolbar">
-                @can('add_'.$module_name)
-                <x-buttons.create route='{{ route("backend.$module_name.create") }}' title="{{__('Create')}} {{ ucwords(Str::singular($module_name)) }}" />
-                @endcan
-
-                @can('restore_'.$module_name)
-                <div class="btn-group">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href='{{ route("backend.$module_name.trashed") }}'>
-                                <i class="fas fa-eye-slash"></i> @lang("View trash")
-                            </a>
-                        </li>
-                        <!-- <li>
-                            <hr class="dropdown-divider">
-                        </li> -->
-                    </ul>
-                </div>
-                @endcan
+               
+                
             </x-slot>
         </x-backend.section-header>
 
@@ -59,7 +40,7 @@
                             <th>@lang("Currency")</th>
                             <th>@lang("Reference Number")</th>
                             <th>@lang("Updated At")</th>
-                            <th class="text-end">@lang("Action")</th>
+                            
                         </tr>
                     </thead>
                 </table>
@@ -111,7 +92,7 @@
             { data: 'currency', name: 'currency' },
             { data: 'reference_number', name: 'reference_number' },
             { data: 'updated_at', name: 'updated_at' },
-            { data: 'action', name: 'action', orderable: false, searchable: false }
+            
         ]
     });
 </script>

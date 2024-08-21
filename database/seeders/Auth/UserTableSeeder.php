@@ -144,5 +144,21 @@ class UserTableSeeder extends Seeder
             event(new UserCreated($user));
             $i++;
         }
+        $i=1;
+        foreach (range(25,29) as $key) {
+            $user_data=[
+                'id' => $key,
+                'username' => '10000'.$key,
+                'name' => 'sales-'.$i,
+                'email' => 'sales-'.$i.'@yopmail.com',
+                'password' => Hash::make('secret'),
+                'email_verified_at' => Carbon::now(),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ];
+            $user = User::create($user_data);
+            event(new UserCreated($user));
+            $i++;
+        }
     }
 }

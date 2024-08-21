@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('Order_number', 50)->unique()->nullable(); // Unique identifier
             $table->date('OrderDate')->nullable();
             $table->date('ShipDate')->nullable();
-            $table->decimal('TotalAmount', 10, 2);
+            $table->decimal('TotalAmount', 10, 2)->nullable();
             $table->text('ShippingAddressID')->nullable();
             $table->text('BillingAddressID')->nullable();
             $table->text('Notes')->nullable();
