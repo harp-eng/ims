@@ -204,7 +204,7 @@ class BackendBaseController extends Controller
         activity()
         ->withProperties($$module_name_singular)
         ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular?->name);
 
         return redirect("admin/{$module_name}");
     }
@@ -297,7 +297,7 @@ class BackendBaseController extends Controller
         activity()
         ->withProperties($$module_name_singular)
         ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular?->name);
 
         return redirect()->route("backend.{$module_name}.show", $$module_name_singular->id);
     }
@@ -334,7 +334,7 @@ class BackendBaseController extends Controller
         activity()
         ->withProperties($$module_name_singular)
         ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular?->name);
 
         return redirect("admin/{$module_name}");
     }
@@ -398,7 +398,7 @@ class BackendBaseController extends Controller
         activity()
         ->withProperties($$module_name_singular)
         ->event($module_title . ' ' . $module_action)
-        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular->name);
+        ->log($module_title . ' ' . $module_action.' => '.$module_title.' name: '.$$module_name_singular?->name);
 
         return redirect("admin/{$module_name}");
     }

@@ -22,11 +22,11 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1);
 
             $table->unsignedInteger('CategoryID')->nullable(); // Foreign key
-            $table->string('SKU', 50)->unique(); // Unique identifier
-            $table->string('Unit', 50); // Unique identifier
+            $table->string('SKU', 50)->unique()->nullable(); // Unique identifier
+            $table->string('Unit', 50)->nullable(); // Unique identifier
             $table->string('Barcode', 50)->nullable();
-            $table->integer('QuantityInStock')->default(0);
-            $table->decimal('UnitPrice', 10, 2);
+            $table->integer('QuantityInStock')->default(0)->nullable();
+            $table->decimal('UnitPrice', 10, 2)->nullable();
             $table->decimal('CostPrice', 10, 2)->nullable();
             $table->integer('ReorderLevel')->nullable();
             $table->integer('ReorderQuantity')->nullable();

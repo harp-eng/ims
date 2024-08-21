@@ -202,6 +202,12 @@ class BaseMaterialsController extends BackendBaseController
 
         logUserAccess($module_title . ' ' . $module_action . ' | Id: ' . $$module_name_singular->id);
 
+        activity()
+            ->performedOn($$module_name_singular)
+            ->withProperties($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' name: ' . $$module_name_singular->name);
+
         return redirect("admin/{$module_name}");
     }
 
@@ -274,7 +280,11 @@ class BaseMaterialsController extends BackendBaseController
                     );
                 }
             }
-
+            activity()
+            ->performedOn($$module_name_singular)
+            ->withProperties($$module_name_singular)
+            ->event($module_title . ' ' . $module_action)
+            ->log($module_title . ' ' . $module_action . ' => ' . $module_title . ' name: ' . $$module_name_singular->name);
             flash(Str::singular($module_title) . "' Updated Successfully")
                 ->success()
                 ->important();

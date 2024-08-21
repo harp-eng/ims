@@ -40,9 +40,23 @@
             {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
             {{ html()->select($field_name, [])->placeholder('-- Select Address --')->class('form-control')->attributes(["$required", 'id' => 'billing_address']) }}
 
-            {{ html()->hidden('TotalAmount') }}
+            {{ html()->hidden('TotalAmount')->attributes(['id' => 'TotalAmount']) }}
             {{ html()->hidden('OrderDate')->value(now()->toDateString()) }}
             {{ html()->hidden('ShipDate')->value(now()->toDateString()) }}
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-4 mb-3">
+        <div class="form-group">
+            @php
+                $field_name = 'status';
+                $field_label = 'Status';
+                $field_placeholder = $field_label;
+                $required = 'required';
+            @endphp
+            {{ html()->label($field_label, $field_name)->class('form-label') }} {!! field_required($required) !!}
+            {{ html()->select($field_name, ['Pending'=>'Pending','Processing'=>'Processing','Ready To Ship'=>'Ready To Ship','Shipped'=>'Shipped','Delivered'=>'Delivered','Cancelled'=>'Cancelled'])->placeholder('-- Select Status --')->class('form-control')->attributes(["$required"]) }}
+
         </div>
     </div>
 </div>
@@ -145,7 +159,7 @@
                         </select>
                     </td>
                     <td>
-                        <input type="text" required name="Quantity[]" class="form-control quantity">
+                        <input type="text" required name="Quantity[]" value="1" class="form-control quantity">
                     </td>
                     <td>
                         <input type="text" name="UnitPrice[]" class="form-control unit-price" value="">
@@ -178,7 +192,7 @@
                     '<option value="{{ $id }}" data-unit_price="{{ $unitPrices[$id] }}">{{ $name }}</option>' +
                     '@endforeach' +
                     '</select></td>' +
-                    '<td><input type="text" name="Quantity[]" required class="form-control quantity"></td>' +
+                    '<td><input type="text" name="Quantity[]" value="1" required class="form-control quantity"></td>' +
                     '<td><input type="text" name="UnitPrice[]" class="form-control unit-price"></td>' +
                     '<td><input type="text" name="TotalPrice[]" class="form-control total-price"></td>' +
                     '<td>' +

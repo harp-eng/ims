@@ -78,10 +78,27 @@ class PermissionRoleTableSeeder extends Seeder
         $user->givePermissionTo('view_activity-log');
 
         $user = Role::create(['id' => '8', 'name' => 'compounder']);
-
+        $user->givePermissionTo('view_backend');
+        $user->givePermissionTo('view_dashboard');
+        $user->givePermissionTo('employee_dashboard');
+        $user->givePermissionTo('view_timesheets');
         $user->givePermissionTo('view_basematerials');
         $user->givePermissionTo('add_basematerials');
         $user->givePermissionTo('edit_basematerials');
+        $user->givePermissionTo('view_circles');
+        $user->givePermissionTo('view_activity-log');
+
+        $user = Role::create(['id' => '9', 'name' => 'sales']);
+
+        $user->givePermissionTo('view_backend');
+        $user->givePermissionTo('view_dashboard');
+        $user->givePermissionTo('employee_dashboard');
+        $user->givePermissionTo('view_timesheets');
+        $user->givePermissionTo('view_orders');
+        $user->givePermissionTo('add_orders');
+        $user->givePermissionTo('edit_orders');
+        $user->givePermissionTo('view_circles');
+        $user->givePermissionTo('view_activity-log');
     }
 
     public function CreateDefaultPermissions()
