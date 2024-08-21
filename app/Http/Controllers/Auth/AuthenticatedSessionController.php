@@ -15,9 +15,16 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create()
     {
-        return view('auth.login');
+        // Check if the user is logged in
+        if (Auth::check()) {
+            // The user is logged in...
+            return redirect()->intended(route('backend.dashboard', absolute: false));
+        } else {
+            // The user is not logged in...
+            return view('auth.login');
+        }
     }
 
     /**
@@ -44,9 +51,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('backend.dashboard', absolute: false));
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return back()
+            ->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])
+            ->onlyInput('email');
 
         // $request->authenticate();
 
