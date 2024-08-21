@@ -92,8 +92,7 @@ class PermissionRoleTableSeeder extends Seeder
 
         $user->givePermissionTo('view_backend');
         $user->givePermissionTo('view_dashboard');
-        $user->givePermissionTo('employee_dashboard');
-        $user->givePermissionTo('view_timesheets');
+        $user->givePermissionTo('admin_manager_dashboard');
         $user->givePermissionTo('view_orders');
         $user->givePermissionTo('add_orders');
         $user->givePermissionTo('edit_orders');
