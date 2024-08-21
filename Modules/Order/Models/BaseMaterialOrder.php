@@ -37,7 +37,7 @@ class BaseMaterialOrder extends BaseModel
             // Update Order QuantityInStock and leftQuantity when a new record is created
             $order = $baseMaterialOrder->baseMaterial;
             if ($order) {
-                $order->QuantityUsed += $baseMaterialOrder->quantity_used;
+                $order->QuantityUsed += $baseMaterialOrder->QuantityUsed;
 
                 // Calculate leftQuantity
                 $leftQuantity = $order->QuantityProduced - $order->QuantityUsed;
