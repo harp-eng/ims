@@ -2,14 +2,14 @@
     @can('view_dashboard')
         @can('admin_manager_dashboard')
             <!-- Dashboard Overview -->
-           
+
             <section id="dashboard-overview">
                 <div class="row text-center">
                     <div class="col-md-3 mb-4">
                         <div class="card bg-pending-orders">
                             <div class="card-body">
                                 <h5 class="card-title">Pending Orders</h5>
-                                <p class="card-text" id="total-sales">{{$pendingOrders}}</p>
+                                <p class="card-text" id="total-sales">{{ $pendingOrders }}</p>
                             </div>
                         </div>
                     </div>
@@ -17,7 +17,7 @@
                         <div class="card bg-pending-order-items">
                             <div class="card-body">
                                 <h5 class="card-title">Pending Order Items</h5>
-                                <p class="card-text" id="new-orders">{{$pendingOrderItems}}</p>
+                                <p class="card-text" id="new-orders">{{ $pendingOrderItems }}</p>
                             </div>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                         <div class="card bg-order-processing">
                             <div class="card-body">
                                 <h5 class="card-title">Order Processing</h5>
-                                <p class="card-text" id="profit-margins">{{$orderProcessing}}</p>
+                                <p class="card-text" id="profit-margins">{{ $orderProcessing }}</p>
                             </div>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                         <div class="card bg-order-items-filled">
                             <div class="card-body">
                                 <h5 class="card-title">Order Items Filled</h5>
-                                <p class="card-text" id="revenue">{{$orderItemsFilled}}</p>
+                                <p class="card-text" id="revenue">{{ $orderItemsFilled }}</p>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                         <div class="card bg-order-items-labelled">
                             <div class="card-body">
                                 <h5 class="card-title">Order Items Labelled</h5>
-                                <p class="card-text" id="profit-margins">{{$orderItemsLabelled}}</p>
+                                <p class="card-text" id="profit-margins">{{ $orderItemsLabelled }}</p>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                         <div class="card bg-order-items-packed">
                             <div class="card-body">
                                 <h5 class="card-title">Order Items Packed</h5>
-                                <p class="card-text" id="profit-margins">{{$orderItemsPacked}}</p>
+                                <p class="card-text" id="profit-margins">{{ $orderItemsPacked }}</p>
                             </div>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                         <div class="card bg-order-ready-to-ship">
                             <div class="card-body">
                                 <h5 class="card-title">Order Ready to Ship</h5>
-                                <p class="card-text" id="profit-margins">{{$orderReadyToShip}}</p>
+                                <p class="card-text" id="profit-margins">{{ $orderReadyToShip }}</p>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                         <div class="card bg-order-shipped">
                             <div class="card-body">
                                 <h5 class="card-title">Order Shipped</h5>
-                                <p class="card-text" id="profit-margins">{{$orderShipped}}</p>
+                                <p class="card-text" id="profit-margins">{{ $orderShipped }}</p>
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                         <div class="card bg-order-delivered">
                             <div class="card-body">
                                 <h5 class="card-title">Order Delivered</h5>
-                                <p class="card-text" id="profit-margins">{{$orderDelivered}}</p>
+                                <p class="card-text" id="profit-margins">{{ $orderDelivered }}</p>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                         <div class="card bg-order-cancelled">
                             <div class="card-body">
                                 <h5 class="card-title">Order Cancelled</h5>
-                                <p class="card-text" id="profit-margins">{{$orderCancelled}}</p>
+                                <p class="card-text" id="profit-margins">{{ $orderCancelled }}</p>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                         <div class="card bg-ingredient-about-to-expire">
                             <div class="card-body">
                                 <h5 class="card-title">Ingredient About to Expire</h5>
-                                <p class="card-text" id="profit-margins">{{$ingredientAboutToExpire}}</p>
+                                <p class="card-text" id="profit-margins">{{ $ingredientAboutToExpire }}</p>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                         <div class="card bg-material-about-to-expire">
                             <div class="card-body">
                                 <h5 class="card-title">Material About to Expire</h5>
-                                <p class="card-text" id="profit-margins">{{$materialAboutToExpire}}</p>
+                                <p class="card-text" id="profit-margins">{{ $materialAboutToExpire }}</p>
                             </div>
                         </div>
                     </div>
@@ -128,74 +128,93 @@
                 </div>
             </section>
             <style>
-             .bg-pending-orders {
-    background-color: #f8d7da; /* Soft Light Red */
-    color: #721c24;
-}
+                .bg-pending-orders {
+                    background-color: #cce5ff;
+                    /* Soft Blue background */
+                    color: #004085;
+                }
 
-.bg-pending-order-items {
-    background-color: #ffe5b4; /* Soft Light Orange */
-    color: #856404;
-}
+                .bg-pending-order-items {
+                    background-color: #ffe5b4;
+                    /* Soft Light Orange */
+                    color: #856404;
+                }
 
-.bg-order-processing {
-    background-color: #fff3cd; /* Soft Light Yellow */
-    color: #856404;
-}
+                .bg-order-processing {
+                    background-color: #fff3cd;
+                    /* Soft Yellow background */
+                    color: #856404;
+                }
 
-.bg-order-items-filled {
-    background-color: #d4edda; /* Soft Light Green */
-    color: #155724;
-}
+                .bg-order-items-filled {
+                    background-color: #d4edda;
+                    /* Soft Light Green */
+                    color: #155724;
+                }
 
-.bg-order-items-labelled {
-    background-color: #cce5ff; /* Soft Light Blue */
-    color: #004085;
-}
+                .bg-order-items-labelled {
+                    background-color: #cce5ff;
+                    /* Soft Light Blue */
+                    color: #004085;
+                }
 
-.bg-order-items-packed {
-    background-color: #e2e3e5; /* Soft Light Gray */
-    color: #383d41;
-}
+                .bg-order-items-packed {
+                    background-color: #e2e3e5;
+                    /* Soft Light Gray */
+                    color: #383d41;
+                }
 
-.bg-order-ready-to-ship {
-    background-color: #f5c6cb; /* Soft Pink */
-    color: #721c24;
-}
+                .bg-order-ready-to-ship {
+                    background-color: #d1ecf1;
+                    /* Soft Light Blue background */
+                    color: #0c5460;
+                }
 
-.bg-order-shipped {
-    background-color: #cce5ff; /* Soft Sky Blue */
-    color: #004085;
-}
+                .bg-order-shipped {
+                    background-color: #d4edda;
+                    /* Soft Green background */
+                    color: #155724;
+                }
 
-.bg-order-delivered {
-    background-color: #d4edda; /* Soft Light Green */
-    color: #155724;
-}
+                .bg-order-delivered {
+                    background-color: #d4edda;
+                    /* Soft Green background */
+                    color: #155724;
+                }
 
-.bg-order-cancelled {
-    background-color: #f8d7da; /* Soft Red */
-    color: #721c24;
-}
+                .bg-order-cancelled {
+                    background-color: #f8d7da;
+                    /* Soft Red background */
+                    color: #721c24;
+                }
 
-.bg-ingredient-about-to-expire {
-    background-color: #ffeeba; /* Soft Amber */
-    color: #856404;
-}
+                .bg-ingredient-about-to-expire {
+                    background-color: #ffeeba;
+                    /* Soft Amber */
+                    color: #856404;
+                }
 
-.bg-material-about-to-expire {
-    background-color: #ffe5d0; /* Soft Coral */
-    color: #856404;
-}
+                .bg-material-about-to-expire {
+                    background-color: #ffe5d0;
+                    /* Soft Coral */
+                    color: #856404;
+                }
 
-/* Optional: Add some padding and border radius to the cards for a nicer look */
-.card {
-    border-radius: 10px;
-    padding: 0px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
+                .bg-secondary {
+                    background-color: #e2e3e5;
+                    /* Soft Gray background */
+                    color: #383d41;
+                }
 
-                </style>
+
+
+                /* Optional: Add some padding and border radius to the cards for a nicer look */
+                .card {
+                    border-radius: 10px;
+                    padding: 0px;
+                    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+                }
+            </style>
         @endcan
     @endcan
     @can('employee_dashboard')
